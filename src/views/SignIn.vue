@@ -67,7 +67,7 @@ export default defineComponent({
     validations() {
         return {
             email: {
-                required: helpers.withMessage('กรุณากรอกอีเมล', required) //TEST
+                required: helpers.withMessage('กรุณากรอกอีเมล', required) //TEST Kong
             },
             password: {
                 required: helpers.withMessage('กรุณากรอกรหัสผ่าน', required) //TEST1
