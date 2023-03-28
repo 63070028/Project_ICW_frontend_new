@@ -70,7 +70,7 @@ export default defineComponent({
                 required: helpers.withMessage('กรุณากรอกอีเมล', required) //TEST
             },
             password: {
-                required: helpers.withMessage('กรุณากรอกรหัสผ่าน', required)
+                required: helpers.withMessage('กรุณากรอกรหัสผ่าน', required) //TEST1
             },
         }
     }
