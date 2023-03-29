@@ -8,6 +8,8 @@ export default interface Job {
     detail:string,
     interview:string,
     qualifications:string[],
-    contact:{name:string, email:string, phone:string}
+    contact:{name:string, email:string, phone:string},
+    creation_date:string
+    
 
 }
