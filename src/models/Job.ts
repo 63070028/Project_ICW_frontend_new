@@ -10,6 +10,4 @@ export default interface Job {
     qualifications:string[],
     contact:{name:string, email:string, phone:string},
     creation_date:string
-    
-
 }
