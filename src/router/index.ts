@@ -5,6 +5,8 @@ import ProgramPage from '@/views/Applicant/ProgramPage.vue';
 import ContactPage from '@/views/Applicant/ContactPage.vue';
 import ApplicantProfilePage from '@/views/Applicant/ApplicantProfilePage.vue';
 import JobPage from '@/views/Applicant/JobPage.vue';
+import CompanyProfileEdit from '@/views/Company/CompanyProfileEdit.vue';
+import CompanyEditProgramPage from '@/views/Company/CompanyEditProgramPage.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -24,16 +26,29 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "about" */ '@/views/SignIn.vue')
   },
   {
-    path: '/company',
-    component: () => import(/* webpackChunkName: "about" */ '@/views/CompanyProfile.vue')
+    path: '/companyProfile/:id',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Company/CompanyProfilePage.vue')
   },
   {
     path: '/companyJob',
-    component: () => import(/* webpackChunkName: "about" */ '@/views/CompanyJob.vue')
+    component: () => import(/* webpackChunkName: "about" */ '../views/Company/CompanyJobPage.vue')
   },
   {
     path: '/companyProgram',
-    component: () => import(/* webpackChunkName: "about" */ '@/views/CompanyProgram.vue')
+    component: () => import(/* webpackChunkName: "about" */'../views/Company/CompanyProgramPage.vue')
+  },
+  
+  { path: '/companyProfile/edit/:id',
+    component:CompanyProfileEdit
+  },
+  {
+    path: '/companyEditJob/:id',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Company/CompanyEditJob.vue')
+  },  
+  {
+    path: '/companyEditProgram/:id',
+    name: 'CompanyEditProgram',
+    component: CompanyEditProgramPage,
   },
   {
     path: '/programs/:id',
@@ -65,6 +80,7 @@ const routes: Array<RouteRecordRaw> = [
     name: 'Applicant',
     component: () => import(/* webpackChunkName: "about" */ '../views/Company/ApplicantDetail.vue')
   },
+ 
 ]
 
 const router = createRouter({
