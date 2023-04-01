@@ -98,7 +98,7 @@ export default {
         async submitForm() {
             const isFormCorrect = await this.v$.$validate()
             if (!isFormCorrect) return
-            let data = {
+            const data = {
                 companyName: this.companyName,
                 email: this.email,
                 password: this.password,

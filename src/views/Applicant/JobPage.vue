@@ -19,7 +19,7 @@
                     </div>
                 </div>
                 <div class="column" style="display: flex; flex-direction: column; justify-content:space-between;">
-                    <button class="button is-danger">รายงาน</button>
+                    <button class="button is-danger" @click="isReport = !isReport">รายงาน</button>
                     <button class="button is-success" @click="submitApplication()">ยืนสมัคร</button>
                 </div>
             </div>
@@ -46,6 +46,31 @@
             <p>เบอร์ติดต่อ: {{ job.contact.phone }}</p>
         </div>
     </div>
+
+
+
+
+    <div :class="['modal', isReport ? 'is-active' : '']">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">แจ้งความผิดปกติดไปให้ผู้ดูแลระบบ</p>
+                <button class="delete" aria-label="close" @click="isReport = !isReport"></button>
+            </header>
+            <section class="modal-card-body">
+                <div class="control">
+                    <textarea class="textarea" v-model="v$.messageReport.$model"></textarea>
+                    <div class="has-text-danger" v-for="error of v$.messageReport.$errors" :key="error.$uid">
+                        <div class="error-msg">{{ error.$message }}</div>
+                    </div>
+                </div>
+            </section>
+            <footer class="modal-card-foot">
+                <button class="button is-success" @click="submitReport()">Submit</button>
+                <button class="button" @click="isReport = !isReport">Cancel</button>
+            </footer>
+        </div>
+    </div>
 </template>
 
 
@@ -56,11 +81,14 @@ import { useRoute, useRouter, } from 'vue-router'
 import Job from '@/models/Job';
 import 'primeicons/primeicons.css';
 import Swal from 'sweetalert2';
+import { useVuelidate } from '@vuelidate/core'
+import { helpers, required } from '@vuelidate/validators'
 
 export default defineComponent({
     setup() {
         const router = useRouter();
         const route = useRoute();
+        const v$ = useVuelidate();
 
         const job = reactive<Job>({
             id: 0,
@@ -78,11 +106,17 @@ export default defineComponent({
 
         const isMyFavorite = ref<boolean>(false)
 
+        const isReport = ref<boolean>(false)
+        const messageReport = ref<string>('')
+
         const saveMyFavorite = () => {
             isMyFavorite.value = !isMyFavorite.value;
         };
 
         const submitApplication = () => {
+
+            //ส่งใบสมัคร
+
             Swal.fire({
                 title: 'Are you sure?',
                 text: "คุณแน่ใจแล้วใช่ไหมที่จะยืนใบสมัคร",
@@ -104,9 +138,34 @@ export default defineComponent({
             })
         };
 
+
+        const submitReport = async () => {
+            const isFormCorrect = await v$.value.$validate();
+            if (!isFormCorrect) return
+
+            //ส่ง report
+            const report = {
+                user_id: 0,
+                job_id: Number(route.params.id),
+                creation_date: new Date().toLocaleDateString('en-GB'),
+                message: messageReport.value
+            }
+
+            console.log(report)
+            
+            Swal.fire({
+                position: 'center',
+                icon: 'success',
+                title: 'ดำเนิดการสำเร็จ',
+                showConfirmButton: false,
+                timer: 1500
+            })
+            isReport.value = !isReport.value;
+        }
+
         onMounted(() => {
             //get api job
-            const get_job:Job = { id: 0, company_id: 1, name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "มาร่วมงานกับ THiNKNET หากคุณมีความหลงใหลในการใช้เทคโนโลยีเพื่อการพัฒนาหรือแก้ไขปัญหาต่าง ๆ และพร้อมที่จะเรียนรู้สิ่งใหม่ ๆ อยู่เสมอ เราคือองค์กรที่รวบรวมคนที่มีความรู้ความสามารถ มีสปิริต มีแพสชัน และมีความคิดสร้างสรรค์มาร่วมกันสร้างนวัตกรรมที่มีคุณค่าต่อสังคมและโลกใบนี้", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015" }
+            const get_job: Job = { id: 0, company_id: 1, name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "มาร่วมงานกับ THiNKNET หากคุณมีความหลงใหลในการใช้เทคโนโลยีเพื่อการพัฒนาหรือแก้ไขปัญหาต่าง ๆ และพร้อมที่จะเรียนรู้สิ่งใหม่ ๆ อยู่เสมอ เราคือองค์กรที่รวบรวมคนที่มีความรู้ความสามารถ มีสปิริต มีแพสชัน และมีความคิดสร้างสรรค์มาร่วมกันสร้างนวัตกรรมที่มีคุณค่าต่อสังคมและโลกใบนี้", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015" }
             Object.assign(job, get_job)
             //kong
         });
@@ -116,12 +175,23 @@ export default defineComponent({
         return {
             router,
             route,
+            v$,
             job,
             isMyFavorite,
+            isReport,
+            messageReport,
             saveMyFavorite,
-            submitApplication
+            submitApplication,
+            submitReport
         }
     },
+    validations() {
+        return {
+            messageReport: {
+                required: helpers.withMessage('กรุณากรอกข้อความ', required)
+            }
+        }
+    }
 })
 </script>
 

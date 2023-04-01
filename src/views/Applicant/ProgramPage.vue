@@ -49,12 +49,12 @@
                     <div class="select">
                         <select v-model="v$.selectedJob.$model">
                             <option value="">เลือกตำแหน่ง</option>
-                            <option v-for="job, index in program.job_title" :key="index" :value="job">{{job}}</option>
+                            <option v-for="job, index in program.job_title" :key="index" :value="job">{{ job }}</option>
                         </select>
                     </div>
                     <div class="has-text-danger" v-for="error of v$.selectedJob.$errors" :key="error.$uid">
-                    <div class="error-msg">{{ error.$message }}</div>
-            </div>
+                        <div class="error-msg">{{ error.$message }}</div>
+                    </div>
                 </div>
             </section>
             <footer class="modal-card-foot">
@@ -117,6 +117,9 @@ export default defineComponent({
             const isFormCorrect = await v$.value.$validate();
             if (!isFormCorrect) return
 
+            //ส่งใบสมัคร
+
+
             Swal.fire({
                 title: 'Are you sure?',
                 text: "คุณแน่ใจแล้วใช่ไหมที่จะยืนใบสมัคร",
@@ -148,9 +151,9 @@ export default defineComponent({
             submitApplication
         }
     },
-    validations(){
+    validations() {
         return {
-            selectedJob:{
+            selectedJob: {
                 required: helpers.withMessage('กรุณาเลือกตำแหน่ง', required)
             }
         }

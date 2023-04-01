@@ -52,6 +52,7 @@ export default defineComponent({
                 email: email.value,
                 password: password.value
             }
+            
             console.log(data)
             Swal.fire({
                 position: 'center',
