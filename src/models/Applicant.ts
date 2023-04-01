@@ -6,4 +6,5 @@ export default interface Applicant {
     birthDate:string,
     gender:string,
     phone:string,
+    type:string,
 }
