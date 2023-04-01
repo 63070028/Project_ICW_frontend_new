@@ -78,7 +78,7 @@ export default defineComponent({
 
             console.log('get api job by company_id: ' + route.params.id);
 
-            let get_jobs = [
+            let get_jobs:Job[] = [
                 { id: 0, company_id: 1, name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015" },
                 { id: 1, company_id: 1, name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015" },
                 { id: 2, company_id: 1, name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015" },
@@ -111,8 +111,7 @@ export default defineComponent({
 }
 
 .profile_image {
-    width: 150px;
-    height: 150px;
+    height: 190px;
     border: 2px solid gray;
     border-radius: 25px;
 }

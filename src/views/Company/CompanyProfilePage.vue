@@ -100,7 +100,7 @@ export default defineComponent({
     onMounted(() => {
       console.log('get api company id: ' + route.params.id);
       // set company
-      const get_company = {
+      const get_company:Company = {
         id: 1,
         name:
           'ไม่ทำงาน จำกัด หมาชน',

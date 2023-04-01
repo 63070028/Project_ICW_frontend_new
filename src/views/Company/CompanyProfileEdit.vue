@@ -83,7 +83,7 @@ export default defineComponent({
       vdo: '',
     });
     onMounted(() => {
-      const get_company = {
+      const get_company:Company = {
         id: 1,
         name:
           'ไม่ทำงาน จำกัด หมาชน',

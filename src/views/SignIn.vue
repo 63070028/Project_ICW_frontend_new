@@ -47,6 +47,7 @@ export default defineComponent({
         const submitSignIn = async () => {
             const isFormCorrect = await v$.value.$validate();
             if (!isFormCorrect) return
+            
             let data = {
                 email: email.value,
                 password: password.value
