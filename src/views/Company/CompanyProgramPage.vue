@@ -65,15 +65,16 @@ export default defineComponent({
     onMounted(() => {
       console.log('get api program by company_id: ' + route.params.id);
 
-      let get_programs = [
-        { id: 1, company_id: 1, name: "โครงการฝึกอบรม AI", duration: "3 เดือน", category: "เทคโนโลยีสารสนเทศ", location: "กรุงเทพมหานคร", description: "ค่าตอบแทน 500 ต่อวัน" },
-        { id: 2, company_id: 1, name: "โครงการพัฒนาแอพพลิเคชั่น", duration: "6 เดือน", category: "เทคโนโลยีสารสนเทศ", location: "กรุงเทพมหานคร", description: "ค่าตอบแทน 500 ต่อวัน" },
-        { id: 3, company_id: 1, name: "โครงการสัมมนา Data Science", duration: "1 สัปดาห์", category: "วิทยาศาสตร์ข้อมูล", location: "กรุงเทพมหานคร", description: "ค่าตอบแทน 500 ต่อวัน" },
-      ]
+      // let get_programs = [
+      //   { id: 1, company_id: 1, name: "โครงการฝึกอบรม AI", duration: "3 เดือน", category: "เทคโนโลยีสารสนเทศ", location: "กรุงเทพมหานคร", description: "ค่าตอบแทน 500 ต่อวัน" },
+      //   { id: 2, company_id: 1, name: "โครงการพัฒนาแอพพลิเคชั่น", duration: "6 เดือน", category: "เทคโนโลยีสารสนเทศ", location: "กรุงเทพมหานคร", description: "ค่าตอบแทน 500 ต่อวัน" },
+      //   { id: 3, company_id: 1, name: "โครงการสัมมนา Data Science", duration: "1 สัปดาห์", category: "วิทยาศาสตร์ข้อมูล", location: "กรุงเทพมหานคร", description: "ค่าตอบแทน 500 ต่อวัน" },
+      // ]
 
-      get_programs.forEach(program => {
-        programs.push(program)
-      });
+      // get_programs.forEach(program => {
+      //   programs.push(program)
+      // });
+
     });
 
     const viewProgram = (id: number) => {
