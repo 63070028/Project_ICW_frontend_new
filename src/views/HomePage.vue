@@ -19,14 +19,14 @@
       </div>
     </div>
 
-    <paginationItems :items="states.companies"></paginationItems>
+    <companyList :items="states.companies"></companyList>
 
 </template>
 
 
 <script lang="ts">
 import { defineComponent, reactive } from 'vue'
-import paginationItems from '../components/pagination-items.vue'
+import companyList from '../components/company-list.vue'
 import Company from '@/models/Company'
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
@@ -34,7 +34,7 @@ import { useRouter } from 'vue-router'
 
 export default defineComponent({
   components: {
-    paginationItems,
+    companyList,
     Carousel,
     Slide,
     Pagination,

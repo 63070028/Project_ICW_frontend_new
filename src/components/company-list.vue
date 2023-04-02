@@ -1,7 +1,7 @@
 <template>
     <div class="companys_content p-3">
         <div class="columns is-multiline">
-            <div class="column is-2 ml-6" v-for="item, index in states.addBlogsPageList" :key="index">
+            <div class="column is-2 ml-6" v-for="item, index in states.addItemsPageList" :key="index">
                 <!-- <button class="button" @click="deleteItem(index)">Del</button> -->
                 <div class="card" @click="viewConpany(item.id)">
                     <div class="card-content">
@@ -19,7 +19,6 @@
                 </div>
             </div>
         </div>
-
     </div>
 
 
@@ -62,21 +61,16 @@ export default defineComponent({
 
         let presentPage = ref<number>(1);
         let pastPage = ref<number>(1);
-        const states = reactive<{ countOfPages: number[], addBlogsPageList: Company[] }>(
+        const states = reactive<{ countOfPages: number[], addItemsPageList: Company[] }>(
             {
                 countOfPages: [],
-                addBlogsPageList: [],
+                addItemsPageList: [],
             }
         )
-        // let countOfPages = reactive<number[]>([]);
-        // let addBlogsPageList = reactive<Company[]>([]);
+        
         const nextPageClicked = ref<boolean>(false);
         const previousClicked = ref<boolean>(false);
 
-
-        // const deleteItem = (index: number) => {
-        //     emit('deleteItem', index);
-        // }
 
         onMounted(() => {
             loadMyPaginationList();
@@ -84,6 +78,7 @@ export default defineComponent({
         })
 
         onUpdated(() => {
+            loadMyPaginationList();
             document.getElementById('pageId' + presentPage.value)?.classList.add('is-current');
         })
 
@@ -117,7 +112,7 @@ export default defineComponent({
         const loadMyPaginationList = () => {
             let startBlog = (presentPage.value - 1) * props.itemPerEachPage;
             let endBlog = startBlog + props.itemPerEachPage;
-            states.addBlogsPageList = props.items.slice(startBlog, endBlog);
+            states.addItemsPageList = props.items.slice(startBlog, endBlog);
             validatePageCount();
         }
 
