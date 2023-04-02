@@ -18,6 +18,11 @@
                             <div class="company-edit-job">
                                 <div class="column is-8">
                                     <h1 class="title">แก้ไขงาน</h1>
+                                    <div class="field is-grouped">
+                                      <div class="control">
+                                          <button class="button is-link is-danger" @click="deleteForm">ลบงาน</button>
+                                      </div>
+                                    </div>
                                     <div class="field">
                                     <label class="label">ชื่องาน</label>
                                     <div class="control">
@@ -48,13 +53,17 @@
                                         <input class="input" type="number" v-model="job.capacity" />
                                     </div>
                                     </div>
+                                    
+
+                                    <div class="field">
+                                      
                                     <div class="field is-grouped">
-                                    <div class="control">
-                                        <button class="button is-link" @click="saveJob">บันทึก</button>
-                                    </div>
-                                    <div class="control">
-                                        <button class="button is-link is-light" @click="cancel">ยกเลิก</button>
-                                    </div>
+                                      <div class="control">
+                                          <button class="button is-link" @click="saveJob">บันทึก</button>
+                                      </div>
+                                      <div class="control">
+                                          <button class="button is-link is-light" @click="cancel">ยกเลิก</button>
+                                      </div>
                                     </div>
                                 </div>
                             </div>
@@ -64,11 +73,13 @@
             </div>
         </div>
       </div>
+    </div>
 </template>
   <script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Job from '@/models/Job';
+import Swal from 'sweetalert2';
 
 export default defineComponent({
   name: 'CompanyProfileEdit',
@@ -117,21 +128,61 @@ export default defineComponent({
     }
 });
 
-    const saveJob = () => {
-      console.log('Save updated job data:', job);
-      router.push('/companyJob');
-    };
+    const saveJob = async () => {
+      const result = await Swal.fire({
+        title: 'ยืนยันการบันทึก?',
+        text: 'คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: 'ยกเลิก',
+      });
 
-    const cancel = () => {
-      router.push('/companyJob');
+      if (result.isConfirmed) {
+        console.log('Save updated job data:', job);
+        router.push('/companyJob');
+      }
+    };
+    const deleteForm = async () => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'คุณจะไม่สามารถกู้ข้อมูลงานนี้ได้',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, keep it',
+    });
+
+    if (result.isConfirmed) {
+      Swal.fire('Deleted!', 'ลบงานเรียบร้อยแล้ว.', 'success');
+      // ...perform the delete action
+    } else {
+      Swal.fire('Cancelled', 'ยกเลิกแล้ว :)', 'error');
+    }
+  };
+    const cancel = async () => {
+      const result = await Swal.fire({
+        title: 'ยืนยันการยกเลิก?',
+        text: 'คุณต้องการยกเลิกการแก้ไขหรือไม่?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: 'ยกเลิก',
+      });
+
+      if (result.isConfirmed) {
+        router.push('/companyJob');
+      }
     };
 
     return {
       job,
       saveJob,
       cancel,
+      deleteForm,
       router,
       activeTab: 'jobs',
+      
     };
   },
 

@@ -19,24 +19,33 @@
               <div v-show="activeTab === 'programs'" style="background-color: #f6f6f6;">
                 <h1 class="title">โครงการพิเศษ</h1>
 
-                <div class="program-card" v-for="program, index in programs" :key="index">
-                  <div class="columns">
-                    <div class="column is-11" @click="viewProgram(program.id)">
-                      <p class="is-size-4 has-text-weight-bold">{{ index + 1 }}. {{ program.name }}</p>
-                      <div class="columns is-multiline ml-6 mt-1">
-                        <p class="column is-6">ระยะเวลาโครงการ: {{ program.duration }}</p>
-                        <p class="column is-6">หมวดหมู่: {{ program.category }}</p>
-                        <p class="column is-6">สถานที่: {{ program.location }}</p>
-                        <p class="column is-6">ค่าตอบแทน: {{ program.description }}</p>
-                      </div>
+                <router-link to="/companyAddProgram">
+                  <button class="button is-success mb-4">เพิ่มโครงการพิเศษ</button>
+                </router-link>
+              <div class="program-card" v-for="program, index in programs" :key="index">
+                <div class="columns">
+                  <div class="column is-2">
+                    <!-- แสดงรูปภาพโครงการ -->
+                    <img :src="program.image" alt="Program Image" />
                   </div>
-                  <div class="column is-1">
-                  <router-link :to="'/companyEditProgram/' + program.id">
-                        <button class="button is-small is-info">แก้ไขโครงการ</button>
-                      </router-link>
+                  <div class="column is-11" @click="viewProgram(program.id)">
+                    <p class="is-size-4 has-text-weight-bold">{{ index + 1 + "." }} {{ program.name }}</p>
+                    <div class="columns is-multiline ml-6 mt-1">
+                      <p class="column is-6">คำอธิบาย: {{ program.description }}</p>
+                      <p class="column is-6">คอร์สเรียน: {{ program.course }}</p>
+                      <p class="column is-6">ตำแหน่งงาน: {{ program.job_title.join(', ') }}</p>
+                      <p class="column is-6">คุณสมบัติ: {{ program.qualifications.join(', ') }}</p>
+                      <p class="column is-6">สิทธิประโยชน์: {{ program.privileges.join(', ') }}</p>
                     </div>
+                    <div class="column is-2">
+                    <router-link :to="'/companyEditProgram/' + program.id">
+                      <button class="button is-small is-info">แก้ไขโครงการ</button>
+                    </router-link>
                   </div>
+                  </div>
+                  
                 </div>
+              </div>
               </div>
             </div>
           </div>
@@ -64,21 +73,27 @@ export default defineComponent({
 
     onMounted(() => {
       console.log('get api program by company_id: ' + route.params.id);
-
-      // let get_programs = [
-      //   { id: 1, company_id: 1, name: "โครงการฝึกอบรม AI", duration: "3 เดือน", category: "เทคโนโลยีสารสนเทศ", location: "กรุงเทพมหานคร", description: "ค่าตอบแทน 500 ต่อวัน" },
-      //   { id: 2, company_id: 1, name: "โครงการพัฒนาแอพพลิเคชั่น", duration: "6 เดือน", category: "เทคโนโลยีสารสนเทศ", location: "กรุงเทพมหานคร", description: "ค่าตอบแทน 500 ต่อวัน" },
-      //   { id: 3, company_id: 1, name: "โครงการสัมมนา Data Science", duration: "1 สัปดาห์", category: "วิทยาศาสตร์ข้อมูล", location: "กรุงเทพมหานคร", description: "ค่าตอบแทน 500 ต่อวัน" },
-      // ]
-
-      // get_programs.forEach(program => {
-      //   programs.push(program)
-      // });
-
+      let get_programs: Program[] = [
+        {
+          id: 0,
+          company_id: 1,
+          name: "โครงการพิเศษ 1",
+          description: "คำอธิบายโครงการพิเศษ 1",
+          course: "คอร์สเรียน 1",
+          job_title: ["ตำแหน่งงาน 1", "ตำแหน่งงาน 2"],
+          qualifications: ["คุณสมบัติ 1", "คุณสมบัติ 2"],
+          privileges: ["สิทธิประโยชน์ 1", "สิทธิประโยชน์ 2"],
+          image: "https://www.w3schools.com/w3images/workbench.jpg", // เพิ่ม URL ของรูปภาพโครงการ
+        },
+        // โครงการพิเศษอื่น ๆ
+    ];
+    get_programs.forEach(program => {
+        programs.push(program);
     });
-
+    });
+    
     const viewProgram = (id: number) => {
-      router.push("/programs/" + id)
+      router.push("/companyEditProgram/" + id)
     }
 
     return {

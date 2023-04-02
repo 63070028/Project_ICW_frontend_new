@@ -1,6 +1,7 @@
 export default interface Program {
     id: number,
     company_id:number,
+    image: string,
     name: string,
     description: string, // เพิ่มคุณสมบัติ description
     course: string,

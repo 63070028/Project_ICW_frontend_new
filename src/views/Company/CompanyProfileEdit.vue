@@ -32,17 +32,30 @@
                   <div class="field">
                     <label class="label">รูปโปรไฟล์</label>
                     <div class="control">
-                      <input class="input" type="text" v-model="company.profile_image" />
+                      <input type="file" ref="profileImageInput" @change="previewProfileImage" />
+                      <img v-if="profileImagePreview" :src="profileImagePreview" class="image-preview" />
                     </div>
                   </div>
                   <div class="field">
                     <label class="label">รูปภาพพื้นหลัง</label>
                     <div class="control">
-                      <input class="input" type="text" v-model="company.background_image" />
+                      <input type="file" ref="backgroundImageInput" @change="previewBackgroundImage" />
+                      <img v-if="backgroundImagePreview" :src="backgroundImagePreview" class="image-preview" />
                     </div>
                   </div>
                   <div class="field">
                     <label class="label">วิดีโอ</label>
+                    <div class="columns">
+                        <div class="column">
+                          <img src="https://sv1.picz.in.th/images/2023/04/02/m1nC4y.png" alt="m1nC4y.png" border="0" />
+                        </div>
+                        <div class="column">
+                          <img src="https://sv1.picz.in.th/images/2023/04/02/m1nvp8.png" alt="m1nvp8.png" border="0" />
+                        </div>
+                        <div class="column">
+                          <img src="https://sv1.picz.in.th/images/2023/04/02/m1nJNR.png" alt="m1nJNR.png" border="0" />
+                        </div>
+                      </div>
                     <div class="control">
                       <input class="input" type="text" v-model="company.vdo" />
                     </div>
@@ -65,9 +78,11 @@
   </div>     
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, reactive } from 'vue';
+import { defineComponent, onMounted, reactive, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Company from '@/models/Company';
+import Swal from 'sweetalert2';
+
 export default defineComponent({
   name: 'CompanyProfileEdit',
 
@@ -82,6 +97,10 @@ export default defineComponent({
       background_image: '',
       vdo: '',
     });
+    const profileImageInput = ref(null);
+    const backgroundImageInput = ref(null);
+    const profileImagePreview = ref('https://cdn.discordapp.com/attachments/905751963017285634/1089481386349580359/profile-icon-design-free-vector.png');
+    const backgroundImagePreview = ref('https://www.w3schools.com/w3images/workbench.jpg');
     onMounted(() => {
       const get_company:Company = {
         id: 1,
@@ -99,13 +118,47 @@ export default defineComponent({
       Object.assign(company, get_company);
     });
 
-    const saveProfile = () => {
+    const saveProfile = async () => {
+      const result = await Swal.fire({
+        title: 'ยืนยันการบันทึก?',
+        text: 'คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: 'ยกเลิก',
+      });
 
-      router.push(`/companyProfile/${company.id}`);
+      if (result.isConfirmed) {
+        console.log('Save updated job data:', company);
+        router.push(`/companyProfile/${company.id}`);
+      }
+    };
+    const cancelEdit = async () => {
+      const result = await Swal.fire({
+        title: 'ยืนยันการยกเลิก?',
+        text: 'คุณต้องการยกเลิกการแก้ไขหรือไม่?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'ยืนยัน',
+        cancelButtonText: 'ยกเลิก',
+      });
+
+      if (result.isConfirmed) {
+        router.push(`/companyProfile/${company.id}`);
+      }
+    };
+    const previewProfileImage = (event: Event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        profileImagePreview.value = URL.createObjectURL(file);
+      }
     };
 
-    const cancelEdit = () => {
-      router.push(`/companyProfile/${company.id}`);
+    const previewBackgroundImage = (event: Event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        backgroundImagePreview.value = URL.createObjectURL(file);
+      }
     };
     return {
       company,
@@ -113,6 +166,12 @@ export default defineComponent({
       saveProfile,
       cancelEdit,
       activeTab: 'info',
+      profileImageInput,
+      backgroundImageInput,
+      profileImagePreview,
+      backgroundImagePreview,
+      previewProfileImage,
+      previewBackgroundImage
     };
   },
   methods: {
@@ -122,6 +181,7 @@ export default defineComponent({
   },
 });
 </script>
+
 
 <style scoped>
 .background_image {
@@ -144,5 +204,9 @@ export default defineComponent({
 .job_content:hover {
   background-color: hsl(0, 0%, 96%);
 }
-</style>
 
+.image-preview {
+  width: 150px;
+  margin-top: 1rem;
+}
+</style>

@@ -17,7 +17,9 @@
             <div class="content" >
                 <div v-show="activeTab === 'jobs'" style="background-color: #f6f6f6;">
                     <h1 class="title">งานที่ประกาศ</h1>
-                    
+                    <router-link to="/companyAddJob">
+                      <button class="button is-success mb-4">เพิ่มประกาศงาน</button>
+                    </router-link>
                     <div class="job-card" v-for="job, index in jobs" :key="index">
                     <div class="columns">
                       <div class="column is-11" @click="viewJob(job.id)">

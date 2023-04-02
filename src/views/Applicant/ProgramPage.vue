@@ -86,7 +86,8 @@ export default defineComponent({
             course: 'None',
             job_title: [],
             qualifications: [],
-            privileges: []
+            privileges: [],
+            image:''
         })
         const router = useRouter();
         const route = useRoute();
@@ -106,7 +107,8 @@ export default defineComponent({
                 course: 'Test',
                 job_title: ['SE', 'NW', "ML"],
                 qualifications: ['4.00'],
-                privileges: ['500 บาทต่อวัน']
+                privileges: ['500 บาทต่อวัน'],
+                image:""
             }
 
             Object.assign(program, get_program)

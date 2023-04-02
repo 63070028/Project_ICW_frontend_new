@@ -21,32 +21,37 @@
               <div v-show="activeTab === 'programs'" style="background-color: #f6f6f6;">
                 <h1 class="title">แก้ไขโครงการพิเศษ</h1>
 
+                <div class="field is-grouped">
+                <div class="control">
+                    <button class="button is-link is-danger" @click="deleteForm">ลบโครงการ</button>
+                </div>
+              </div>
+                <div class="field">
+                  <label class="label">อัพโหลดรูปภาพ</label>
+                  <div class="control">
+                    <input class="input" type="file" @change="onFileChange" />
+                  </div>
+                </div>
+
                 <div class="field">
                   <label class="label">ชื่อโครงการ</label>
                   <div class="control">
                     <input class="input" type="text" placeholder="ชื่อโครงการ" v-model="program.name" />
                   </div>
-                </div>
+               </div>
 
                 <div class="field">
-                  <label class="label">ระยะเวลา</label>
+                  <label class="label">คอร์สเรียน</label>
                   <div class="control">
-                    <input class="input" type="text" placeholder="ระยะเวลา" v-model="program.duration" />
+                    <input class="input" type="text" placeholder="คอร์สเรียน" v-model="program.course" />
                   </div>
                 </div>
 
                 <div class="field">
-                  <label class="label">หมวดหมู่</label>
-                  <div class="control">
-                    <input class="input" type="text" placeholder="หมวดหมู่" v-model="program.category" />
-                  </div>
-                </div>
-
-                <div class="field">
-                  <label class="label">สถานที่จัดโครงการ</label>
+                  <label class="label">ตำแหน่งงาน</label>
                   <div>
                     <div class="control">
-                      <input class="input" type="text" placeholder="สถานที่จัดโครงการ" v-model="program.location" />
+                      <input class="input" type="text" placeholder="ตำแหน่งงาน" v-model="program.job_title" />
                     </div>
                   </div>
 
@@ -59,11 +64,29 @@
                   </div>
 
                   <div class="field">
+                    <label class="label">คุณสมบัติ</label>
                     <div class="control">
-                      <button class="button is-primary" @click="updateProgram">
-                        บันทึกการแก้ไข
-                      </button>
+                      <textarea class="textarea" placeholder="คุณสมบัติ"
+                        v-model="program.qualifications"></textarea>
                     </div>
+                  </div>
+
+                  <div class="field">
+                    <label class="label">สิทธิประโยชน์</label>
+                    <div class="control">
+                      <textarea class="textarea" placeholder="สิทธิประโยชน์"
+                        v-model="program.privileges"></textarea>
+                    </div>
+                  </div>
+                  
+                  <div class="field is-grouped">
+                    <div class="control">
+                        <button class="button is-link" @click="submitForm">บันทึก</button>
+                    </div>
+                    <div class="control">
+                        <button class="button is-link is-light" @click="cancelForm">ยกเลิก</button>
+                    </div>
+                    
                   </div>
                 </div>
               </div>
@@ -80,6 +103,7 @@ import 'bulma/css/bulma.css';
 import { defineComponent, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Program from '@/models/Program';
+import Swal from 'sweetalert2';
 
 export default defineComponent({
   name: 'CompanyEditProgramPage',
@@ -96,7 +120,8 @@ export default defineComponent({
       course: 'None',
       job_title: [],
       qualifications: [],
-      privileges: []
+      privileges: [],
+      image:'https://images.unsplash.com/photo-1535551951406-a19828b0a76b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1166&q=80'
     });
 
     onMounted(() => {
@@ -110,23 +135,83 @@ export default defineComponent({
       //   location: 'กรุงเทพมหานคร',
       //   description: 'รายละเอียดของโครงการพิเศษ 1',
       // };
-
       // Object.assign(program, get_program);
 
     });
+    const onFileChange = (event: Event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        const reader = new FileReader();
+        reader.onload = () => {
+          program.image = reader.result as string;
+        };
+        reader.readAsDataURL(file);
+      }
+    };
+    const submitForm = async () => {
+      // ตรวจสอบความถูกต้องของข้อมูลก่อนส่ง
+      if (!program.image || !program.name || !program.description || !program.course) {
+        Swal.fire('กรุณากรอกข้อมูลให้ครบถ้วน', 'ข้อมูลไม่สมบูรณ์ กรุณากรอกข้อมูลให้ครบถ้วน', 'warning');
+        return;
+      }
 
+      // ส่งข้อมูลไปยัง API เพื่อบันทึก
+      try {
+        // await saveProgram(program);
+        Swal.fire('บันทึกเรียบร้อย!', 'โครงการพิเศษถูกแก้ไขแล้ว', 'success');
+    router.push('/companyProgram');
+  } catch (error) {
+    Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถแก้ไขโครงการพิเศษได้', 'error');
+  }
+};
+    const deleteForm = async () => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'คุณจะไม่สามารถกู้ข้อมูลโครงการนี้ได้',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, keep it',
+    });
+
+    if (result.isConfirmed) {
+      Swal.fire('Deleted!', 'ลบโครงการเรียบร้อยแล้ว.', 'success');
+      // ...perform the delete action
+    } else {
+      Swal.fire('Cancelled', 'ยกเลิกแล้ว :)', 'error');
+    }
+  };
+  
     const updateProgram = () => {
       console.log('update api program id: ' + route.params.id);
       console.log('updated program:', program);
       router.push('/companyProgram');
     };
 
+    const cancelForm = () => {
+    Swal.fire({
+      title: 'ยืนยันการยกเลิก?',
+      text: 'คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการแก้ไขโครงการพิเศษนี้?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'ยืนยัน',
+      cancelButtonText: 'ยกเลิก',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        router.push('/companyProgram');
+      }
+    });
+  };
     return {
       router,
       route,
       program,
       updateProgram,
       activeTab: 'programs',
+      submitForm,
+      cancelForm,
+      deleteForm,
+      onFileChange
     };
   },
 
@@ -135,6 +220,8 @@ export default defineComponent({
       this.activeTab = tab;
     },
   },
+  
+
 });
 </script>
 <style scoped>
