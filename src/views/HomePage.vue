@@ -3,7 +3,7 @@
     <div class="columns ml-6 mt-5 pl-3 pr-3">
 
       <div class="column has-background-dark is-2 mr-6 has-text-white box" @click="viewContact()" style="cursor: pointer;">
-        <p class="is-size-1 has-text-centered">Contact</p>
+        <p class="is-size-1 has-text-centered">Professor Contact</p>
       </div>
 
       <div class="column is-10 ml-3 mr-3 ">
