@@ -5,12 +5,9 @@
           <aside class="menu">
             <p class="menu-label">Navigation</p>
             <ul class="menu-list">
-              <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')"
-                  to="/companyProfile/1">ข้อมูลบริษัท</router-link></li>
-              <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')"
-                  to="/companyJob">งานที่ประกาศ</router-link></li>
-              <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')"
-                  to="/companyProgram">โครงการพิเศษ</router-link></li>
+              <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')" to="/companyProfile">ข้อมูลบริษัท</router-link></li>
+              <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')" to="/companyJob">งานที่ประกาศ</router-link></li>
+              <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')" to="/companyProgram">โครงการพิเศษ</router-link></li>
             </ul>
           </aside>
         </div>
@@ -24,7 +21,6 @@
                         <label class="label">อัพโหลดรูปภาพโครงการ</label>
                         <input type="file" accept="image/*" @change="onFileChange" />
                     </div>
-
                     <!-- ฟอร์มข้อมูลโครงการพิเศษ -->
                         <div class="field">
                         <label class="label">ชื่อโครงการ</label>
@@ -93,7 +89,6 @@ import Program from '@/models/Program';
 export default defineComponent({
   setup() {
     const router = useRouter();
-
     const program = reactive<Program>({
       id: 0,
       company_id: 0,
@@ -116,14 +111,12 @@ export default defineComponent({
         reader.readAsDataURL(file);
       }
     };
-
     const submitForm = async () => {
       // ตรวจสอบความถูกต้องของข้อมูลก่อนส่ง
       if (!program.image || !program.name || !program.description || !program.course) {
         Swal.fire('กรุณากรอกข้อมูลให้ครบถ้วน', 'ข้อมูลไม่สมบูรณ์ กรุณากรอกข้อมูลให้ครบถ้วน', 'warning');
         return;
       }
-
       // ส่งข้อมูลไปยัง API เพื่อบันทึก
       try {
         // await saveProgram(program);
@@ -135,19 +128,9 @@ export default defineComponent({
 };
 
 const cancelForm = () => {
-  Swal.fire({
-    title: 'ยืนยันการยกเลิก?',
-    text: 'คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการเพิ่มโครงการพิเศษนี้?',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonText: 'ยืนยัน',
-    cancelButtonText: 'ยกเลิก',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      router.push('/companyProgram');
-    }
-  });
+  router.push('/companyProgram');
 };
+
 
 return {
   program,
