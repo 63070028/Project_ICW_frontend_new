@@ -5,12 +5,12 @@ import ProgramPage from '@/views/Applicant/ProgramPage.vue';
 import ContactPage from '@/views/Applicant/ContactPage.vue';
 import ApplicantProfilePage from '@/views/Applicant/ApplicantProfilePage.vue';
 import JobPage from '@/views/Applicant/JobPage.vue';
-import CompanyProfileEdit from '@/views/Company/CompanyProfileEdit.vue';
-import CompanyEditProgramPage from '@/views/Company/CompanyEditProgramPage.vue';
+import CompanyProfileEdit from '@/views/Company/CompanyEditPage/CompanyProfileEdit.vue';
+import CompanyEditProgramPage from '@/views/Company/CompanyEditPage/CompanyEditProgramPage.vue';
 import Applicant from '@/views/Company/ApplicantDetail.vue';
 import MyJobsPage from '@/views/Applicant/MyJobsPage.vue';
-import CompanyAddProgram from '@/views/Company/companyAddProgram.vue';
-import CompanyAddJob from '@/views/Company/CompanyAddJob.vue';
+import CompanyAddProgram from '@/views/Company/CompanyEditPage/CompanyAddProgram.vue';
+import CompanyAddJob from '@/views/Company/CompanyEditPage/CompanyAddJob.vue';
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -30,7 +30,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "about" */ '@/views/SignIn.vue')
   },
   {
-    path: '/companyProfile/:id',
+    path: '/companyProfile',
     component: () => import(/* webpackChunkName: "about" */ '../views/Company/CompanyProfilePage.vue')
   },
   {
@@ -39,7 +39,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/companyProgram',
-    component: () => import(/* webpackChunkName: "about" */'../views/Company/CompanyProgramPage.vue')
+    component: () => import('../views/Company/CompanyProgramPage.vue')
   },
   
   { path: '/companyProfile/edit/:id',
@@ -47,7 +47,7 @@ const routes: Array<RouteRecordRaw> = [
   },
   {
     path: '/companyEditJob/:id',
-    component: () => import(/* webpackChunkName: "about" */ '../views/Company/CompanyEditJob.vue')
+    component: () => import('../views/Company/CompanyEditPage/CompanyEditJob.vue')
   },  
   {
     path: '/companyEditProgram/:id',

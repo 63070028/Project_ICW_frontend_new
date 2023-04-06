@@ -5,7 +5,7 @@
         <aside class="menu">
           <p class="menu-label">Navigation</p>
           <ul class="menu-list">
-            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')" to="/companyProfile/1">ข้อมูลบริษัท</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')" to="/companyProfile">ข้อมูลบริษัท</router-link></li>
             <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')" to="/companyJob">งานที่ประกาศ</router-link></li>
             <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')" to="/companyProgram" >โครงการพิเศษ</router-link ></li>
           </ul>
@@ -15,51 +15,20 @@
         <div class="card" style="min-height: 100vh;">
           <div class="card-content">
             <div class="content">
-              <div
-                v-show="activeTab === 'info'"
-                style="background-color: #fafafa;"
-              >
+              <div v-show="activeTab === 'info'" style="background-color: #fafafa;">
                 <div class="card-content">
                   <div class="container mt-4">
-                    <img
-                      :src="company.background_image"
-                      class="background_image"
-                    />
-                    <div
-                      class="columns is-gapless ml-6 mb-6"
-                      style="position: relative; top: -80px;"
-                    >
-                      <img
-                        :src="company.profile_image"
-                        class="column is-2 profile_image"
-                      />
-                      <div
-                        class="column ml-4"
-                        style="position: relative; top: 100px;"
-                      >
-                        <p class="is-size-4 has-text-weight-bold">
-                          {{ company.name }}
-                        </p>
+                    <img :src="company.background_image" class="background_image"/>
+                    <div class="columns is-gapless ml-6 mb-6" style="position: relative; top: -80px;">
+                      <img :src="company.profile_image" class="column is-2 profile_image" />
+                      <div class="column ml-4" style="position: relative; top: 100px;" >
+                        <p class="is-size-4 has-text-weight-bold">{{ company.name }}</p>
                         <!-- Add the edit button here -->
-                        <button
-                          class="button is-primary is-small"
-                          @click="editProfile"
-                        >
-                          แก้ไข
-                        </button>
+                        <button class="button is-primary is-small" @click="editProfile">แก้ไข</button>
                       </div>
                     </div>
-                    <p
-                      class="is-size-5"
-                      style="position: relative; top: -40px;"
-                    >
-                      {{ company.description }}
-                    </p>
-                    <div
-                      v-if="company.vdo != ''"
-                      class="vdo mt-4 mb-6"
-                      v-html="company.vdo"
-                    ></div>
+                    <p class="is-size-5" style="position: relative; top: -40px;">{{ company.description }}</p>
+                    <div v-if="company.vdo != ''" class="vdo mt-4 mb-6" v-html="company.vdo"></div>
                   </div>
                 </div>
               </div>
@@ -70,13 +39,10 @@
     </div>
   </div>
 </template>
-
-
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Company from '@/models/Company';
-
 export default defineComponent({
   name: 'App',
   data() {
@@ -88,7 +54,6 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
-    // def
     const company = reactive<Company>({
       id: Number(route.params.id),
       name: 'None',
@@ -142,25 +107,21 @@ export default defineComponent({
   },
 });
 </script>
-
 <style scoped>
 .background_image {
   width: 100%;
   height: 300px;
 }
-
 .profile_image {
   width: 150px;
   height: 150px;
   border: 2px solid gray;
   border-radius: 25px;
 }
-
 .vdo {
   display: flex;
   flex-direction: column;
 }
-
 .job_content:hover {
   background-color: hsl(0, 0%, 96%);
 }

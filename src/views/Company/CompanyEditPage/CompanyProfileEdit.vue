@@ -5,7 +5,7 @@
         <aside class="menu">
           <p class="menu-label">Navigation</p>
           <ul class="menu-list">
-            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')" to="/companyProfile/1">ข้อมูลบริษัท</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')" to="/companyProfile">ข้อมูลบริษัท</router-link></li>
             <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')" to="/companyJob">งานที่ประกาศ</router-link></li>
             <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')" to="/companyProgram" >โครงการพิเศษ</router-link ></li>
           </ul>
@@ -32,7 +32,7 @@
                   <div class="field">
                     <label class="label">รูปโปรไฟล์</label>
                     <div class="control">
-                      <input type="file" ref="profileImageInput" @change="previewProfileImage" />
+                      <input type="file" ref="profileImageInput" @change="previewProfileImage" /><br>
                       <img v-if="profileImagePreview" :src="profileImagePreview" class="image-preview" />
                     </div>
                   </div>
@@ -40,7 +40,7 @@
                     <label class="label">รูปภาพพื้นหลัง</label>
                     <div class="control">
                       <input type="file" ref="backgroundImageInput" @change="previewBackgroundImage" />
-                      <img v-if="backgroundImagePreview" :src="backgroundImagePreview" class="image-preview" />
+                      <img v-if="backgroundImagePreview" :src="backgroundImagePreview" class="background_image" />
                     </div>
                   </div>
                   <div class="field">
@@ -130,22 +130,12 @@ export default defineComponent({
 
       if (result.isConfirmed) {
         console.log('Save updated job data:', company);
-        router.push(`/companyProfile/${company.id}`);
+        router.push(`/companyProfile`);
       }
     };
     const cancelEdit = async () => {
-      const result = await Swal.fire({
-        title: 'ยืนยันการยกเลิก?',
-        text: 'คุณต้องการยกเลิกการแก้ไขหรือไม่?',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'ยืนยัน',
-        cancelButtonText: 'ยกเลิก',
-      });
+      router.push(`/companyProfile`);
 
-      if (result.isConfirmed) {
-        router.push(`/companyProfile/${company.id}`);
-      }
     };
     const previewProfileImage = (event: Event) => {
       const file = (event.target as HTMLInputElement).files?.[0];

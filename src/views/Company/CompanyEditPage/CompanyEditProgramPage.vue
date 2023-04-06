@@ -5,13 +5,9 @@
         <aside class="menu">
           <p class="menu-label">Navigation</p>
           <ul class="menu-list">
-            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')"
-                to="/companyProfile/1">ข้อมูลบริษัท</router-link></li>
-            <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')"
-                to="/companyJob">งานที่ประกาศ</router-link></li>
-            <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')"
-                to="/companyProgram">โครงการพิเศษ</router-link></li>
-          </ul>
+            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')" to="/companyProfile">ข้อมูลบริษัท</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')" to="/companyJob">งานที่ประกาศ</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')" to="/companyProgram">โครงการพิเศษ</router-link></li></ul>
         </aside>
       </div>
       <div class="column is-9" style="background-color: #f1f1f1;">
@@ -188,19 +184,8 @@ export default defineComponent({
       router.push('/companyProgram');
     };
 
-    const cancelForm = () => {
-    Swal.fire({
-      title: 'ยืนยันการยกเลิก?',
-      text: 'คุณแน่ใจหรือไม่ว่าต้องการยกเลิกการแก้ไขโครงการพิเศษนี้?',
-      icon: 'warning',
-      showCancelButton: true,
-      confirmButtonText: 'ยืนยัน',
-      cancelButtonText: 'ยกเลิก',
-    }).then((result) => {
-      if (result.isConfirmed) {
-        router.push('/companyProgram');
-      }
-    });
+  const cancelForm = () => {
+    router.push('/companyProgram');
   };
     return {
       router,

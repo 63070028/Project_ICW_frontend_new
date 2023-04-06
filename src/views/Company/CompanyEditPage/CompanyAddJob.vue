@@ -5,30 +5,9 @@
         <aside class="menu">
           <p class="menu-label">Navigation</p>
           <ul class="menu-list">
-            <li>
-              <router-link
-                :class="{ 'is-active': activeTab === 'info' }"
-                @click="setActiveTab('info')"
-                to="/companyProfile/1"
-                >ข้อมูลบริษัท</router-link
-              >
-            </li>
-            <li>
-              <router-link
-                :class="{ 'is-active': activeTab === 'jobs' }"
-                @click="setActiveTab('jobs')"
-                to="/companyJob"
-                >งานที่ประกาศ</router-link
-              >
-            </li>
-            <li>
-              <router-link
-                :class="{ 'is-active': activeTab === 'programs' }"
-                @click="setActiveTab('programs')"
-                to="/companyProgram"
-                >โครงการพิเศษ</router-link
-              >
-            </li>
+            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')" to="/companyProfile">ข้อมูลบริษัท</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')" to="/companyJob">งานที่ประกาศ</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')" to="/companyProgram">โครงการพิเศษ</router-link></li>
           </ul>
         </aside>
       </div>
@@ -38,8 +17,7 @@
             <div class="content">
               <div
                 v-show="activeTab === 'jobs'"
-                style="background-color: #f6f6f6"
-              >
+                style="background-color: #f6f6f6">
                 <h1 class="title">เพิ่มประกาศงาน</h1>
                 <div class="field">
                   <label class="label">ชื่องาน</label>
