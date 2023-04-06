@@ -18,26 +18,50 @@
                 <i
                   class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"
                 ></i
-                >{{ applicant.fullName }}
+                >ชื่อ: {{ applicant.fullName }}
               </p>
               <p>
                 <i
                   class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"
                 ></i
-                >{{ applicant.email }}
+                >อีเมล: {{ applicant.email }}
               </p>
               <p>
                 <i
                   class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"
                 ></i
-                >{{ applicant.position }}
+                >ตำแหน่งที่สมัคร: {{ applicant.position }}
               </p>
               <p>
                 <i
                   class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"
                 ></i
-                >{{ applicant.fullName }}
+                >วันเกิด: {{ applicant.birthDate }}
               </p>
+              <p>
+                <i
+                  class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"
+                ></i
+                >เพศ: {{ applicant.gender }}
+              </p>
+              <p>
+                <i
+                  class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"
+                ></i
+                >เบอร์ติดต่อ: {{ applicant.phone }}
+              </p>
+              <div>
+                <button @click="acceptApplicant()" class="button mb-3 mt-3 is-success w3-margin-right">
+                  Accept
+                </button>
+                
+                <button
+                  @click="declineApplicant()"
+                  class="button mb-3 mt-3 is-danger w3-margin-right"
+                >
+                  Decline
+                </button>
+              </div>
               <hr />
             </div>
           </div>
@@ -100,6 +124,21 @@
       </div>
     </div>
   </div>
+
+  <div :class="['modal', confirmDelete ? 'is-active' : '']">
+        <div class="modal-background"></div>
+        <div class="modal-card">
+            <header class="modal-card-head">
+                <p class="modal-card-title">ต้องการปฏิเสธผู้สมัครรายนี้</p>
+                <button class="delete" aria-label="close" @click="confirmDelete = !confirmDelete"></button>
+            </header>
+            <footer class="modal-card-foot">
+                <button class="button is-success" @click="submitReport()">Submit</button>
+                <button class="button" @click="confirmDelete = !confirmDelete">Cancel</button>
+            </footer>
+        </div>
+    </div>
+
 </template>
 
 <script lang="ts">
@@ -107,7 +146,10 @@ import { defineComponent, ref, reactive, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import uploadPdfVue from "@/components/upload-pdf.vue";
 import Applicant from "@/models/Applicant";
-
+import "primeicons/primeicons.css";
+import Swal from "sweetalert2";
+import { useVuelidate } from "@vuelidate/core";
+import { helpers, required } from "@vuelidate/validators";
 export default defineComponent({
   components: {
     uploadPdfVue,
@@ -115,7 +157,9 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
+    const v$ = useVuelidate();
 
+    const confirmDelete = ref<boolean>(false);
     const applicant = reactive<Applicant>({
       id: Number(route.params.id),
       fullName: "None",
@@ -127,6 +171,51 @@ export default defineComponent({
       type: "None",
     });
 
+    const declineApplicant = () => {
+            //ปฏิ
+            Swal.fire({
+                title: 'ปฏิเสธผู้สมัครหมายเลข ' + route.params.id,
+                text: "คุณแน่ใจแล้วใช่ไหมที่จะปฏิเสธผู้สมัครรายนี้",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'hsl(141, 50%, 48%)',
+                cancelButtonColor: 'hsl(348, 100%, 61%)',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'ทำการลบผู้สมัครเรียบร้อย',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    router.push("/ListApplicant")
+                }
+            })
+        };
+    const acceptApplicant = () => {
+            //ปฏิ
+            Swal.fire({
+                title: 'รับผู้สมัครหมายเลข ' + route.params.id,
+                text: "",
+                icon: 'info',
+                showCancelButton: true,
+                confirmButtonColor: 'hsl(141, 50%, 48%)',
+                cancelButtonColor: 'hsl(348, 100%, 61%)',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'ทำการรับผู้สมัครเรียบร้อย',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            })
+        };
     onMounted(() => {
       console.log("get api applicant id: " + route.params.id);
 
@@ -147,10 +236,14 @@ export default defineComponent({
     let select_option = ref<string>("user_profile");
 
     return {
+      v$,
+      confirmDelete,
       router,
       route,
       applicant,
       select_option,
+      declineApplicant,
+      acceptApplicant
     };
   },
 });

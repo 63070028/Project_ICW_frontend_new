@@ -95,14 +95,6 @@
             </div>
 
         </fieldset>
-
-        <div class="mt-6 modify_profile">
-            <button v-show="!modify_profile" class="button is-medium ml-2 is-info"
-                @click="modify_profile = !modify_profile">แก้ไข</button>
-            <button v-show="modify_profile" class="button is-medium ml-2 is-success" @click="saveProfile()">บันทึก</button>
-            <button v-show="modify_profile" class="button is-medium ml-2 is-danger"
-                @click="modify_profile = !modify_profile">ยกเลิก</button>
-        </div>
     </div>
 </template>
 

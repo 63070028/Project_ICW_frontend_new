@@ -3,11 +3,11 @@
         <div class="columns is-multiline">
             <div class="column is-12" v-for="item, index in states.addBlogsPageList" :key="index">
                 <!-- <button class="button" @click="deleteItem(index)">Del</button> -->
-                <div class="card">
+                <div @click="viewApplicant(item.id)" class="card">
                     <div class="card-content">
                         <div class="card-content">  
                             <div class="media-content">
-                                <p class="title has-text-centered is-size-4">{{ item.fullName }}</p>
+                                <p class="title has-text-centered is-size-4">{{ item.id }}.{{ item.fullName }}</p>
                             </div>
                         </div>
                     </div>
@@ -35,6 +35,7 @@
 import { defineComponent, onMounted, reactive, ref, onUpdated } from 'vue'
 import type { PropType } from 'vue'
 import Applicant from '@/models/Applicant';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
     props: {
@@ -49,7 +50,7 @@ export default defineComponent({
     },
     emits: ['deleteItem'],
     setup(props) {
-
+        const router = useRouter();
         let presentPage = ref<number>(1);
         let pastPage = ref<number>(1);
         const states = reactive<{ countOfPages: number[], addBlogsPageList: Applicant[] }>(
@@ -65,7 +66,10 @@ export default defineComponent({
         // const deleteItem = (index: number) => {
         //     emit('deleteItem', index);
         // }
-
+        const viewApplicant = (id: number) => {
+            router.push("/Applicant/" + id)
+        }
+        
         onMounted(() => {
             loadMyPaginationList();
             states.countOfPages = Array.from(Array(Math.ceil(props.items.length / props.itemPerEachPage)).keys());
@@ -106,11 +110,15 @@ export default defineComponent({
             let startBlog = (presentPage.value - 1) * props.itemPerEachPage;
             let endBlog = startBlog + props.itemPerEachPage;
             states.addBlogsPageList = props.items.slice(startBlog, endBlog);
+            validatePageCount();
         }
 
-
+        const validatePageCount = () => {
+            presentPage.value === states.countOfPages.length ? nextPageClicked.value = true : nextPageClicked.value = false;
+            presentPage.value === 1 ? previousClicked.value = true : previousClicked.value = false;
+        }
         return {
-             nextPageClicked, previousClicked, getNextPage, getPreviousPage, states, presentPage, changePage
+             nextPageClicked, previousClicked, getNextPage, getPreviousPage, states, presentPage, changePage, viewApplicant
         }
     }
 
