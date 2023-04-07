@@ -1,18 +1,30 @@
 <template>
-    <div class="signin_content p-6">
-        <h1 class="is-size-1 has-text-centered">Sign Up</h1>
+    <div class="signin_content px-6 pb-6 pt-1">
+        <h1 class="is-size-1 has-text-centered m-5 has-text-weight-bold">Sign In</h1>
+        <div class="columns select-role">
+            <button
+                :class="['column', 'button', 'is-dark', 'p-1', 'is-size-6', select_role === 'company' ? 'is-outlined' : '']"
+                @click="siwtchApplicant()">
+                หางาน
+            </button>
+            <button
+                :class="['column', 'button', 'is-dark', 'p-1', 'is-size-6', select_role === 'applicant' ? 'is-outlined' : '']"
+                @click="siwtchCompany()">
+                หาคน
+            </button>
+        </div>
         <div class="field ">
-            <label class="label ">Email</label>
+            <label class="label is-large">Email</label>
             <div class="control">
                 <input :class="['input', v$.email.$errors.length ? 'is-danger' : '']" v-model="v$.email.$model"
-                    class="input " type="text">
+                    class="input" type="text">
             </div>
             <div class="has-text-danger" v-for="error of v$.email.$errors" :key="error.$uid">
                 <div class="error-msg">{{ error.$message }}</div>
             </div>
         </div>
         <div class="field ">
-            <label class="label ">Password</label>
+            <label class="label is-large">Password</label>
             <div class="control">
                 <input :class="['input', v$.password.$errors.length ? 'is-danger' : '']" v-model="v$.password.$model"
                     class="input " type="password">
@@ -21,7 +33,7 @@
                 <div class="error-msg">{{ error.$message }}</div>
             </div>
         </div>
-        <div class="field">
+        <div class="field mt-6">
             <div class="control">
                 <button class="button is-success  is-fullwidth" @click="submitSignIn()">Sign In</button>
             </div>
@@ -43,6 +55,16 @@ export default defineComponent({
         let email = ref<string>("");
         let password = ref<string>("");
         const router = useRouter();
+        const select_role = ref<string> ("applicant")
+
+        const siwtchApplicant = () =>{
+            select_role.value = "applicant";
+        }
+
+        const siwtchCompany = () =>{
+            select_role.value = "company";
+        }
+
 
         const submitSignIn = async () => {
             const isFormCorrect = await v$.value.$validate();
@@ -54,6 +76,7 @@ export default defineComponent({
             }
             
             console.log(data)
+            
             Swal.fire({
                 position: 'center',
                 icon: 'success',
@@ -64,7 +87,7 @@ export default defineComponent({
             setTimeout(()=>{router.push("/")}, 1500);
         }
 
-        return { email, password, v$, submitSignIn }
+        return { email, password, v$, submitSignIn, select_role, siwtchApplicant, siwtchCompany}
     },
     validations() {
         return {

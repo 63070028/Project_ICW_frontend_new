@@ -4,6 +4,7 @@
             <p class="has-text-right">{{ job.creation_date }}</p>
             <div class="columns mt-1">
                 <div class="column is-11">
+                    <p class="is-size-3 has-text-weight-bold p-4"><b>บริษัท xxx</b></p>
                     <p class="is-size-5 p-4"><b>{{ job.name }}</b></p>
                     <div class="pl-3">
                         <div class="p-4"><i class="pi pi-map-marker"> <span class="is-size-5 pl-4"><b>สถานที่ทำงาน: </b>{{
@@ -18,9 +19,9 @@
                         <p class="is-size-5 p-4"><b>รูปแบบการสัมภาษณ์: </b>{{ job.interview }}</p>
                     </div>
                 </div>
-                <div class="column" style="display: flex; flex-direction: column; justify-content:space-between;">
+                <div class="column my-3" style="display: flex; flex-direction: column; justify-content:space-between;">
                     <button class="button is-danger" @click="isReport = !isReport">รายงาน</button>
-                    <button class="button is-success" @click="submitApplication()">ยืนสมัคร</button>
+                    <button class="button is-success" @click="submitApplication()">ยื่นสมัคร</button>
                 </div>
             </div>
         </div>

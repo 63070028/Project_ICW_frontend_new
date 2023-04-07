@@ -1,10 +1,15 @@
 export default interface Applicant {
-    id:number,
-    fullName:string,
-    position:string,
+    id:number | string,
+    firstName:string,
+    lastName:string,
+    fullName?:string, //ลบ
     email:string,
     birthDate:string,
     gender:string,
+    position?:string, //ลบ
+    address:string,
     phone:string,
-    type:string,
+    resume?:string,
+    transcript?:string,
+    portfolio?:string,
 }

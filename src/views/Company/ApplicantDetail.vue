@@ -133,7 +133,7 @@
                 <button class="delete" aria-label="close" @click="confirmDelete = !confirmDelete"></button>
             </header>
             <footer class="modal-card-foot">
-                <button class="button is-success" @click="submitReport()">Submit</button>
+                <button class="button is-success" >Submit</button>
                 <button class="button" @click="confirmDelete = !confirmDelete">Cancel</button>
             </footer>
         </div>
@@ -145,11 +145,10 @@
 import { defineComponent, ref, reactive, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import uploadPdfVue from "@/components/upload-pdf.vue";
-import Applicant from "@/models/Applicant";
+// import Applicant from "@/models/Applicant";
 import "primeicons/primeicons.css";
 import Swal from "sweetalert2";
 import { useVuelidate } from "@vuelidate/core";
-import { helpers, required } from "@vuelidate/validators";
 export default defineComponent({
   components: {
     uploadPdfVue,
@@ -160,7 +159,8 @@ export default defineComponent({
     const v$ = useVuelidate();
 
     const confirmDelete = ref<boolean>(false);
-    const applicant = reactive<Applicant>({
+    //ยังไม่กำหนด any ไปก่อน
+    const applicant = reactive<any>({
       id: Number(route.params.id),
       fullName: "None",
       position: "None",
@@ -234,6 +234,7 @@ export default defineComponent({
     });
 
     let select_option = ref<string>("user_profile");
+
 
     return {
       v$,

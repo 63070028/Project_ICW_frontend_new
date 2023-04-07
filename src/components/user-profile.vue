@@ -9,13 +9,19 @@
                 <div class="field-body">
                     <div class="field">
                         <p class="control ">
-                            <input class="input" type="text">
+                            <input class="input" type="text" v-model="v$.f_firstName.$model">
                         </p>
+                        <div class="has-text-danger" v-for="error of v$.f_firstName.$errors" :key="error.$uid">
+                            <div class="error-msg">{{ error.$message }}</div>
+                        </div>
                     </div>
                     <div class="field">
                         <p class="control">
-                            <input class="input" type="text">
+                            <input class="input" type="text" v-model="v$.f_lastName.$model">
                         </p>
+                        <div class="has-text-danger" v-for="error of v$.f_lastName.$errors" :key="error.$uid">
+                            <div class="error-msg">{{ error.$message }}</div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -27,7 +33,10 @@
                 <div class="field-body">
                     <div class="field">
                         <div class="control">
-                            <input class="input" type="email">
+                            <input class="input" type="email" v-model="v$.f_email.$model">
+                            <div class="has-text-danger" v-for="error of v$.f_email.$errors" :key="error.$uid">
+                                <div class="error-msg">{{ error.$message }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -40,7 +49,10 @@
                 <div class="field-body">
                     <div class="field">
                         <div class="control">
-                            <input class="input" type="date">
+                            <input class="input" type="date" v-model="v$.f_birthDate.$model">
+                            <div class="has-text-danger" v-for="error of v$.f_birthDate.$errors" :key="error.$uid">
+                                <div class="error-msg">{{ error.$message }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -54,13 +66,16 @@
                     <div class="field is-narrow">
                         <div class="control">
                             <label class="radio">
-                                <input type="radio">
+                                <input type="radio" value="male" v-model="v$.f_gender.$model">
                                 ชาย
                             </label>
                             <label class="radio">
-                                <input type="radio">
+                                <input type="radio" value="female" v-model="v$.f_gender.$model">
                                 หญิง
                             </label>
+                        </div>
+                        <div class="has-text-danger" v-for="error of v$.f_gender.$errors" :key="error.$uid">
+                            <div class="error-msg">{{ error.$message }}</div>
                         </div>
                     </div>
                 </div>
@@ -75,7 +90,10 @@
                 <div class="field-body">
                     <div class="field">
                         <div class="control">
-                            <textarea class="textarea"></textarea>
+                            <textarea class="textarea" v-model="v$.f_address.$model"></textarea>
+                            <div class="has-text-danger" v-for="error of v$.f_address.$errors" :key="error.$uid">
+                                <div class="error-msg">{{ error.$message }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -88,7 +106,10 @@
                 <div class="field-body">
                     <div class="field">
                         <div class="control">
-                            <input class="input" type="text">
+                            <input class="input" type="text" v-model="v$.f_phone.$model">
+                            <div class="has-text-danger" v-for="error of v$.f_phone.$errors" :key="error.$uid">
+                                <div class="error-msg">{{ error.$message }}</div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -101,7 +122,7 @@
                 @click="modify_profile = !modify_profile">แก้ไข</button>
             <button v-show="modify_profile" class="button is-medium ml-2 is-success" @click="saveProfile()">บันทึก</button>
             <button v-show="modify_profile" class="button is-medium ml-2 is-danger"
-                @click="modify_profile = !modify_profile">ยกเลิก</button>
+                @click="resetProfile()">ยกเลิก</button>
         </div>
     </div>
 </template>
@@ -111,13 +132,63 @@
 <script lang="ts">
 import Swal from 'sweetalert2';
 import { defineComponent, ref } from 'vue'
+import { useVuelidate } from '@vuelidate/core'
+import { helpers, required } from '@vuelidate/validators'
 
 export default defineComponent({
-    setup() {
+    props: {
+        id: {
+            type: [String, Number],
+            required: true
+        },
+        firstName: {
+            type: String,
+            required: true
+        },
+        lastName: {
+            type: String,
+            required: true
+        },
+        email: {
+            type: String,
+            required: true
+        },
+        birthDate: {
+            type: String,
+            required: true
+        },
+        gender: {
+            type: String,
+            required: true
+        },
+        address: {
+            type: String,
+            required: true
+        },
+        phone: {
+            type: String,
+            required: true
+        },
+    },
 
-        let modify_profile = ref<boolean>(false);
+    setup(props) {
 
-        const saveProfile = () => {
+        const modify_profile = ref<boolean>(false);
+        const v$ = useVuelidate();
+
+        const f_firstName = ref<string>(props.firstName);
+        const f_lastName = ref<string>(props.lastName);
+        const f_email = ref<string>(props.email);
+        const f_birthDate = ref<string>(props.birthDate);
+        const f_gender = ref<string>(props.gender);
+        const f_address = ref<string>(props.address);
+        const f_phone = ref<string>(props.phone);
+
+
+
+        const saveProfile = async () => {
+            const isFormCorrect = await v$.value.$validate();
+            if (!isFormCorrect) return
 
             //api
             //update this page
@@ -130,15 +201,53 @@ export default defineComponent({
                 timer: 1500
             })
 
-            setTimeout(()=>{
+            setTimeout(() => {
                 modify_profile.value = !modify_profile.value;
             });
         }
 
+        const resetProfile = () => {
+            modify_profile.value = !modify_profile.value;
+            f_firstName.value = props.firstName;
+            f_lastName.value = props.lastName;
+            f_email.value = props.email;
+            f_birthDate.value = props.birthDate;
+            f_gender.value = props.gender;
+            f_address.value = props.address;
+            f_phone.value = props.phone;
+        }
+
         return {
-            modify_profile, saveProfile
+            modify_profile, v$,
+            f_firstName, f_lastName, f_email, f_birthDate, f_gender, f_address, f_phone,
+            resetProfile, saveProfile,
         }
     },
+    validations() {
+        return {
+            f_firstName: {
+                required: helpers.withMessage('กรุณากรอกข้อมูล', required)
+            },
+            f_lastName: {
+                required: helpers.withMessage('กรุณากรอกข้อมูล', required)
+            },
+            f_email: {
+                required: helpers.withMessage('กรุณากรอกข้อมูล', required)
+            },
+            f_birthDate: {
+                required: helpers.withMessage('กรุณากรอกข้อมูล', required)
+            },
+            f_gender: {
+                required: helpers.withMessage('กรุณากรอกข้อมูล', required)
+            },
+            f_address: {
+                required: helpers.withMessage('กรุณากรอกข้อมูล', required)
+            },
+            f_phone: {
+                required: helpers.withMessage('กรุณากรอกข้อมูล', required)
+            }
+        }
+    }
 })
 </script>
 

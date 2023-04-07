@@ -8,7 +8,7 @@
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
 import listApplicants from "@/components/list-applicants.vue";
-import Applicant from "@/models/Applicant"
+// import Applicant from "@/models/Applicant"
 
 
 export default defineComponent({
@@ -16,7 +16,8 @@ export default defineComponent({
     listApplicants,
   },
   setup() {
-    const states = reactive<{ applicants: Applicant[] }>({
+    //ยังไม่กำหนด any ไปก่อน
+    const states = reactive<{ applicants: any[] }>({
       applicants: [
         {id: 1,fullName: "AAA AAA",position: "XXXX",email: "XXX@gmail.com",birthDate: "xx-xx-xxxx",gender: "Male",phone: "xxx-xxxxxxx", type: "Program"},
         {id: 2,fullName: "AAA AAA",position: "XXXX",email: "XXX@gmail.com",birthDate: "xx-xx-xxxx",gender: "Male",phone: "xxx-xxxxxxx", type: "Program"},

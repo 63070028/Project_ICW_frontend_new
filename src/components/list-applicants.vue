@@ -3,7 +3,7 @@
         <div class="columns is-multiline">
             <div class="column is-12" v-for="item, index in states.addBlogsPageList" :key="index">
                 <!-- <button class="button" @click="deleteItem(index)">Del</button> -->
-                <div @click="viewApplicant(item.id)" class="card">
+                <div class="card">
                     <div class="card-content">
                         <div class="card-content">  
                             <div class="media-content">
@@ -63,9 +63,7 @@ export default defineComponent({
         const previousClicked = ref<boolean>(false);
 
 
-        // const deleteItem = (index: number) => {
-        //     emit('deleteItem', index);
-        // }
+
         const viewApplicant = (id: number) => {
             router.push("/Applicant/" + id)
         }

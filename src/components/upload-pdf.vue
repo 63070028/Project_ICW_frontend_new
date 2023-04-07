@@ -25,11 +25,17 @@
                 <h1>{{ error }}</h1>
             </div>
         </div>
-        <button class="button mb-3 mt-3 is-success" @click="uploadFile()">Upload</button>
+        <button v-if="file.isUploaded" class="button mb-3 mt-3 is-success" @click="uploadFile()">Upload</button>
     </div>
+
+    
 
     <div v-if="isEdit === false" style="display: flex; flex-direction: column; align-items: flex-end;">
         <button class="button mb-3 mt-3 is-info" @click="isEdit = true">Edit</button>
+    </div>
+
+    <div v-if="urlOld === '' && file.url === ''">
+        <p class="is-size-1 has-text-weight-bold has-text-centered mt-6">ยังไม่มีการอัปโหลดไฟล์</p>
     </div>
 
     <!-- pre-review เก่า -->
@@ -46,12 +52,12 @@
     </div>
 
 
+
 </template>
 
 
 <script>
 import Swal from 'sweetalert2';
-import ResumeOld from '../assets/ResumeOld';
 export default {
     props: {
         upload_category: {
@@ -61,6 +67,11 @@ export default {
         maxSize: {
             type: Number,
             default: 100,
+            required: true,
+        },   
+        url:{
+            type: String,
+            default: '',
             required: true,
         }
     },
@@ -79,7 +90,7 @@ export default {
             isEdit: false,
             errors: [],
             file_test: null,
-            urlOld: 'data:application/pdf;base64, ' + ResumeOld
+            urlOld: this.url
 
         };
     },
