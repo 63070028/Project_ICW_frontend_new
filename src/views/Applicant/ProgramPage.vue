@@ -15,7 +15,7 @@
         <div class="program_info_display">
             <p class="is-size-4">ตำแหน่งที่เปิดรับ</p>
             <ul class="ml-6 mt-3">
-                <li v-for="job, index in program.job_title" :key="index">{{ index + 1 }}. {{ job }}</li>
+                <li v-for="job, index in program.jobs_title" :key="index">{{ index + 1 }}. {{ job }}</li>
             </ul>
         </div>
         <div class="program_info_display">
@@ -49,7 +49,7 @@
                     <div class="select">
                         <select v-model="v$.selectedJob.$model">
                             <option value="">เลือกตำแหน่ง</option>
-                            <option v-for="job, index in program.job_title" :key="index" :value="job">{{ job }}</option>
+                            <option v-for="job, index in program.jobs_title" :key="index" :value="job">{{ job }}</option>
                         </select>
                     </div>
                     <div class="has-text-danger" v-for="error of v$.selectedJob.$errors" :key="error.$uid">
@@ -84,10 +84,10 @@ export default defineComponent({
             name: 'None',
             description: 'None', // เพิ่มคุณสมบัติ description
             course: 'None',
-            job_title: [],
+            jobs_title: [],
             qualifications: [],
             privileges: [],
-            image:''
+            image: ''
         })
         const router = useRouter();
         const route = useRoute();
@@ -105,10 +105,10 @@ export default defineComponent({
                 name: 'Test',
                 description: 'Test', // เพิ่มคุณสมบัติ description
                 course: 'Test',
-                job_title: ['SE', 'NW', "ML"],
+                jobs_title: ['SE', 'NW', "ML"],
                 qualifications: ['4.00'],
                 privileges: ['500 บาทต่อวัน'],
-                image:""
+                image: ""
             }
 
             Object.assign(program, get_program)
@@ -119,8 +119,26 @@ export default defineComponent({
             const isFormCorrect = await v$.value.$validate();
             if (!isFormCorrect) return
 
-            //ส่งใบสมัคร
+            //ส่งใบสมัครโครงการ
+            //     {
+            //     program_id: 0,
+            //     job_title:'',
+            //     applicant_id: 0,
+            //     firstName: 'test',
+            //     lastName: 'test',
+            //     email: 'xxx@gmail.com',
+            //     birthDate: '2001-08-01',
+            //     gender: 'male',
+            //     address: 'xxxx',
+            //     phone: '08x-xxxxx',
+            //     resume: 'data:application/pdf;base64, ' + ResumeOld,
+            //     transcript: '',
+            //     portfolio: '',
+            //เพิ่ม status:pending
+            //เพิ่ม type: program
+            // }
 
+            //api post /sendAppplicationProgram
 
             Swal.fire({
                 title: 'Are you sure?',

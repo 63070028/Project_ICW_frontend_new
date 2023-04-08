@@ -32,7 +32,7 @@
                         <label class="label">ตำแหน่งงาน</label>
                         <div>
                             <div class="control">
-                            <input class="input" type="text" placeholder="ตำแหน่งงาน" v-model="program.job_title" />
+                            <input class="input" type="text" placeholder="ตำแหน่งงาน" v-model="program.jobs_title" />
                             </div>
                         </div>
 
@@ -96,7 +96,7 @@ export default defineComponent({
       name: '',
       description: '',
       course: '',
-      job_title: [],
+      jobs_title: [],
       qualifications: [],
       privileges: [],
     });

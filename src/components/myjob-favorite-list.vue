@@ -126,6 +126,11 @@ export default defineComponent({
         }
 
         const removeFavorieJob = () => {
+             //api post /removeMyJobFavorite
+                // const data = {
+                //     applicant_id:"xxx",
+                //     job_id:'xxx'
+                // }
             Swal.fire({
                 position: 'center',
                 icon: 'success',

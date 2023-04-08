@@ -182,9 +182,9 @@ export default {
             // const formData = new FormData();
             // formData.append('file', file);
             console.log(this.file.upload_category)
-            //api post
 
-            this.urlOld = this.file.url
+            //api post applicant/profile
+            this.urlOld = this.file.url  //update page
 
             Swal.fire({
                 position: 'center',

@@ -55,13 +55,13 @@ export default defineComponent({
         let email = ref<string>("");
         let password = ref<string>("");
         const router = useRouter();
-        const select_role = ref<string> ("applicant")
+        const select_role = ref<string>("applicant")
 
-        const siwtchApplicant = () =>{
+        const siwtchApplicant = () => {
             select_role.value = "applicant";
         }
 
-        const siwtchCompany = () =>{
+        const siwtchCompany = () => {
             select_role.value = "company";
         }
 
@@ -69,14 +69,26 @@ export default defineComponent({
         const submitSignIn = async () => {
             const isFormCorrect = await v$.value.$validate();
             if (!isFormCorrect) return
-            
-            let data = {
-                email: email.value,
-                password: password.value
+
+
+            if (select_role.value === "applicant") {
+                const data = {
+                    email: email.value,
+                    password: password.value
+                }
+                console.log(data)
+                //api get applicant by check email & pass return role
             }
-            
-            console.log(data)
-            
+            else {
+                const data = {
+                    email: email.value,
+                    password: password.value
+                }
+                console.log(data)
+                //api get company by check email & pass return role
+            }
+
+
             Swal.fire({
                 position: 'center',
                 icon: 'success',
@@ -84,10 +96,10 @@ export default defineComponent({
                 showConfirmButton: false,
                 timer: 1500
             })
-            setTimeout(()=>{router.push("/")}, 1500);
+            setTimeout(() => { router.push("/") }, 1500);
         }
 
-        return { email, password, v$, submitSignIn, select_role, siwtchApplicant, siwtchCompany}
+        return { email, password, v$, submitSignIn, select_role, siwtchApplicant, siwtchCompany }
     },
     validations() {
         return {

@@ -111,14 +111,21 @@ export default {
                 const data = {
                     email: this.email,
                     password: this.password,
-                    role: this.select_role
-
                 }
                 console.log(data)
+                //api post signup/applicant
+                // const res = await axios.post('http://localhost:3003/signup', data, {
+                //     headers: { "Access-Control-Allow-Origin": "*" }
+                // });
             }
-            // else{
-
-            // }
+            else {
+                const data = {
+                    email: this.email,
+                    password: this.password,
+                }
+                console.log(data)
+                //api post signup/company
+            }
 
             Swal.fire({
                 position: 'center',
@@ -128,11 +135,7 @@ export default {
                 timer: 1500
             })
             setTimeout(() => { this.$router.push("/") }, 1500);
-            // const res = await axios.post('http://localhost:3003/signup', data, {
-            //     headers: { "Access-Control-Allow-Origin": "*" }
-            // });
 
-            // console.log(res)
         }
     }
 

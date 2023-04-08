@@ -27,10 +27,10 @@
         </div>
         <div style="display: flex; flex-direction: column; align-items:flex-end;">
             <i v-show="isMyFavorite == false" class="pi pi-heart m-5" style="font-size: 1.3rem; cursor: pointer;"
-                @click="saveMyFavorite()"><span class="ml-2 prevent-select">รายการโปรด</span></i>
+                @click="saveMyJobFavorite()"><span class="ml-2 prevent-select">รายการโปรด</span></i>
 
             <i v-show="isMyFavorite == true" class="pi pi-heart-fill m-5"
-                style="color:#e41a50; font-size: 1.3rem; cursor: pointer;" @click="saveMyFavorite()"><span
+                style="color:#e41a50; font-size: 1.3rem; cursor: pointer;" @click="saveMyJobFavorite()"><span
                     class="ml-2 prevent-select" style="color:black;">รายการโปรด</span></i>
         </div>
         <div class="p-5">
@@ -110,13 +110,45 @@ export default defineComponent({
         const isReport = ref<boolean>(false)
         const messageReport = ref<string>('')
 
-        const saveMyFavorite = () => {
+        const saveMyJobFavorite = () => {
             isMyFavorite.value = !isMyFavorite.value;
+            if(isMyFavorite.value == true){
+                //api post /saveMyJobFavorite
+                // const data = {
+                //     applicant_id:"xxx",
+                //     job_id:'xxx'
+                // }
+            }
+            else{
+                //api post /removeMyJobFavorite
+                // const data = {
+                //     applicant_id:"xxx",
+                //     job_id:'xxx'
+                // }
+            }
         };
 
         const submitApplication = () => {
 
             //ส่งใบสมัคร
+            //     {
+            //     job_id: 0,
+            //     applicant_id: 0,
+            //     firstName: 'test',
+            //     lastName: 'test',
+            //     email: 'xxx@gmail.com',
+            //     birthDate: '2001-08-01',
+            //     gender: 'male',
+            //     address: 'xxxx',
+            //     phone: '08x-xxxxx',
+            //     resume: 'data:application/pdf;base64, ' + ResumeOld,
+            //     transcript: '',
+            //     portfolio: '',
+            //เพิ่ม status:pending
+            //เพิ่ม type: job
+            // }
+
+            //api post /sendAppplicationJob
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -153,7 +185,8 @@ export default defineComponent({
             }
 
             console.log(report)
-            
+            //api post /sendReport
+
             Swal.fire({
                 position: 'center',
                 icon: 'success',
@@ -181,7 +214,7 @@ export default defineComponent({
             isMyFavorite,
             isReport,
             messageReport,
-            saveMyFavorite,
+            saveMyJobFavorite,
             submitApplication,
             submitReport
         }

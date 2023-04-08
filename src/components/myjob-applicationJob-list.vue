@@ -1,18 +1,22 @@
 <template>
-    <div class="column ml-6 p-0">
-        <div class="card px-5 py-4">
-            <div style="border-top:0.5px solid gray;" v-for="item, index in states.addItemsPageList" :key="index">
+    <div class="column m-0 p-0">
+        <div class="card px-5 py-3">
+            <div class="pt-3" style="border-top:0.5px solid gray;" v-for="item, index in states.addItemsPageList"
+                :key="index">
                 <p class="is-size-4 has-text-weight-bold p-4">บริษัท ...</p>
                 <div class="columns p-4">
                     <div class="column">
-                        <p class="is-size-4 has-text-weight-bold">ตำแหน่ง:</p>
+                        <p class="is-size-5 has-text-weight-bold">ตำแหน่ง:</p>
                     </div>
                     <div class="column">
-                        <p class="is-size-4 has-text-weight-bold">วันที่ยื่นสมัคร:</p>
+                        <p class="is-size-5 has-text-weight-bold">วันที่ยื่นสมัคร:</p>
                     </div>
                     <div class="column">
-                        <p class="is-size-4 has-text-weight-bold">สถานะ:</p>
+                        <p class="is-size-5 has-text-weight-bold">สถานะ:</p>
                     </div>
+                </div>
+                <div style="display: flex; flex-direction: row; justify-content: flex-end;">
+                    <button v-if="isCancel" class="button mx-4 mb-4 is-danger" @click="cancelApplication()">ยกเลิก</button>
                 </div>
             </div>
         </div>
@@ -33,19 +37,26 @@
 </template>
 
 <script lang="ts">
+import Swal from 'sweetalert2';
 import { defineComponent, onMounted, onUpdated, reactive, ref } from 'vue'
+// import ApplicationJob from '@/models/ApplicationJob';
 
 export default defineComponent({
     props: {
         items: {
             type: Array,
+            // type: Object as PropType<ApplicationJob[]>,
             required: true,
             default: () => []
         },
         itemPerEachPage: {
             type: Number,
             default: 3
-        }
+        },
+        isCancel: {
+            type: Boolean,
+            default: true
+        },
     },
     setup(props) {
 
@@ -110,8 +121,38 @@ export default defineComponent({
             presentPage.value === 1 ? previousClicked.value = true : previousClicked.value = false;
         }
 
+        const cancelApplication = () => {
+
+            // const data = {
+            //     applicationJob_id: 'xxx',
+            //     status: 'cancel'
+            // }
+
+            //api post change ApplicationJob status is pending => cancel
+
+            Swal.fire({
+                title: 'Are you sure?',
+                text: "คุณแน่ใจแล้วใช่ไหมที่ยกเลิกใบสมัคร",
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: 'hsl(141, 50%, 48%)',
+                cancelButtonColor: 'hsl(348, 100%, 61%)',
+                confirmButtonText: 'Yes'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'ดำเนิดการสำเร็จ',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                }
+            })
+        }
+
         return {
-            nextPageClicked, previousClicked, getNextPage, getPreviousPage, states, presentPage, changePage
+            nextPageClicked, previousClicked, getNextPage, getPreviousPage, states, presentPage, changePage, cancelApplication
         }
     },
 })

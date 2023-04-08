@@ -35,7 +35,7 @@
                     <div class="columns is-3 is-multiline ml-6 mt-1 ">
                       <p >คำอธิบาย: {{ program.description }}</p>
                       <p>คอร์สเรียน: {{ program.course }}</p>
-                      <p>ตำแหน่งงาน: {{ program.job_title.join(', ') }}</p>
+                      <p>ตำแหน่งงาน: {{ program.jobs_title.join(', ') }}</p>
                       <p>คุณสมบัติ: {{ program.qualifications.join(', ') }}</p>
                       <p>สิทธิประโยชน์: {{ program.privileges.join(', ') }}</p>
                     </div>
@@ -77,7 +77,7 @@ export default defineComponent({
           name: "โครงการพิเศษ 1",
           description: "คำอธิบายโครงการพิเศษ 1",
           course: "คอร์สเรียน 1",
-          job_title: ["ตำแหน่งงาน 1", "ตำแหน่งงาน 2"],
+          jobs_title: ["ตำแหน่งงาน 1", "ตำแหน่งงาน 2"],
           qualifications: ["คุณสมบัติ 1", "คุณสมบัติ 2"],
           privileges: ["สิทธิประโยชน์ 1", "สิทธิประโยชน์ 2"],
           image: "https://www.w3schools.com/w3images/workbench.jpg", // เพิ่ม URL ของรูปภาพโครงการ
@@ -88,7 +88,7 @@ export default defineComponent({
           name: "โครงการพิเศษ 2",
           description: "คำอธิบายโครงการพิเศษ 1",
           course: "คอร์สเรียน 1",
-          job_title: ["ตำแหน่งงาน 1", "ตำแหน่งงาน 2"],
+          jobs_title: ["ตำแหน่งงาน 1", "ตำแหน่งงาน 2"],
           qualifications: ["คุณสมบัติ 1", "คุณสมบัติ 2"],
           privileges: ["สิทธิประโยชน์ 1", "สิทธิประโยชน์ 2"],
           image: "https://www.w3schools.com/w3images/workbench.jpg", // เพิ่ม URL ของรูปภาพโครงการ

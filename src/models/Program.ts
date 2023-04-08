@@ -5,7 +5,7 @@ export default interface Program {
     name: string,
     description: string, // เพิ่มคุณสมบัติ description
     course: string,
-    job_title:string[],
+    jobs_title:string[],
     qualifications:string[],
     privileges:string[]
   }

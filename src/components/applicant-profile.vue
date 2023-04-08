@@ -190,7 +190,7 @@ export default defineComponent({
             const isFormCorrect = await v$.value.$validate();
             if (!isFormCorrect) return
 
-            //api
+            //api post applicant/profile
             //update this page
 
             Swal.fire({

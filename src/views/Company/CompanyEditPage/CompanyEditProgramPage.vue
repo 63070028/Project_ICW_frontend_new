@@ -47,7 +47,7 @@
                   <label class="label">ตำแหน่งงาน</label>
                   <div>
                     <div class="control">
-                      <input class="input" type="text" placeholder="ตำแหน่งงาน" v-model="program.job_title" />
+                      <input class="input" type="text" placeholder="ตำแหน่งงาน" v-model="program.jobs_title" />
                     </div>
                   </div>
 
@@ -114,7 +114,7 @@ export default defineComponent({
       name: 'None',
       description: 'None', // เพิ่มคุณสมบัติ description
       course: 'None',
-      job_title: [],
+      jobs_title: [],
       qualifications: [],
       privileges: [],
       image:'https://images.unsplash.com/photo-1535551951406-a19828b0a76b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1166&q=80'

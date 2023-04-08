@@ -31,15 +31,18 @@
 
             </ul>
 
-            <userProfileVue :id="applicant.id" :firstName="applicant.firstName" :lastName="applicant.lastName"
+            <applicantProfileVue :id="applicant.id" :firstName="applicant.firstName" :lastName="applicant.lastName"
                 :email="applicant.email" :birthDate="applicant.birthDate" :address="applicant.address"
                 :gender="applicant.gender" :phone="applicant.phone" v-if="select_option === 'user_profile'">
-            </userProfileVue>
+            </applicantProfileVue>
 
-            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'" :url="applicant.resume"></uploadPdfVue>
-            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'transcript'">
+            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'"
+                :url="applicant.resume"></uploadPdfVue>
+            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'transcript'"
+                :url="applicant.transcript">
             </uploadPdfVue>
-            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'portfolio'">
+            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'portfolio'"
+                :url="applicant.portfolio">
             </uploadPdfVue>
 
             <ApplicantDetail v-if="select_option === 'preview'"></ApplicantDetail>
@@ -53,16 +56,16 @@
 
 
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue'
-import userProfileVue from '@/components/user-profile.vue'
+import { defineComponent, onMounted, reactive, ref } from 'vue'
+import applicantProfileVue from '@/components/applicant-profile.vue'
 import uploadPdfVue from '@/components/upload-pdf.vue'
 import Applicant from '@/models/Applicant'
 import ResumeOld from '@/assets/ResumeOld';
-import ApplicantDetail from '../Company/ApplicantDetail.vue';
+import ApplicantDetail from '@/views/Company/ApplicantDetail.vue';
 
 export default defineComponent({
     components: {
-        userProfileVue,
+        applicantProfileVue,
         uploadPdfVue,
         ApplicantDetail
     },
@@ -82,6 +85,11 @@ export default defineComponent({
         })
 
         let select_option = ref<string>("user_profile")
+
+        onMounted(() => {
+            //get applicant/:id
+            //set value in applicant
+        })
 
         return {
             select_option, applicant
