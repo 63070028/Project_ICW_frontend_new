@@ -3,7 +3,7 @@
         <div class="columns mb-3">
             <div class="file is-info has-name">
                 <label class="file-label">
-                    <input class="file-input" type="file" accept="application/pdf" @change="handleFileChange($event)">
+                    <input class="file-input" type="file" ref="fileInput" accept=".pdf" @change="handleFileChange($event)">
                     <span class="file-cta">
                         <span class="file-icon">
                             <i class="fas fa-upload"></i>
@@ -28,7 +28,7 @@
         <button v-if="file.isUploaded" class="button mb-3 mt-3 is-success" @click="uploadFile()">Upload</button>
     </div>
 
-    
+
 
     <div v-if="isEdit === false" style="display: flex; flex-direction: column; align-items: flex-end;">
         <button class="button mb-3 mt-3 is-info" @click="isEdit = true">Edit</button>
@@ -39,7 +39,7 @@
     </div>
 
     <!-- pre-review เก่า -->
-    <iframe  v-show="isEdit === false" :src="urlOld" width="100%" height="1500">
+    <iframe v-show="isEdit === false" :src="urlOld" width="100%" height="1500">
     </iframe>
 
     <!-- pre-review อันใหม่ -->
@@ -50,14 +50,13 @@
             {{ file.fileExtention }}
         </div>
     </div>
-
-
-
 </template>
 
 
 <script>
 import Swal from 'sweetalert2';
+import axios from 'axios';
+import { PORT } from '@/port';
 export default {
     props: {
         upload_category: {
@@ -68,8 +67,8 @@ export default {
             type: Number,
             default: 100,
             required: true,
-        },   
-        url:{
+        },
+        url: {
             type: String,
             default: '',
             required: true,
@@ -173,33 +172,45 @@ export default {
                 };
             });
         },
-        cancelEdit(){
+        cancelEdit() {
             this.resetFileInput();
             this.isEdit = false;
         },
-        uploadFile() {
+        async uploadFile() {
 
-            // const formData = new FormData();
-            // formData.append('file', file);
             console.log(this.file.upload_category)
 
+
             //api post applicant/profile
-            this.urlOld = this.file.url  //update page
 
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Success',
-                showConfirmButton: false,
-                timer: 1500
-            })
-            
-        
+            try {
+                const file = this.$refs.fileInput.files[0]
+                const formData = new FormData()
+                formData.append('file', file)
+                await axios.post(`${PORT}` + '/applicant/resume/upload', formData, {
+                    headers: {
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }).then(response=>{
+                    console.log(response.data)
+                })
+                this.urlOld = this.file.url;
+                Swal.fire({
+                    position: 'center',
+                    icon: 'success',
+                    title: 'Success',
+                    showConfirmButton: false,
+                    timer: 1500
+                })
+                setTimeout(() => {
+                    this.isEdit = false;
+                    this.resetFileInput();
+                }, 1500);
 
-            setTimeout(()=>{
-                this.isEdit = false;
-                this.resetFileInput();
-            }, 1500);
+            } catch (error) {
+                console.error(error)
+            }
+
 
         }
     }
