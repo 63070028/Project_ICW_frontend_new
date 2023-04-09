@@ -48,6 +48,8 @@ import { defineComponent, ref } from 'vue'
 import { required, helpers } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2';
+import axios from 'axios';
+import {PORT} from '@/port';
 
 export default defineComponent({
     setup() {
@@ -78,6 +80,30 @@ export default defineComponent({
                 }
                 console.log(data)
                 //api get applicant by check email & pass return role
+                axios.post(`${PORT}`+'/applicant/signIn', data)
+                    .then(function (response) {
+                        // handle success
+                        console.log(response);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'เข้าสู้ระบบสำเร็จ',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        setTimeout(() => { router.push("/") }, 1500);
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'ผิดพลาด',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    })
             }
             else {
                 const data = {
@@ -86,17 +112,33 @@ export default defineComponent({
                 }
                 console.log(data)
                 //api get company by check email & pass return role
+                axios.post(`${PORT}`+'/company/signIn', data)
+                    .then(function (response) {
+                        // handle success
+                        console.log(response);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'เข้าสู้ระบบสำเร็จ',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        setTimeout(() => { router.push("/") }, 1500);
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'ผิดพลาด',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    })
             }
 
 
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'เข้าสู้ระบบสำเร็จ',
-                showConfirmButton: false,
-                timer: 1500
-            })
-            setTimeout(() => { router.push("/") }, 1500);
         }
 
         return { email, password, v$, submitSignIn, select_role, siwtchApplicant, siwtchCompany }

@@ -59,8 +59,9 @@
 <script>
 import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, sameAs, helpers } from '@vuelidate/validators'
-// import axios from 'axios';
 import Swal from 'sweetalert2';
+import axios from 'axios';
+import { PORT } from '@/port';
 
 // const alpha = helpers.regex(/^[a-zA-Z]*$/)
 const emailValid = helpers.regex(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
@@ -110,31 +111,67 @@ export default {
             if (this.select_role === "applicant") {
                 const data = {
                     email: this.email,
-                    password: this.password,
+                    password: this.password
                 }
                 console.log(data)
-                //api post signup/applicant
-                // const res = await axios.post('http://localhost:3003/signup', data, {
-                //     headers: { "Access-Control-Allow-Origin": "*" }
-                // });
+                axios.post(`${PORT}` + '/applicant/signUp', data)
+                    .then(function (response) {
+                        // handle success
+                        console.log(response);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        setTimeout(() => { this.$router.push("/") }, 1500);
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'Error',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    })
             }
             else {
                 const data = {
                     email: this.email,
-                    password: this.password,
+                    password: this.password
                 }
                 console.log(data)
                 //api post signup/company
+                axios.post(`${PORT}` + '/company/signUp', data)
+                    .then(function (response) {
+                        // handle success
+                        console.log(response);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        setTimeout(() => { this.$router.push("/") }, 1500);
+                    })
+                    .catch(function (error) {
+                        // handle error
+                        console.log(error);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'Error',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    })
             }
 
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Success',
-                showConfirmButton: false,
-                timer: 1500
-            })
-            setTimeout(() => { this.$router.push("/") }, 1500);
 
         }
     }
