@@ -96,7 +96,7 @@ export default defineComponent({
     },
     editProfile() {
       // Navigate to the edit page
-      this.router.push(`/companyProfile/edit/${this.company.id}`);
+      this.router.push(`/companyProfile/edit`);
     },
     cancelEdit() {
       this.editingProfile = false;
@@ -119,8 +119,9 @@ export default defineComponent({
   border-radius: 25px;
 }
 .vdo {
-  display: flex;
-  flex-direction: column;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .job_content:hover {
   background-color: hsl(0, 0%, 96%);

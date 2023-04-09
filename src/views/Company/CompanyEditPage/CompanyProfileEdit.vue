@@ -31,15 +31,35 @@
                   </div>
                   <div class="field">
                     <label class="label">รูปโปรไฟล์</label>
+                    <div class="file ">
+                        <label class="file-label">
+                            <input class="file-input" type="file"   @change="previewProfileImage">
+                            <span class="file-cta is-small">
+                                <span class="file-label">
+                                    Choose a file..
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                    
                     <div class="control">
-                      <input type="file" ref="profileImageInput" @change="previewProfileImage" /><br>
-                      <img v-if="profileImagePreview" :src="profileImagePreview" class="image-preview" />
+                      <img v-if="profileImagePreview" :src="profileImagePreview" class="image-preview profile_image" />
                     </div>
                   </div>
                   <div class="field">
                     <label class="label">รูปภาพพื้นหลัง</label>
                     <div class="control">
-                      <input type="file" ref="backgroundImageInput" @change="previewBackgroundImage" />
+                      <div class="file ">
+                        <label class="file-label">
+                            <input class="file-input" type="file"   @change="previewBackgroundImage">
+                            <span class="file-cta is-small">
+                                <span class="file-label">
+                                    Choose a file..
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                    <br>
                       <img v-if="backgroundImagePreview" :src="backgroundImagePreview" class="background_image" />
                     </div>
                   </div>
@@ -199,4 +219,17 @@ export default defineComponent({
   width: 150px;
   margin-top: 1rem;
 }
+.file-cta.is-small {
+  font-size: 0.75rem;
+}
+.file-label {
+  text-align: center;
+}
+.profile_image {
+  width: 150px;
+  height: 150px;
+  border: 2px solid gray;
+  border-radius: 25px;
+}
+
 </style>

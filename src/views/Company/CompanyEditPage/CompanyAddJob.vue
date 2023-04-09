@@ -83,7 +83,6 @@ import Job from "@/models/Job";
 export default defineComponent({
   setup() {
     const router = useRouter();
-
     const job = reactive<Job>({
       id: 0,
       company_id: 0,
@@ -97,7 +96,6 @@ export default defineComponent({
       contact: { name: "", email: "", phone: "" },
       creation_date: "",
     });
-
     const saveJob = async () => {
       const result = await Swal.fire({
         title: "ยืนยันการบันทึก?",
@@ -114,18 +112,7 @@ export default defineComponent({
       }
     };
     const cancel = async () => {
-      const result = await Swal.fire({
-        title: "ยืนยันการยกเลิก?",
-        text: "คุณต้องการยกเลิกการแก้ไขหรือไม่?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "ยืนยัน",
-        cancelButtonText: "ยกเลิก",
-      });
-
-      if (result.isConfirmed) {
-        router.push("/companyJob");
-      }
+      router.push("/companyJob");
     };
 
     return {

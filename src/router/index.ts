@@ -42,7 +42,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/Company/CompanyProgramPage.vue')
   },
   
-  { path: '/companyProfile/edit/:id',
+  { path: '/companyProfile/edit',
     component:CompanyProfileEdit
   },
   {

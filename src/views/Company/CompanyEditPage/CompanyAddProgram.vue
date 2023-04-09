@@ -19,7 +19,19 @@
                     <h1 class="title">เพิ่มโครงการพิเศษ</h1>
                     <div class="field">
                         <label class="label">อัพโหลดรูปภาพโครงการ</label>
-                        <input type="file" accept="image/*" @change="onFileChange" />
+                        <div class="file ">
+                        <label class="file-label">
+                            <input class="file-input" type="file"   @change="previewProgramImage">
+                            <span class="file-cta is-small">
+                                <span class="file-label">
+                                    Choose a file..
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                    </div>
+                    <div  >
+                      <img v-if="programImagePreview" :src="programImagePreview" class="program_image image-is2by1" />
                     </div>
                     <!-- ฟอร์มข้อมูลโครงการพิเศษ -->
                         <div class="field">
@@ -81,7 +93,7 @@
 </template>
   
 <script lang="ts">
-import { defineComponent, reactive } from 'vue';
+import { defineComponent, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import Program from '@/models/Program';
@@ -100,7 +112,8 @@ export default defineComponent({
       qualifications: [],
       privileges: [],
     });
-
+    const programImageInput = ref(null);
+    const programImagePreview = ref('https://www.w3schools.com/w3images/workbench.jpg');
     const onFileChange = (event: Event) => {
       const file = (event.target as HTMLInputElement).files?.[0];
       if (file) {
@@ -131,6 +144,12 @@ const cancelForm = () => {
   router.push('/companyProgram');
 };
 
+const previewProgramImage = (event: Event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        programImagePreview.value = URL.createObjectURL(file);
+      }
+    };
 
 return {
   program,
@@ -138,6 +157,9 @@ return {
   submitForm,
   cancelForm,
   activeTab: 'programs',
+  programImageInput,
+  previewProgramImage,
+  programImagePreview
 };
 },
 methods: {
@@ -147,3 +169,11 @@ methods: {
   },
 });
 </script>
+<style scoped>
+
+.program_image {
+  width: 30%;
+  height: 50%;
+  }
+
+</style>

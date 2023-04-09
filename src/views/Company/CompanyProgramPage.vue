@@ -11,47 +11,56 @@
           </ul>
         </aside>
       </div>
-      <div class="column is-9" style="background-color: #f1f1f1; ">
-        <div class="column is-9" style="background-color: #f1f1f1;">
+      <div class="card-container column is-9">
         <div class="card" style="min-height: 100vh;">
           <div class="card-content">
             <div class="content">
-              <div v-show="activeTab === 'programs'" style="background-color: #f6f6f6;">
-                <h1 class="title">โครงการพิเศษ</h1>
-                <div class="column is-3">
-                <router-link to="/companyAddProgram">
-                  <button class="button is-success mb-4">เพิ่มโครงการพิเศษ</button>
-                </router-link>
-              </div>
-              <div class="program-card" v-for="program, index in programs" :key="index">
-                <div class="card-content columns is-3">
-                  <h1>{{ program.name }}</h1>  
-                </div>    
-                <div class="columns">
-                  <div >     
-                    <img :src="program.image" alt="Program Image" />
-                  </div>
-                  <div class="media-content" @click="viewProgram(program.id)"> 
-                    <div class="columns is-3 is-multiline ml-6 mt-1 ">
-                      <p >คำอธิบาย: {{ program.description }}</p>
-                      <p>คอร์สเรียน: {{ program.course }}</p>
-                      <p>ตำแหน่งงาน: {{ program.jobs_title.join(', ') }}</p>
-                      <p>คุณสมบัติ: {{ program.qualifications.join(', ') }}</p>
-                      <p>สิทธิประโยชน์: {{ program.privileges.join(', ') }}</p>
+              <div v-show="activeTab === 'programs'">
+                <div class="head-content">
+                  <router-link to="/companyAddProgram">
+                    <button class="button is-success ">เพิ่มโครงการพิเศษ</button>
+                  </router-link>
+                  <h1 class="title">โครงการพิเศษ</h1>
+                </div>
+                
+                <div class="program-card" v-for="program, index in programs" :key="index">
+                <div class="job-detail">
+                  <p class="is-size-4 has-text-weight-bold">{{ index + 2 + "." }} {{ program.name }}</p>
+                  <div class="columns">
+                    <div class="column is-4 ">
+                      <div class="program-image image is-2by1">
+                        <img :src="program.image" alt="Program Image" />
+                      </div>
                     </div>
-                    <div class="media-right ml-6 mt-1">
-                      <router-link :to="'/companyEditProgram/' + program.id">
-                        <button class="button is-small is-info">แก้ไขโครงการ</button>
-                      </router-link>
+                    <div class="column is-8">
+                      
+                        <p class="job-detai-text">คำอธิบาย: {{ program.description }}</p>
+                        <p class="job-detai-text">คอร์สเรียน: {{ program.course }}</p>
+                        <p class="job-detai-text">ตำแหน่งงาน: {{ program.jobs_title.join(', ') }}</p>
+                        <p class="job-detai-text">คุณสมบัติ: {{ program.qualifications.join(', ') }}</p>
+                        <p class="job-detai-text">สิทธิประโยชน์: {{ program.privileges.join(', ') }}</p>
+                        <v-switch
+                          v-model="program.active"
+                          hide-details
+                          inset
+                          color="success"
+                          :true-value="ProgramStatus.Open"
+                          :false-value="ProgramStatus.Closed"
+                          :label="`สถานะงาน: ${program.active}`"
+                          :style="{ color: ProgramStatusColor(program.active) }">
+                        </v-switch>
+                        <router-link :to="'/companyEditProgram/' + program.id">
+                          <button class="button is-small is-info">แก้ไขงาน</button>
+                        </router-link>
+                        <button class="button is-small is-danger" @click="deleteForm">ลบงาน</button>
+                    </div>
                     </div>
                   </div>
                 </div>   
                 </div>
-                </div>
               </div>
             </div>
           </div>
-        </div>
       </div>
     </div>
   </div>
@@ -60,17 +69,19 @@
 import 'bulma/css/bulma.css';
 import { defineComponent, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import Program from '@/models/Program';
+import Program2 from '@/models/Program2';
+import {ProgramStatus} from '@/models/Program2';
+import Swal from 'sweetalert2';
 
 export default defineComponent({
   name: 'CompanyProgramPage',
   setup() {
     const router = useRouter();
     const route = useRoute();
-    const programs = reactive<Program[]>([])
+    const programs = reactive<Program2[]>([])
     onMounted(() => {
       console.log('get api program by company_id: ' + route.params.id);
-      let get_programs: Program[] = [
+      let get_programs: Program2[] = [
         {
           id: 0,
           company_id: 1,
@@ -81,6 +92,7 @@ export default defineComponent({
           qualifications: ["คุณสมบัติ 1", "คุณสมบัติ 2"],
           privileges: ["สิทธิประโยชน์ 1", "สิทธิประโยชน์ 2"],
           image: "https://www.w3schools.com/w3images/workbench.jpg", // เพิ่ม URL ของรูปภาพโครงการ
+          active: ProgramStatus.Closed,
         },
         {
           id: 2,
@@ -91,7 +103,8 @@ export default defineComponent({
           jobs_title: ["ตำแหน่งงาน 1", "ตำแหน่งงาน 2"],
           qualifications: ["คุณสมบัติ 1", "คุณสมบัติ 2"],
           privileges: ["สิทธิประโยชน์ 1", "สิทธิประโยชน์ 2"],
-          image: "https://www.w3schools.com/w3images/workbench.jpg", // เพิ่ม URL ของรูปภาพโครงการ
+          image: "https://images.unsplash.com/photo-1680562725444-5a9aaa12525b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80", // เพิ่ม URL ของรูปภาพโครงการ
+          active: ProgramStatus.Open,
         },
         // โครงการพิเศษอื่น ๆ
     ];
@@ -101,13 +114,36 @@ export default defineComponent({
     });
     const viewProgram = (id: number) => {
       router.push("/companyEditProgram/" + id)
+    };
+    const deleteForm = async () => {
+    const result = await Swal.fire({
+      title: 'Are you sure?',
+      text: 'คุณจะไม่สามารถกู้ข้อมูลโครงการนี้ได้',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Yes, delete it!',
+      cancelButtonText: 'No, keep it',
+    });
+
+    if (result.isConfirmed) {
+      Swal.fire('Deleted!', 'ลบโครงการเรียบร้อยแล้ว.', 'success');
+      // ...perform the delete action
+    } else {
+      Swal.fire('Cancelled', 'ยกเลิกแล้ว :)', 'error');
     }
+  };
+    const ProgramStatusColor = (status: ProgramStatus) => {
+      return status === ProgramStatus.Open ? "green" : "red";
+    };
     return {
       router,
       route,
       programs,
       viewProgram,
       activeTab: 'programs',
+      ProgramStatus,
+      deleteForm,
+      ProgramStatusColor
     }
   },
   methods: {
@@ -118,19 +154,42 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-.program-card {
-  padding: 1rem;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(117, 0, 0, 0.1);
-  margin-bottom: 1rem;
-  background-color: #ffffff;
-}
-.card {
-  background-color: #fff;
-  border-radius: 6px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-  padding: 2rem;
-  margin-bottom: 1rem;
-}
 
+
+/*fix css*/
+.card-container{
+  background-color: #e9e9e9;
+}
+.card-content{
+  background-color: #f0ede9
+}
+.head-content{
+  padding: 1rem;
+  
+}
+.program-image {
+    background-color: #AEC2B6;
+  }
+.job-detail{
+  border-radius: 6px;
+  padding: 1rem;
+  background-color: #f1f1f1;
+}
+.job-detai-text{
+ 
+  color: rgb(0, 0, 0);
+}
+.program-card {
+  padding: 0.5rem;
+  border-radius: 6px;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin: 1rem;
+  background-color: #e9e9e9;
+}
+.button {
+  margin-right: 0.3rem;
+}
+.edit {
+  align-items: center;
+}
 </style>

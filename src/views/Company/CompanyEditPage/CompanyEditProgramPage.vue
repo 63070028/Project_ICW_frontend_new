@@ -22,13 +22,22 @@
                     <button class="button is-link is-danger" @click="deleteForm">ลบโครงการ</button>
                 </div>
               </div>
-                <div class="field">
-                  <label class="label">อัพโหลดรูปภาพ</label>
-                  <div class="control">
-                    <input class="input" type="file" @change="onFileChange" />
-                  </div>
-                </div>
-
+                  <div class="field">
+                        <label class="label">อัพโหลดรูปภาพโครงการ</label>
+                        <div class="file ">
+                        <label class="file-label">
+                            <input class="file-input" type="file"   @change="previewProgramImage">
+                            <span class="file-cta is-small">
+                                <span class="file-label">
+                                    Choose a file..
+                                </span>
+                            </span>
+                        </label>
+                    </div>
+                    </div>
+                    <div  >
+                      <img v-if="programImagePreview" :src="programImagePreview" class="program_image image-is2by1" />
+                    </div>
                 <div class="field">
                   <label class="label">ชื่อโครงการ</label>
                   <div class="control">
@@ -96,7 +105,7 @@
 
 <script lang="ts">
 import 'bulma/css/bulma.css';
-import { defineComponent, onMounted, reactive } from 'vue';
+import { defineComponent, onMounted, reactive ,ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Program from '@/models/Program';
 import Swal from 'sweetalert2';
@@ -119,7 +128,8 @@ export default defineComponent({
       privileges: [],
       image:'https://images.unsplash.com/photo-1535551951406-a19828b0a76b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1166&q=80'
     });
-
+    const programImageInput = ref(null);
+    const programImagePreview = ref('https://www.w3schools.com/w3images/workbench.jpg');
     onMounted(() => {
       console.log('get api program id: ' + route.params.id);
 
@@ -187,6 +197,12 @@ export default defineComponent({
   const cancelForm = () => {
     router.push('/companyProgram');
   };
+  const previewProgramImage = (event: Event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        programImagePreview.value = URL.createObjectURL(file);
+      }
+    };
     return {
       router,
       route,
@@ -196,7 +212,10 @@ export default defineComponent({
       submitForm,
       cancelForm,
       deleteForm,
-      onFileChange
+      onFileChange,
+      programImageInput,
+      previewProgramImage,
+      programImagePreview
     };
   },
 
@@ -217,4 +236,8 @@ export default defineComponent({
   margin-bottom: 1rem;
   background-color: #ffffff;
 }
+.program_image {
+  width: 30%;
+  height: 50%;
+  }
 </style>

@@ -1,3 +1,7 @@
+export enum ProgramStatus {
+    Open = 'เปิดรับสมัคร',
+    Closed = 'ปิดรับสมัคร',
+}
 export default interface Program {
     id: number,
     company_id:number,
@@ -8,6 +12,6 @@ export default interface Program {
     jobs_title:string[],
     qualifications:string[],
     privileges:string[],
-    
+    active: ProgramStatus;
   }
   
