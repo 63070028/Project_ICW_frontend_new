@@ -30,9 +30,14 @@
 
 
 
-    <div v-if="isEdit === false" style="display: flex; flex-direction: column; align-items: flex-end;">
+    <div v-if="isEdit === false & urlOld != ''" style="display: flex; flex-direction: column; align-items: flex-end;">
         <button class="button mb-3 mt-3 is-info" @click="isEdit = true">Edit</button>
     </div>
+
+    <div v-if="isEdit === false & urlOld === ''" style="display: flex; flex-direction: column; align-items: flex-end;">
+        <button class="button mb-3 mt-3 is-info" @click="isEdit = true">Upload</button>
+    </div>
+
 
     <div v-if="urlOld === '' && file.url === ''">
         <p class="is-size-1 has-text-weight-bold has-text-centered mt-6">ยังไม่มีการอัปโหลดไฟล์</p>
@@ -177,24 +182,42 @@ export default {
             this.isEdit = false;
         },
         async uploadFile() {
-
-            console.log(this.file.upload_category)
-
-
-            //api post applicant/profile
-
+            let swalWaiting = Swal.fire({
+                position: 'center',
+                title: 'Uploading file...',
+                showConfirmButton: false,
+                didOpen: () => {
+                    Swal.showLoading()
+                }
+            })
             try {
+                console.log(this.file.upload_category)
                 const file = this.$refs.fileInput.files[0]
                 const formData = new FormData()
                 formData.append('file', file)
-                await axios.post(`${PORT}` + '/applicant/resume/upload', formData, {
-                    headers: {
-                        'Content-Type': 'multipart/form-data'
-                    }
-                }).then(response=>{
-                    console.log(response.data)
-                })
-                this.urlOld = this.file.url;
+                formData.append('user_id', 'xxx')
+                formData.append('urlOld', this.urlOld)
+                if (this.urlOld != '') {
+                    console.log('edit')
+                    const response = await axios.post(`${PORT}` + '/applicant/resume/edit', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    console.log(response.data.url)
+                    this.urlOld = response.data.url
+                }
+                else {
+                    console.log('upload')
+                    const response = await axios.post(`${PORT}` + '/applicant/resume/upload', formData, {
+                        headers: {
+                            'Content-Type': 'multipart/form-data'
+                        }
+                    })
+                    console.log(response.data.url)
+                    this.urlOld = response.data.url
+                }
+                swalWaiting.close()
                 Swal.fire({
                     position: 'center',
                     icon: 'success',
@@ -206,13 +229,19 @@ export default {
                     this.isEdit = false;
                     this.resetFileInput();
                 }, 1500);
-
             } catch (error) {
                 console.error(error)
+                swalWaiting.close()
+                Swal.fire({
+                    position: 'center',
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'An error occurred while uploading the file.',
+                    showConfirmButton: true
+                })
             }
-
-
         }
+
     }
 }
 </script>
