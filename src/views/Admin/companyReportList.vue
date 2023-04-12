@@ -5,8 +5,8 @@
         <aside class="menu">
           <p class="menu-label">Navigation</p>
           <ul class="menu-list">
-            <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')" to="/reportList">งานที่ได้รับแจ้ง</router-link></li>
-            <li><router-link :class="{ 'is-active': activeTab === 'companys' }" @click="setActiveTab('companys')" to="/reportCommpanyList">บริษัทที่ได้รับแจ้ง</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')" to="/dashboard">งานที่ได้รับแจ้ง</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'companys' }" @click="setActiveTab('companys')" to="/reportCommpanyList">บริษัททั้งหมด</router-link></li>
           </ul>
         </aside>
       </div>
@@ -15,15 +15,12 @@
           <div class="card-content" >
             <div class="content" >
                 <div v-show="activeTab === 'companys'" style="background-color: #f6f6f6;">
-                    <h1 class="title">บริษัทที่ได้รับแจ้ง</h1>
+                    <h1 class="title">บริษัททั้งหมด</h1>
                     
                     <div class="company-card" v-for="d, index in companys" :key="index">
                     <div class="columns">
                       <div class="column is-11" @click="viewCompany(d.id)">
                         <p class="is-size-4 has-text-weight-bold">{{ index + 1 + "." }} {{ d.name }}</p>
-                      </div>
-                      <div class="column is-1">
-                        <button @click="removeCompany(d.name)" class="button is-small is-danger">ลบบริษัทนี้</button>
                       </div>
                     </div>
                   </div>
@@ -99,7 +96,7 @@ name: 'App',
         });
 
         const viewCompany = (id: number) => {
-            router.push("/companies/" + id)
+            router.push("/reportCompanyDetail/" + id)
         }
 
         return {

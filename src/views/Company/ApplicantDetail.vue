@@ -3,142 +3,100 @@
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
   <div class="w3-light-grey">
     <div class="w3-content w3-margin-top" style="max-width: 1400px">
-      <div class="w3-row-padding">
-        <div class="w3-third">
-          <div class="w3-white w3-text-grey w3-card-4">
-            <div class="w3-display-container">
-              <img
-                src="https://e00-marca.uecdn.es/assets/multimedia/imagenes/2022/12/28/16721837440133.jpg"
-                style="width: 100%"
-                alt="Avatar"
-              />
-            </div>
-            <div class="w3-container">
-              <p>
-                <i
-                  class="fa fa-briefcase fa-fw w3-margin-right w3-large w3-text-teal"
-                ></i
-                >ชื่อ: {{ applicant.fullName }}
-              </p>
-              <p>
-                <i
-                  class="fa fa-home fa-fw w3-margin-right w3-large w3-text-teal"
-                ></i
-                >อีเมล: {{ applicant.email }}
-              </p>
-              <p>
-                <i
-                  class="fa fa-envelope fa-fw w3-margin-right w3-large w3-text-teal"
-                ></i
-                >ตำแหน่งที่สมัคร: {{ applicant.position }}
-              </p>
-              <p>
-                <i
-                  class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"
-                ></i
-                >วันเกิด: {{ applicant.birthDate }}
-              </p>
-              <p>
-                <i
-                  class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"
-                ></i
-                >เพศ: {{ applicant.gender }}
-              </p>
-              <p>
-                <i
-                  class="fa fa-phone fa-fw w3-margin-right w3-large w3-text-teal"
-                ></i
-                >เบอร์ติดต่อ: {{ applicant.phone }}
-              </p>
-              <div>
-                <button @click="acceptApplicant()" class="button mb-3 mt-3 is-success w3-margin-right">
-                  Accept
-                </button>
-                
-                <button
-                  @click="declineApplicant()"
-                  class="button mb-3 mt-3 is-danger w3-margin-right"
-                >
-                  Decline
-                </button>
+      <div class="w3-container w3-card w3-white w3-margin-bottom">
+        <div class="columns mt-6">
+          <div class="column is-2"></div>
+          <div class="tabs is-boxed column is-8">
+            <div>
+              <div class="column is-11">
+                <p class="is-size-4 has-text-weight-bold">ผู้สมัครหมายเลข {{ route.params.id }}</p>
+                <div class="columns is-multiline ml-6 mt-1">
+                  <p class="column is-12">ชื่อ-นามสกุล: {{ applicant.firstName }} {{ applicant.lastName }}</p>
+                  <p class="column is-6">เพศ: {{ applicant.gender }}</p>
+                  <p class="column is-6">อีเมล: {{ applicant.email }}</p>
+                  <p class="column is-6">วัน-เดือน-ปี เกิด: {{ applicant.birthDate }}</p>
+                  <p class="column is-6">ที่อยู่: {{ applicant.address }}</p>
+                  <p class="column is-6">เบอร์โทร: {{ applicant.phone }}</p>
+                  <div class="column is-6">
+                  </div>
+                  <div class="column is-1">
+                    <button class="button is-small is-success" @click="acceptApplicant( applicant.id )">ผ่าน</button>
+                  </div>
+                  <div class="column is-1">
+                    <button class="button is-small is-danger" @click="declineApplicant( applicant.id )">ไม่ผ่าน</button>
+                  </div>
+                </div>
               </div>
-              <hr />
             </div>
+            <ul>
+              <li
+                :class="[select_option === 'resume' ? 'is-active' : '']"
+                @click="select_option = 'resume'"
+              >
+                <a>
+                  <span>Resume</span>
+                </a>
+              </li>
+              <li
+                :class="[select_option === 'transcript' ? 'is-active' : '']"
+                @click="select_option = 'transcript'"
+              >
+                <a>
+                  <span>Transcript</span>
+                </a>
+              </li>
+              <li
+                :class="[select_option === 'portfolio' ? 'is-active' : '']"
+                @click="select_option = 'portfolio'"
+              >
+                <a>
+                  <span>Portfolio</span>
+                </a>
+              </li>
+            </ul>
+
+            <uploadPdfVue
+              :maxSize="100"
+              :upload_category="select_option"
+              v-if="select_option === 'resume'"
+            ></uploadPdfVue>
+            <uploadPdfVue
+              :maxSize="100"
+              :upload_category="select_option"
+              v-if="select_option === 'transcript'"
+            ></uploadPdfVue>
+            <uploadPdfVue
+              :maxSize="100"
+              :upload_category="select_option"
+              v-if="select_option === 'portfolio'"
+            ></uploadPdfVue>
           </div>
-          <br />
-        </div>
 
-        <div class="w3-twothird">
-          <div class="w3-container w3-card w3-white w3-margin-bottom">
-            <div class="columns mt-6">
-              <div class="column is-2"></div>
-              <div class="tabs is-boxed column is-8">
-                <ul>
-                  <li
-                    :class="[select_option === 'resume' ? 'is-active' : '']"
-                    @click="select_option = 'resume'"
-                  >
-                    <a>
-                      <span>Resume</span>
-                    </a>
-                  </li>
-                  <li
-                    :class="[select_option === 'transcript' ? 'is-active' : '']"
-                    @click="select_option = 'transcript'"
-                  >
-                    <a>
-                      <span>Transcript</span>
-                    </a>
-                  </li>
-                  <li
-                    :class="[select_option === 'portfolio' ? 'is-active' : '']"
-                    @click="select_option = 'portfolio'"
-                  >
-                    <a>
-                      <span>Portfolio</span>
-                    </a>
-                  </li>
-                </ul>
-
-                <uploadPdfVue
-                  :maxSize="100"
-                  :upload_category="select_option"
-                  v-if="select_option === 'resume'"
-                ></uploadPdfVue>
-                <uploadPdfVue
-                  :maxSize="100"
-                  :upload_category="select_option"
-                  v-if="select_option === 'transcript'"
-                ></uploadPdfVue>
-                <uploadPdfVue
-                  :maxSize="100"
-                  :upload_category="select_option"
-                  v-if="select_option === 'portfolio'"
-                ></uploadPdfVue>
-              </div>
-
-              <div class="column is-2"></div>
-            </div>
-          </div>
+          <div class="column is-2"></div>
         </div>
       </div>
     </div>
   </div>
 
   <div :class="['modal', confirmDelete ? 'is-active' : '']">
-        <div class="modal-background"></div>
-        <div class="modal-card">
-            <header class="modal-card-head">
-                <p class="modal-card-title">ต้องการปฏิเสธผู้สมัครรายนี้</p>
-                <button class="delete" aria-label="close" @click="confirmDelete = !confirmDelete"></button>
-            </header>
-            <footer class="modal-card-foot">
-                <button class="button is-success" >Submit</button>
-                <button class="button" @click="confirmDelete = !confirmDelete">Cancel</button>
-            </footer>
-        </div>
+    <div class="modal-background"></div>
+    <div class="modal-card">
+      <header class="modal-card-head">
+        <p class="modal-card-title">ต้องการปฏิเสธผู้สมัครรายนี้</p>
+        <button
+          class="delete"
+          aria-label="close"
+          @click="confirmDelete = !confirmDelete"
+        ></button>
+      </header>
+      <footer class="modal-card-foot">
+        <button class="button is-success">Submit</button>
+        <button class="button" @click="confirmDelete = !confirmDelete">
+          Cancel
+        </button>
+      </footer>
     </div>
-
+  </div>
 </template>
 
 <script lang="ts">
@@ -162,69 +120,73 @@ export default defineComponent({
     //ยังไม่กำหนด any ไปก่อน
     const applicant = reactive<any>({
       id: Number(route.params.id),
-      fullName: "None",
+      firstName: "None",
+      lastName: "None",
       position: "None",
       email: "None",
       birthDate: "None",
+      address: "None",
       gender: "None",
       phone: "None",
       type: "None",
     });
 
     const declineApplicant = () => {
-            //ปฏิ
-            Swal.fire({
-                title: 'ปฏิเสธผู้สมัครหมายเลข ' + route.params.id,
-                text: "คุณแน่ใจแล้วใช่ไหมที่จะปฏิเสธผู้สมัครรายนี้",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: 'hsl(141, 50%, 48%)',
-                cancelButtonColor: 'hsl(348, 100%, 61%)',
-                confirmButtonText: 'Yes'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'error',
-                        title: 'ทำการลบผู้สมัครเรียบร้อย',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                    router.push("/ListApplicant")
-                }
-            })
-        };
+      //ปฏิ
+      Swal.fire({
+        title: "ปฏิเสธผู้สมัครหมายเลข " + route.params.id,
+        text: "คุณแน่ใจแล้วใช่ไหมที่จะปฏิเสธผู้สมัครรายนี้",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "hsl(141, 50%, 48%)",
+        cancelButtonColor: "hsl(348, 100%, 61%)",
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "ทำการลบผู้สมัครเรียบร้อย",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+          router.push("/ListApplicant");
+        }
+      });
+    };
     const acceptApplicant = () => {
-            //ปฏิ
-            Swal.fire({
-                title: 'รับผู้สมัครหมายเลข ' + route.params.id,
-                text: "",
-                icon: 'info',
-                showCancelButton: true,
-                confirmButtonColor: 'hsl(141, 50%, 48%)',
-                cancelButtonColor: 'hsl(348, 100%, 61%)',
-                confirmButtonText: 'Yes'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    Swal.fire({
-                        position: 'center',
-                        icon: 'success',
-                        title: 'ทำการรับผู้สมัครเรียบร้อย',
-                        showConfirmButton: false,
-                        timer: 1500
-                    })
-                }
-            })
-        };
+      //ปฏิ
+      Swal.fire({
+        title: "รับผู้สมัครหมายเลข " + route.params.id,
+        text: "",
+        icon: "info",
+        showCancelButton: true,
+        confirmButtonColor: "hsl(141, 50%, 48%)",
+        cancelButtonColor: "hsl(348, 100%, 61%)",
+        confirmButtonText: "Yes",
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            position: "center",
+            icon: "success",
+            title: "ทำการรับผู้สมัครเรียบร้อย",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        }
+      });
+    };
     onMounted(() => {
       console.log("get api applicant id: " + route.params.id);
 
       //set applicant
       const get_applicant = {
         id: 1,
-        fullName: "AAA AAA",
+        firstName: "None",
+        lastName: "None",
         position: "XXXX",
         email: "XXX@gmail.com",
+        address: "None",
         birthDate: "xx-xx-xxxx",
         gender: "Male",
         phone: "xxx-xxxxxxx",
@@ -235,7 +197,6 @@ export default defineComponent({
 
     let select_option = ref<string>("user_profile");
 
-
     return {
       v$,
       confirmDelete,
@@ -244,7 +205,7 @@ export default defineComponent({
       applicant,
       select_option,
       declineApplicant,
-      acceptApplicant
+      acceptApplicant,
     };
   },
 });

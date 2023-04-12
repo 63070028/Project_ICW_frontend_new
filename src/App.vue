@@ -26,7 +26,7 @@
            <router-link class="navbar-item " to="/ListApplicant">คนที่มายื่นสมัคร</router-link>
 
            <!-- ของแอดมิน -->
-           <!-- <router-link class="navbar-item " to="/dashboard">Dashboard</router-link> -->
+           <router-link class="navbar-item " to="/dashboard">Dashboard</router-link>
 
           <div class="navbar-item">
             <div class="buttons">

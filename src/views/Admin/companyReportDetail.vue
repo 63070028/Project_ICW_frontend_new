@@ -1,30 +1,7 @@
 <template>
   <div class="company p-3">
     <div class="columns">
-      <div class="column is-3" style="background-color: #f8f8f8">
-        <aside class="menu">
-          <p class="menu-label">Navigation</p>
-          <ul class="menu-list">
-            <li>
-              <router-link
-                :class="{ 'is-active': activeTab === 'jobs' }"
-                @click="setActiveTab('jobs')"
-                to="/dashboard"
-                >งานที่ได้รับแจ้ง</router-link
-              >
-            </li>
-            <li>
-              <router-link
-                :class="{ 'is-active': activeTab === 'companys' }"
-                @click="setActiveTab('companys')"
-                to="/reportCommpanyList"
-                >บริษัททั้งหมด</router-link
-              >
-            </li>
-          </ul>
-        </aside>
-      </div>
-      <div class="column is-9" style="background-color: #f1f1f1">
+      <div class="column is-12" style="background-color: #f1f1f1">
         <div class="card" style="min-height: 100vh">
           <div class="card-content">
             <div class="content">
@@ -32,27 +9,30 @@
                 v-show="activeTab === 'jobs'"
                 style="background-color: #f6f6f6"
               >
-                <h1 class="title">งานที่ได้รับแจ้ง</h1>
+                <h1 class="title">งานทั้งหมดของบริษัท {{ route.params.id }}</h1>
 
                 <div class="job-card" v-for="(job, index) in jobs" :key="index">
-                  <div class="columns">
-                    <div class="column is-11" @click="viewJob(job.id)">
-                      <p class="is-size-4 has-text-weight-bold">
-                        {{ index + 1 + "." }} ฝึกงานเภสัช jobID= {{ job.job_id }}
-                      </p>
-                      <div class="columns is-multiline ml-6 mt-1">
-                        <p class="column is-6">
-                          ข้อความจากผู้รายงาน: {{ job.message }}
-                        </p>
-                        <p class="column is-6">
-                          หมายเลข ID ของผู้รายงาน: {{ job.user_id }}
-                        </p>
-                        <p class="column is-6">
-                          วันที่รายงาน: {{ job.creation_date }}
-                        </p>
+                  <div class="job-detail">
+                    <p class="is-size-4 has-text-weight-bold" >{{ index + 2 + "." }} {{ job.name }}</p>
+                      <p class="job-detai-text">สถานที่ทำงาน: {{ job.location }}</p>
+                      <p class="job-detai-text">ค่าตอบแทนรายวัน: {{ job.salary_per_day }}</p>
+                      <p class="job-detai-text">รูปแบบการสัมภาษณ์: {{ job.interview }}</p>
+                      <p class="job-detai-text">จำนวนที่รับ: {{ job.capacity }}</p>
+                      <div class="column is-6 edit" style="background-color: #your_color_code;">
+                        <div class="field" style="background-color: #your_color_code;">
+                          <v-switch
+                            v-model="job.active"
+                            hide-details
+                            inset
+                            color="success"
+                            :true-value="JobStatus.Open"
+                            :false-value="JobStatus.Closed"
+                            :label="`สถานะงาน: ${job.active}`"
+                            :style="{ color: jobStatusColor(job.active) }">
+                          </v-switch>
+                        </div>
                       </div>
                     </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -68,7 +48,8 @@ import "bulma/css/bulma.css";
 import { defineComponent, onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Company from "@/models/Company";
-import Job from "@/models/JobReport";
+import Job from "@/models/Job2";
+import { JobStatus } from "@/models/Job2";
 import Swal from "sweetalert2";
 
 export default defineComponent({
@@ -111,25 +92,57 @@ export default defineComponent({
       let get_jobs: Job[] = [
         {
           id: 1,
-          user_id: 1,
-          job_id: 1,
-          message:
-            "งานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับ",
-          creation_date: "xx-xx-xxxx",
+          company_id: 1,
+          name: "ฝึกงาน ตำแหน่ง Software Engineer",
+          salary_per_day: 500,
+          location: "sssss",
+          capacity: 10,
+          detail: "มาร่วมงานกับ THiNKNET ...",
+          interview: "online",
+          qualifications: ["111", "2222"],
+          contact: {
+            name: "chanapon",
+            email: "xxxxx@hotmail.com",
+            phone: "08xxxxxxxx",
+          },
+          creation_date: "03/25/2015",
+          active: JobStatus.Open,
         },
         {
-          id: 1,
-          user_id: 1,
-          job_id: 2,
-          message: "งานนี้ดูมีปัญหานะครับ",
-          creation_date: "xx-xx-xxxx",
+          id: 2,
+          company_id: 1,
+          name: "ฝึกงาน ตำแหน่ง Software Engineer",
+          salary_per_day: 500,
+          location: "sssss",
+          capacity: 10,
+          detail: "มาร่วมงานกับ THiNKNET ...",
+          interview: "online",
+          qualifications: ["111", "2222"],
+          contact: {
+            name: "chanapon",
+            email: "xxxxx@hotmail.com",
+            phone: "08xxxxxxxx",
+          },
+          creation_date: "03/25/2015",
+          active: JobStatus.Closed,
         },
         {
-          id: 1,
-          user_id: 1,
-          job_id: 3,
-          message: "งานนี้ดูมีปัญหานะครับ",
-          creation_date: "xx-xx-xxxx",
+          id: 3,
+          company_id: 1,
+          name: "ฝึกงาน ตำแหน่ง Software Engineer",
+          salary_per_day: 500,
+          location: "sssss",
+          capacity: 10,
+          detail: "มาร่วมงานกับ THiNKNET ...",
+          interview: "online",
+          qualifications: ["111", "2222"],
+          contact: {
+            name: "chanapon",
+            email: "xxxxx@hotmail.com",
+            phone: "08xxxxxxxx",
+          },
+          creation_date: "03/25/2015",
+          active: JobStatus.Open,
         },
       ];
 
@@ -141,6 +154,10 @@ export default defineComponent({
     const viewJob = (id: number) => {
       router.push("/jobs/" + id);
     };
+    const jobStatusColor = (status: JobStatus) => {
+      return status === JobStatus.Open ? "green" : "red";
+    };
+
     const deleteJob = (index: number) => {
       //ปฏิs
       Swal.fire({
@@ -171,6 +188,8 @@ export default defineComponent({
       jobs,
       viewJob,
       deleteJob,
+      jobStatusColor,
+      JobStatus,
       activeTab: "jobs",
     };
   },

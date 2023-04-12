@@ -96,7 +96,22 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/MyJobs',
     component:MyJobsPage
-  }
+  },
+  {
+    path: '/dashboard',
+    name: 'admin_dashboard',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Admin/adminReportList.vue')
+  },
+  {
+    path: '/reportCommpanyList',
+    name: 'repor',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Admin/companyReportList.vue')
+  },
+  {
+    path: '/reportCompanyDetail/:id',
+    name: 'adminCompanyDetail',
+    component: () => import(/* webpackChunkName: "about" */ '../views/Admin/companyReportDetail.vue')
+  },
  
 ]
 
