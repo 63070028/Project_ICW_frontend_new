@@ -83,7 +83,8 @@ export default defineComponent({
                 axios.post(`${PORT}`+'/applicant/signIn', data)
                     .then(response => {
                         // handle success
-                        console.log(response.data.token);
+                        console.log(response.data);
+                        localStorage.setItem("token", response.data.token);
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
@@ -115,7 +116,7 @@ export default defineComponent({
                 axios.post(`${PORT}`+'/company/signIn', data)
                     .then(response => {
                         // handle success
-                        console.log(response.data.token);
+                        console.log(response.data);
                         Swal.fire({
                             position: 'center',
                             icon: 'success',

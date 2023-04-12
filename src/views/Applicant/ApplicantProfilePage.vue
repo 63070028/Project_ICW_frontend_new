@@ -78,7 +78,7 @@ export default defineComponent({
             gender: 'male',
             address: 'xxxx',
             phone: '08x-xxxxx',
-            resume: 'https://s3.amazonaws.com/chanapon.icw.bucket/resume/xxx-1741abe7-aab9-40ac-a35b-b10357ab97fa-ResumeNew.pdf',
+            resume: 'https://s3.amazonaws.com/chanapon.icw.bucket/resume/xxx-638d7ae3-217f-4631-8ed3-6eaf1ed4c281-ResumeOld.pdf',
             transcript: '',
             portfolio: '',
             state:"on"

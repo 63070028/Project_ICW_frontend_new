@@ -60,7 +60,7 @@
 
 <script>
 import Swal from 'sweetalert2';
-import axios from 'axios';
+import axios from '@/plugins/axios'
 import { PORT } from '@/port';
 export default {
     props: {
@@ -196,11 +196,13 @@ export default {
                 formData.append('file', file)
                 formData.append('user_id', 'xxx')
                 formData.append('urlOld', this.urlOld)
+                console.log(localStorage.getItem("token"))
                 if (this.urlOld != '') {
                     console.log('edit')
                     const response = await axios.post(`${PORT}` + '/applicant/resume/edit', formData, {
                         headers: {
-                            'Content-Type': 'multipart/form-data'
+                            'Content-Type': 'multipart/form-data',
+                            'Authorization': `Bearer ${localStorage.getItem("token")}`
                         }
                     })
                     console.log(response.data.url)

@@ -36,7 +36,7 @@
               <router-link class="button is-light" to="/signin">
                 Sign In
               </router-link>
-              <button class="button is-danger">
+              <button class="button is-danger" @click="logout()">
                 Logout
               </button>
             </div>
@@ -47,6 +47,25 @@
   </section>
   <router-view />
 </template>
+
+
+<script lang="ts">
+import { defineComponent } from 'vue'
+
+export default defineComponent({
+    setup() {
+
+        const logout = () => {
+          localStorage.removeItem('token');
+        }
+
+        return {
+          logout
+        }
+    },
+})
+</script>
+
 
 <style>
 @import 'bulma/css/bulma.css';
