@@ -47,16 +47,14 @@
 
 <script lang="ts">
 import Swal from 'sweetalert2';
-import { defineComponent, onMounted, onUpdated, reactive, ref } from 'vue'
-// import ApplicationJob from '@/models/ApplicationJob';
+import { defineComponent, onMounted, onUpdated, PropType, reactive, ref } from 'vue'
+import ApplicationProgram from '@/models/ApplicationProgram';
 
 export default defineComponent({
     props: {
         items: {
-            type: Array,
-            // type: Object as PropType<ApplicationJob[]>,
+            type: Object as PropType<ApplicationProgram[]>,
             required: true,
-            default: () => []
         },
         itemPerEachPage: {
             type: Number,
@@ -72,7 +70,7 @@ export default defineComponent({
         let presentPage = ref<number>(1);
         let pastPage = ref<number>(1);
 
-        const states = reactive<{ countOfPages: number[], addItemsPageList: any[] }>(
+        const states = reactive<{ countOfPages: number[], addItemsPageList: ApplicationProgram[] }>(
             {
                 countOfPages: [],
                 addItemsPageList: [],

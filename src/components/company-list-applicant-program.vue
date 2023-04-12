@@ -14,7 +14,7 @@
           <div class="columns p-4">
             <div class="column">
               <p class="is-size-5 has-text-weight-bold">
-                ตำแหน่ง: {{ item.job_id }}
+                ตำแหน่ง: {{ item.job_title }}
               </p>
             </div>
             <div class="column">
@@ -64,7 +64,6 @@
 </template>
 
 <script lang="ts">
-import Swal from "sweetalert2";
 import {
   defineComponent,
   onMounted,
@@ -73,13 +72,13 @@ import {
   ref,
   PropType,
 } from "vue";
-import ApplicationJob from "@/models/ApplicationJob";
+import ApplicationProgram from "@/models/ApplicationProgram";
 import { useRouter } from "vue-router";
 
 export default defineComponent({
   props: {
     items: {
-      type: Object as PropType<ApplicationJob[]>,
+      type: Object as PropType<ApplicationProgram[]>,
       required: true,
     },
     itemPerEachPage: {
@@ -98,7 +97,7 @@ export default defineComponent({
 
     const states = reactive<{
       countOfPages: number[];
-      addItemsPageList: any[];
+      addItemsPageList: ApplicationProgram[];
     }>({
       countOfPages: [],
       addItemsPageList: [],
@@ -172,7 +171,7 @@ export default defineComponent({
         ? (previousClicked.value = true)
         : (previousClicked.value = false);
     };
-    const viewApplicant = (id:number) => {
+    const viewApplicant = (id:string) => {
       router.push("/applicant/"+id)
     }
     return {

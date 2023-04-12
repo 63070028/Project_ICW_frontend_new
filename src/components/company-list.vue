@@ -1,5 +1,5 @@
 <template>
-    <div class="companys_content p-3">
+    <div class="companys_content px-6 mb-6">
         <div class="columns is-multiline">
             <div class="column is-2 ml-6" v-for="item, index in states.addItemsPageList" :key="index">
                 <!-- <button class="button" @click="deleteItem(index)">Del</button> -->
@@ -23,7 +23,7 @@
 
 
 
-    <nav class="pagination mt-3 pl-6 pr-5" role="navigation" aria-label="pagination">
+    <nav class="pagination mt-3 px-6" role="navigation" aria-label="pagination">
         <button class="pagination-previous" :disabled="previousClicked" @click="getPreviousPage()">Previous</button>
         <button class="pagination-next" :disabled="nextPageClicked" @click="getNextPage()">Next page</button>
         <ul class="pagination-list">

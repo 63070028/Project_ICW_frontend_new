@@ -118,15 +118,16 @@ export default defineComponent({
     const route = useRoute();
 
     const program = reactive<Program>({
-      id: 0,
-      company_id: 0,
+      id: "0",
+      company_id: "0",
       name: 'None',
       description: 'None', // เพิ่มคุณสมบัติ description
       course: 'None',
       jobs_title: [],
       qualifications: [],
       privileges: [],
-      image:'https://images.unsplash.com/photo-1535551951406-a19828b0a76b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1166&q=80'
+      image:'https://images.unsplash.com/photo-1535551951406-a19828b0a76b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1166&q=80',
+      state:""
     });
     const programImageInput = ref(null);
     const programImagePreview = ref('https://www.w3schools.com/w3images/workbench.jpg');

@@ -29,7 +29,7 @@
       <div class="field">
         <label class="label">วิดีโอ</label>
         <div class="control">
-          <input class="input" type="text" v-model="company.vdo" />
+          <input class="input" type="text" v-model="company.video_iframe" />
         </div>
       </div>
       <div class="field is-grouped">
@@ -55,12 +55,13 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const company = reactive<Company>({
-      id: Number(route.params.id),
-      name: 'None',
-      description: 'None',
-      profile_image: '',
-      background_image: '',
-      vdo: '',
+      id:"",
+      name: "None",
+      description: "None",
+      profile_image: "",
+      background_image: "",
+      video_iframe: "",
+      state:""
     });
 
     onMounted(() => {

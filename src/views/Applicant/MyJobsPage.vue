@@ -42,10 +42,10 @@ export default defineComponent({
 
         const select_option = ref<string>('application')
         const myApplications = reactive<Applications>({
-            applicationJob: [1,2,3,4],
-            applicationProgram: [1,2,3,4]
+            applicationJob: [],
+            applicationProgram: []
         });
-        const myFavoriteJobs = reactive<Job[] | number[]>([1,2,3,4]);
+        const myFavoriteJobs = reactive<Job[]>([]);
 
         onMounted(() => {
             //api get /myApplicationJobs:id and filter status

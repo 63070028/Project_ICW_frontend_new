@@ -81,9 +81,9 @@ export default defineComponent({
                 console.log(data)
                 //api get applicant by check email & pass return role
                 axios.post(`${PORT}`+'/applicant/signIn', data)
-                    .then(function (response) {
+                    .then(response => {
                         // handle success
-                        console.log(response);
+                        console.log(response.data.token);
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
@@ -93,7 +93,7 @@ export default defineComponent({
                         })
                         setTimeout(() => { router.push("/") }, 1500);
                     })
-                    .catch(function (error) {
+                    .catch(error => {
                         // handle error
                         console.log(error);
                         Swal.fire({
@@ -113,9 +113,9 @@ export default defineComponent({
                 console.log(data)
                 //api get company by check email & pass return role
                 axios.post(`${PORT}`+'/company/signIn', data)
-                    .then(function (response) {
+                    .then(response => {
                         // handle success
-                        console.log(response);
+                        console.log(response.data.token);
                         Swal.fire({
                             position: 'center',
                             icon: 'success',
@@ -125,7 +125,7 @@ export default defineComponent({
                         })
                         setTimeout(() => { router.push("/") }, 1500);
                     })
-                    .catch(function (error) {
+                    .catch(error => {
                         // handle error
                         console.log(error);
                         Swal.fire({

@@ -13,63 +13,45 @@
                 <div class="columns is-multiline ml-6 mt-1">
                   <p class="column is-12">ชื่อ-นามสกุล: {{ applicant.firstName }} {{ applicant.lastName }}</p>
                   <p class="column is-6">เพศ: {{ applicant.gender }}</p>
-                  <p class="column is-6">อีเมล: {{ applicant.email }}</p>
+                  <p class="column is-6">อีเมล: {{ applicant.email_profile }}</p>
                   <p class="column is-6">วัน-เดือน-ปี เกิด: {{ applicant.birthDate }}</p>
                   <p class="column is-6">ที่อยู่: {{ applicant.address }}</p>
                   <p class="column is-6">เบอร์โทร: {{ applicant.phone }}</p>
                   <div class="column is-6">
                   </div>
                   <div class="column is-1">
-                    <button class="button is-small is-success" @click="acceptApplicant( applicant.id )">ผ่าน</button>
+                    <button class="button is-small is-success" @click="acceptApplicant(applicant.id)">ผ่าน</button>
                   </div>
                   <div class="column is-1">
-                    <button class="button is-small is-danger" @click="declineApplicant( applicant.id )">ไม่ผ่าน</button>
+                    <button class="button is-small is-danger" @click="declineApplicant(applicant.id)">ไม่ผ่าน</button>
                   </div>
                 </div>
               </div>
             </div>
             <ul>
-              <li
-                :class="[select_option === 'resume' ? 'is-active' : '']"
-                @click="select_option = 'resume'"
-              >
+              <li :class="[select_option === 'resume' ? 'is-active' : '']" @click="select_option = 'resume'">
                 <a>
                   <span>Resume</span>
                 </a>
               </li>
-              <li
-                :class="[select_option === 'transcript' ? 'is-active' : '']"
-                @click="select_option = 'transcript'"
-              >
+              <li :class="[select_option === 'transcript' ? 'is-active' : '']" @click="select_option = 'transcript'">
                 <a>
                   <span>Transcript</span>
                 </a>
               </li>
-              <li
-                :class="[select_option === 'portfolio' ? 'is-active' : '']"
-                @click="select_option = 'portfolio'"
-              >
+              <li :class="[select_option === 'portfolio' ? 'is-active' : '']" @click="select_option = 'portfolio'">
                 <a>
                   <span>Portfolio</span>
                 </a>
               </li>
             </ul>
 
-            <uploadPdfVue
-              :maxSize="100"
-              :upload_category="select_option"
-              v-if="select_option === 'resume'"
-            ></uploadPdfVue>
-            <uploadPdfVue
-              :maxSize="100"
-              :upload_category="select_option"
-              v-if="select_option === 'transcript'"
-            ></uploadPdfVue>
-            <uploadPdfVue
-              :maxSize="100"
-              :upload_category="select_option"
-              v-if="select_option === 'portfolio'"
-            ></uploadPdfVue>
+            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'">
+            </uploadPdfVue>
+            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'transcript'">
+            </uploadPdfVue>
+            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'portfolio'">
+            </uploadPdfVue>
           </div>
 
           <div class="column is-2"></div>
@@ -83,11 +65,7 @@
     <div class="modal-card">
       <header class="modal-card-head">
         <p class="modal-card-title">ต้องการปฏิเสธผู้สมัครรายนี้</p>
-        <button
-          class="delete"
-          aria-label="close"
-          @click="confirmDelete = !confirmDelete"
-        ></button>
+        <button class="delete" aria-label="close" @click="confirmDelete = !confirmDelete"></button>
       </header>
       <footer class="modal-card-foot">
         <button class="button is-success">Submit</button>
@@ -103,7 +81,7 @@
 import { defineComponent, ref, reactive, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import uploadPdfVue from "@/components/upload-pdf.vue";
-// import Applicant from "@/models/Applicant";
+import Applicant from "@/models/Applicant";
 import "primeicons/primeicons.css";
 import Swal from "sweetalert2";
 import { useVuelidate } from "@vuelidate/core";
@@ -118,23 +96,25 @@ export default defineComponent({
 
     const confirmDelete = ref<boolean>(false);
     //ยังไม่กำหนด any ไปก่อน
-    const applicant = reactive<any>({
-      id: Number(route.params.id),
-      firstName: "None",
-      lastName: "None",
-      position: "None",
-      email: "None",
-      birthDate: "None",
-      address: "None",
-      gender: "None",
-      phone: "None",
-      type: "None",
+    const applicant = reactive<Applicant>({
+      id: "",
+      firstName: "",
+      lastName: "",
+      email_profile: "",
+      birthDate: "",
+      gender: "",
+      address: "",
+      phone: "",
+      resume: "",
+      transcript: "",
+      portfolio: "",
+      state: ""
     });
 
-    const declineApplicant = () => {
+    const declineApplicant = (applicant_id:string) => {
       //ปฏิ
       Swal.fire({
-        title: "ปฏิเสธผู้สมัครหมายเลข " + route.params.id,
+        title: "ปฏิเสธผู้สมัครหมายเลข " + applicant_id,
         text: "คุณแน่ใจแล้วใช่ไหมที่จะปฏิเสธผู้สมัครรายนี้",
         icon: "warning",
         showCancelButton: true,
@@ -154,10 +134,10 @@ export default defineComponent({
         }
       });
     };
-    const acceptApplicant = () => {
+    const acceptApplicant = (applicant_id:string) => {
       //ปฏิ
       Swal.fire({
-        title: "รับผู้สมัครหมายเลข " + route.params.id,
+        title: "รับผู้สมัครหมายเลข " + applicant_id,
         text: "",
         icon: "info",
         showCancelButton: true,
@@ -185,7 +165,7 @@ export default defineComponent({
         firstName: "None",
         lastName: "None",
         position: "XXXX",
-        email: "XXX@gmail.com",
+        email_profile: "XXX@gmail.com",
         address: "None",
         birthDate: "xx-xx-xxxx",
         gender: "Male",

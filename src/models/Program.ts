@@ -1,6 +1,6 @@
 export default interface Program {
-    id: number,
-    company_id:number,
+    id: string,
+    company_id:string,
     image: string,
     name: string,
     description: string, // เพิ่มคุณสมบัติ description
@@ -8,6 +8,6 @@ export default interface Program {
     jobs_title:string[],
     qualifications:string[],
     privileges:string[],
-    
+    state:string
   }
   

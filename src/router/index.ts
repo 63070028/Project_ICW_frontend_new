@@ -18,10 +18,6 @@ const routes: Array<RouteRecordRaw> = [
     component: HomePage
   },
   {
-    path: '/ex',
-    component: () => import(/* webpackChunkName: "about" */ '@/views/ExamplePage.vue')
-  },
-  {
     path: '/signup',
     component: () => import(/* webpackChunkName: "about" */ '@/views/SignUp.vue')
   },

@@ -92,8 +92,8 @@ export default defineComponent({
         const v$ = useVuelidate();
 
         const job = reactive<Job>({
-            id: 0,
-            company_id: 0,
+            id: "",
+            company_id: "",
             name: "Job",
             salary_per_day: 500,
             location: "None",
@@ -102,7 +102,8 @@ export default defineComponent({
             interview: "online",
             qualifications: ["111", "2222"],
             contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" },
-            creation_date: "03/25/2015"
+            creation_date: "03/25/2015",
+            state: ""
         });
 
         const isMyFavorite = ref<boolean>(false)
@@ -112,14 +113,14 @@ export default defineComponent({
 
         const saveMyJobFavorite = () => {
             isMyFavorite.value = !isMyFavorite.value;
-            if(isMyFavorite.value == true){
+            if (isMyFavorite.value == true) {
                 //api post /saveMyJobFavorite
                 // const data = {
                 //     applicant_id:"xxx",
                 //     job_id:'xxx'
                 // }
             }
-            else{
+            else {
                 //api post /removeMyJobFavorite
                 // const data = {
                 //     applicant_id:"xxx",
@@ -199,7 +200,7 @@ export default defineComponent({
 
         onMounted(() => {
             //get api job
-            const get_job: Job = { id: 0, company_id: 1, name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "มาร่วมงานกับ THiNKNET หากคุณมีความหลงใหลในการใช้เทคโนโลยีเพื่อการพัฒนาหรือแก้ไขปัญหาต่าง ๆ และพร้อมที่จะเรียนรู้สิ่งใหม่ ๆ อยู่เสมอ เราคือองค์กรที่รวบรวมคนที่มีความรู้ความสามารถ มีสปิริต มีแพสชัน และมีความคิดสร้างสรรค์มาร่วมกันสร้างนวัตกรรมที่มีคุณค่าต่อสังคมและโลกใบนี้", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015" }
+            const get_job: Job = { id: "", company_id: "", name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "มาร่วมงานกับ THiNKNET หากคุณมีความหลงใหลในการใช้เทคโนโลยีเพื่อการพัฒนาหรือแก้ไขปัญหาต่าง ๆ และพร้อมที่จะเรียนรู้สิ่งใหม่ ๆ อยู่เสมอ เราคือองค์กรที่รวบรวมคนที่มีความรู้ความสามารถ มีสปิริต มีแพสชัน และมีความคิดสร้างสรรค์มาร่วมกันสร้างนวัตกรรมที่มีคุณค่าต่อสังคมและโลกใบนี้", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015", state: "" }
             Object.assign(job, get_job)
             //kong
         });

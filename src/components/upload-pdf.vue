@@ -75,7 +75,6 @@ export default {
         },
         url: {
             type: String,
-            default: '',
             required: true,
         }
     },

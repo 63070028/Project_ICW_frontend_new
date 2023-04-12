@@ -84,8 +84,8 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const job = reactive<Job>({
-      id: 0,
-      company_id: 0,
+      id: "",
+      company_id: "",
       name: "",
       salary_per_day: 0,
       location: "",
@@ -95,6 +95,7 @@ export default defineComponent({
       qualifications: [],
       contact: { name: "", email: "", phone: "" },
       creation_date: "",
+      state:""
     });
     const saveJob = async () => {
       const result = await Swal.fire({

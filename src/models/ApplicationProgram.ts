@@ -1,8 +1,8 @@
 export default interface ApplicationProgram {
-  id: number | string;
-  program_id: number | string;
+  id:string;
+  program_id:string;
   job_title: string;
-  applicant_id: number | string;
+  applicant_id:string;
   firstName: string;
   lastName: string;
   email: string;
@@ -14,5 +14,5 @@ export default interface ApplicationProgram {
   transcript: string;
   portfolio: string;
   status: string;
-  type: string;
+  type?: string;
 }

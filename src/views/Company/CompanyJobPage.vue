@@ -75,12 +75,13 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
     const company = reactive<Company>({
-      id: Number(route.params.id),
+      id:"",
       name: "None",
       description: "None",
       profile_image: "",
       background_image: "",
-      vdo: "",
+      video_iframe: "",
+      state:""
     });
     const jobs = reactive<Job2[]>([]);
     onMounted(() => {
@@ -94,7 +95,7 @@ export default defineComponent({
         profile_image:
           "https://cdn.discordapp.com/attachments/905751963017285634/1089481386349580359/profile-icon-design-free-vector.png",
         background_image: "https://www.w3schools.com/w3images/workbench.jpg",
-        vdo: '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
+        video_iframe: '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
       };
       Object.assign(company, get_company);
       console.log("get api job by company_id: " + route.params.id);

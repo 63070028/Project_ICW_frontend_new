@@ -32,7 +32,7 @@
             </ul>
 
             <applicantProfileVue :id="applicant.id" :firstName="applicant.firstName" :lastName="applicant.lastName"
-                :email="applicant.email" :birthDate="applicant.birthDate" :address="applicant.address"
+                :email="applicant.email_profile" :birthDate="applicant.birthDate" :address="applicant.address"
                 :gender="applicant.gender" :phone="applicant.phone" v-if="select_option === 'user_profile'">
             </applicantProfileVue>
 
@@ -60,7 +60,6 @@ import { defineComponent, onMounted, reactive, ref } from 'vue'
 import applicantProfileVue from '@/components/applicant-profile.vue'
 import uploadPdfVue from '@/components/upload-pdf.vue'
 import Applicant from '@/models/Applicant'
-import ResumeOld from '@/assets/ResumeOld';
 import ApplicantDetail from '@/views/Company/ApplicantDetail.vue';
 
 export default defineComponent({
@@ -71,17 +70,18 @@ export default defineComponent({
     },
     setup() {
         const applicant = reactive<Applicant>({
-            id: 0,
+            id: "",
             firstName: 'test',
             lastName: 'test',
-            email: 'xxx@gmail.com',
+            email_profile: 'xxx@gmail.com',
             birthDate: '2001-08-01',
             gender: 'male',
             address: 'xxxx',
             phone: '08x-xxxxx',
-            resume: 'https://s3.amazonaws.com/chanapon.icw.bucket/resume/xxx-7ea3c451-6ad3-45d4-aca5-7e672454d23a-ResumeNew.pdf',
+            resume: 'https://s3.amazonaws.com/chanapon.icw.bucket/resume/xxx-1741abe7-aab9-40ac-a35b-b10357ab97fa-ResumeNew.pdf',
             transcript: '',
             portfolio: '',
+            state:"on"
         })
 
         let select_option = ref<string>("user_profile")

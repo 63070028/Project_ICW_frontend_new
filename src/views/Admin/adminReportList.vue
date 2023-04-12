@@ -70,6 +70,7 @@ import { useRoute, useRouter } from "vue-router";
 import Company from "@/models/Company";
 import Job from "@/models/JobReport";
 import Swal from "sweetalert2";
+import JobReport from "@/models/JobReport";
 
 export default defineComponent({
   name: "App",
@@ -80,12 +81,13 @@ export default defineComponent({
 
     //def
     const company = reactive<Company>({
-      id: Number(route.params.id),
+      id:"",
       name: "None",
       description: "None",
       profile_image: "",
       background_image: "",
-      vdo: "",
+      video_iframe: "",
+      state:""
     });
 
     const jobs = reactive<Job[]>([]);
@@ -102,43 +104,43 @@ export default defineComponent({
         profile_image:
           "https://cdn.discordapp.com/attachments/905751963017285634/1089481386349580359/profile-icon-design-free-vector.png",
         background_image: "https://www.w3schools.com/w3images/workbench.jpg",
-        vdo: '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
+        video_iframe: '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
       };
       Object.assign(company, get_company);
 
       console.log("get api job by company_id: " + route.params.id);
 
-      let get_jobs: Job[] = [
+      let get_jobReport: JobReport[] = [
         {
-          id: 1,
-          user_id: 1,
-          job_id: 1,
+          id: "",
+          user_id: "",
+          job_id: "",
           message:
             "งานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับ",
           creation_date: "xx-xx-xxxx",
         },
         {
-          id: 1,
-          user_id: 1,
-          job_id: 2,
+          id: "",
+          user_id: "",
+          job_id: "",
           message: "งานนี้ดูมีปัญหานะครับ",
           creation_date: "xx-xx-xxxx",
         },
         {
-          id: 1,
-          user_id: 1,
-          job_id: 3,
+          id: "",
+          user_id: "",
+          job_id: "",
           message: "งานนี้ดูมีปัญหานะครับ",
           creation_date: "xx-xx-xxxx",
         },
       ];
 
-      get_jobs.forEach((job) => {
+      get_jobReport.forEach((job) => {
         jobs.push(job);
       });
     });
 
-    const viewJob = (id: number) => {
+    const viewJob = (id: string) => {
       router.push("/jobs/" + id);
     };
     const deleteJob = (index: number) => {

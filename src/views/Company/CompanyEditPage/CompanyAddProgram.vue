@@ -102,8 +102,8 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const program = reactive<Program>({
-      id: 0,
-      company_id: 0,
+      id: "0",
+      company_id: "0",
       image: '',
       name: '',
       description: '',
@@ -111,6 +111,7 @@ export default defineComponent({
       jobs_title: [],
       qualifications: [],
       privileges: [],
+      state:""
     });
     const programImageInput = ref(null);
     const programImagePreview = ref('https://www.w3schools.com/w3images/workbench.jpg');

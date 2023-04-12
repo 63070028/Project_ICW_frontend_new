@@ -1,6 +1,6 @@
 export default interface Job {
-    id:number,
-    company_id:number,
+    id:string,
+    company_id:string,
     name:string,
     salary_per_day:number,
     location:string,
@@ -10,4 +10,5 @@ export default interface Job {
     qualifications:string[],
     contact:{name:string, email:string, phone:string},
     creation_date:string
+    state:""
 }

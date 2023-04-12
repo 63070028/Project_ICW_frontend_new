@@ -79,15 +79,16 @@ export default defineComponent({
 
 
         const program = reactive<Program>({
-            id: 0,
-            company_id: 0,
+            id: "0",
+            company_id: "0",
             name: 'None',
             description: 'None', // เพิ่มคุณสมบัติ description
             course: 'None',
             jobs_title: [],
             qualifications: [],
             privileges: [],
-            image: ''
+            image: '',
+            state:""
         })
         const router = useRouter();
         const route = useRoute();
@@ -100,15 +101,16 @@ export default defineComponent({
 
         onMounted(() => {
             const get_program: Program = {
-                id: 1,
-                company_id: 1,
+                id: "1",
+                company_id: "1",
                 name: 'Test',
                 description: 'Test', // เพิ่มคุณสมบัติ description
                 course: 'Test',
                 jobs_title: ['SE', 'NW', "ML"],
                 qualifications: ['4.00'],
                 privileges: ['500 บาทต่อวัน'],
-                image: ""
+                image: "",
+                state:""
             }
 
             Object.assign(program, get_program)

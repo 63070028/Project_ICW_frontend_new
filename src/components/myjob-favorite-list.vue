@@ -43,15 +43,15 @@
 
 <script lang="ts">
 import Swal from 'sweetalert2';
-import { defineComponent, onMounted, onUpdated, reactive, ref } from 'vue'
+import { defineComponent, onMounted, onUpdated, PropType, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router';
+import Job from '@/models/Job';
 
 export default defineComponent({
     props: {
         items: {
-            type: Array,
+            type: Object as PropType<Job[]>,
             required: true,
-            default: () => []
         },
         itemPerEachPage: {
             type: Number,
@@ -63,7 +63,7 @@ export default defineComponent({
         let presentPage = ref<number>(1);
         let pastPage = ref<number>(1);
 
-        const states = reactive<{ countOfPages: number[], addItemsPageList: any[] }>(
+        const states = reactive<{ countOfPages: number[], addItemsPageList: Job[] }>(
             {
                 countOfPages: [],
                 addItemsPageList: [],
@@ -121,7 +121,7 @@ export default defineComponent({
             presentPage.value === 1 ? previousClicked.value = true : previousClicked.value = false;
         }
 
-        const viewJob = (id: number) => {
+        const viewJob = (id: string) => {
             router.push("/jobs/" + id)
         }
 

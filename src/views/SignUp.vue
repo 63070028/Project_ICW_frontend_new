@@ -56,29 +56,133 @@
 </template>
 
 
-<script>
+<script lang="ts">
 import { useVuelidate } from '@vuelidate/core'
 import { required, minLength, sameAs, helpers } from '@vuelidate/validators'
+import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2';
 import axios from 'axios';
 import { PORT } from '@/port';
+import { defineComponent, ref } from 'vue'
+import ApplicantSignUpModel from '@/models/formModels/ApplicantSignUpModel';
+import CompanySignUpModel from '@/models/formModels/CompanySignUpModel';
+import { reactive } from 'vue';
 
 // const alpha = helpers.regex(/^[a-zA-Z]*$/)
 const emailValid = helpers.regex(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
 
-export default {
+export default defineComponent({
     setup() {
-        return {
-            v$: useVuelidate()
-        }
-    },
-    data() {
-        return {
-            select_role: "applicant",
+        const v$ = useVuelidate()
+        const router = useRouter();
+        const email = ref<string>("");
+        const password = ref<string>("");
+        const confirmPassword = ref<string>("");
+        const select_role = ref<string>("applicant")
+
+        const formApplicantSignUp = reactive<ApplicantSignUpModel>({
             email: "",
             password: "",
-            confirmPassword: "",
+            firstName: "",
+            lastName: "",
+            email_profile: "",
+            birthDate: "",
+            gender: "",
+            address: "",
+            phone: "",
+            resume: "",
+            transcript: "",
+            portfolio: "",
+            state:""
+        })
+
+        const formCompanySignUp = reactive<CompanySignUpModel>({
+            email: "",
+            password: "",
+            name: "",
+            description: "",
+            profile_image: "",
+            background_image: "",
+            video_iframe: "",
+            state:""
+        })
+
+        const siwtchApplicant = () => {
+            select_role.value = "applicant";
         }
+        const siwtchCompany = () => {
+            select_role.value = "company";
+        }
+
+
+        const submitForm = async () => {
+            const isFormCorrect = await v$.value.$validate();
+            if (!isFormCorrect) return
+
+            if (select_role.value === "applicant") {
+                formApplicantSignUp.email = email.value
+                formApplicantSignUp.password = password.value
+
+                console.log(formApplicantSignUp)
+                axios.post(`${PORT}` + '/applicant/signUp', formApplicantSignUp)
+                    .then((response) => {
+                        // handle success
+                        console.log(response.data.message);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        setTimeout(() => { router.push("/") }, 1500);
+                    })
+                    .catch((error) => {
+                        // handle error
+                        console.log(error);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'Error',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    })
+            }
+            else {
+                formCompanySignUp.email = email.value;
+                formCompanySignUp.password = email.value;
+                console.log(formCompanySignUp)
+                //api post signup/company
+                axios.post(`${PORT}` + '/company/signUp', formCompanySignUp)
+                    .then((response) => {
+                        // handle success
+                        console.log(response);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'success',
+                            title: 'Success',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                        setTimeout(() => { router.push("/") }, 1500);
+                    })
+                    .catch((error) => {
+                        // handle error
+                        console.log(error);
+                        Swal.fire({
+                            position: 'center',
+                            icon: 'error',
+                            title: 'Error',
+                            showConfirmButton: false,
+                            timer: 1500
+                        })
+                    })
+            }
+
+
+        }
+        return { email, password, confirmPassword, v$, submitForm, select_role, siwtchApplicant, siwtchCompany, formApplicantSignUp, formCompanySignUp }
     },
     validations() {
         return {
@@ -97,88 +201,8 @@ export default {
         }
     },
 
-    methods: {
-        siwtchApplicant() {
-            this.select_role = "applicant";
-        },
-        siwtchCompany() {
-            this.select_role = "company";
-        },
-        async submitForm() {
-            const isFormCorrect = await this.v$.$validate()
-            if (!isFormCorrect) return
 
-            if (this.select_role === "applicant") {
-                const data = {
-                    email: this.email,
-                    password: this.password
-                }
-                console.log(data)
-                axios.post(`${PORT}` + '/applicant/signUp', data)
-                    .then(function (response) {
-                        // handle success
-                        console.log(response);
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Success',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        setTimeout(() => { this.$router.push("/") }, 1500);
-                    })
-                    .catch(function (error) {
-                        // handle error
-                        console.log(error);
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: 'Error',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    })
-            }
-            else {
-                const data = {
-                    email: this.email,
-                    password: this.password
-                }
-                console.log(data)
-                //api post signup/company
-                axios.post(`${PORT}` + '/company/signUp', data)
-                    .then(function (response) {
-                        // handle success
-                        console.log(response);
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'Success',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        setTimeout(() => { this.$router.push("/") }, 1500);
-                    })
-                    .catch(function (error) {
-                        // handle error
-                        console.log(error);
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: 'Error',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    })
-            }
-
-
-        }
-    }
-
-
-
-}
+})
 </script>
 
 <style scoped>

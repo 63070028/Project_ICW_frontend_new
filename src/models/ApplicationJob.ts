@@ -1,7 +1,7 @@
 export default interface ApplicationJob {
-  id: number | string,
-  job_id: number | string,
-  applicant_id: number | string,
+  id: string,
+  job_id: string,
+  applicant_id: string,
   firstName: string,
   lastName: string,
   email: string,
@@ -12,6 +12,6 @@ export default interface ApplicationJob {
   resume: string,
   transcript: string,
   portfolio: string,
-  status: string,
+  state: string,
   type: string
 }

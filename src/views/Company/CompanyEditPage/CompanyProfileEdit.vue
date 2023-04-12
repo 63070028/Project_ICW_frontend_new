@@ -77,7 +77,7 @@
                         </div>
                       </div>
                     <div class="control">
-                      <input class="input" type="text" v-model="company.vdo" />
+                      <input class="input" type="text" v-model="company.video_iframe" />
                     </div>
                   </div>
                   <div class="field is-grouped">
@@ -99,7 +99,7 @@
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, reactive, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 import Company from '@/models/Company';
 import Swal from 'sweetalert2';
 
@@ -108,14 +108,14 @@ export default defineComponent({
 
   setup() {
     const router = useRouter();
-    const route = useRoute();
     const company = reactive<Company>({
-      id: Number(route.params.id),
-      name: 'None',
-      description: 'None',
-      profile_image: '',
-      background_image: '',
-      vdo: '',
+      id:"",
+      name: "None",
+      description: "None",
+      profile_image: "",
+      background_image: "",
+      video_iframe: "",
+      state:""
     });
     const profileImageInput = ref(null);
     const backgroundImageInput = ref(null);
@@ -123,7 +123,7 @@ export default defineComponent({
     const backgroundImagePreview = ref('https://www.w3schools.com/w3images/workbench.jpg');
     onMounted(() => {
       const get_company:Company = {
-        id: 1,
+        id: "",
         name:
           'ไม่ทำงาน จำกัด หมาชน',
         description:
@@ -132,9 +132,10 @@ export default defineComponent({
           'https://cdn.discordapp.com/attachments/905751963017285634/1089481386349580359/profile-icon-design-free-vector.png',
         background_image:
           'https://www.w3schools.com/w3images/workbench.jpg',
-        vdo:
+        video_iframe:
           '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
-      };
+        state:""
+        };
       Object.assign(company, get_company);
     });
 
@@ -206,7 +207,7 @@ export default defineComponent({
   border-radius: 25px;
 }
 
-.vdo {
+.video_iframe {
   display: flex;
   flex-direction: column;
 }

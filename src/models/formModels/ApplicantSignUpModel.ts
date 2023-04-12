@@ -1,5 +1,6 @@
-export default interface Applicant {
-    id:string,
+export default interface ApplicantSignUpModel {
+    email:string,
+    password:string,
     firstName:string,
     lastName:string,
     email_profile:string,

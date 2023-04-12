@@ -1,12 +1,8 @@
 <template>
   <div class="column m-0 p-0">
     <div class="card px-5 py-3">
-      <div
-        class="pt-3"
-        style="border-top: 0.5px solid gray"
-        v-for="(item, index) in states.addItemsPageList"
-        :key="index"
-      >
+      <div class="pt-3" style="border-top: 0.5px solid gray" v-for="(item, index) in states.addItemsPageList"
+        :key="index">
         <div @click="viewApplicant(item.id)">
           <p class="is-size-4 has-text-weight-bold p-4">
             {{ item.id }}. {{ item.firstName }} {{ item.lastName }}
@@ -28,33 +24,16 @@
       </div>
     </div>
 
-    <nav
-      class="pagination mt-3 pl-6 pr-5"
-      role="navigation"
-      aria-label="pagination"
-    >
-      <button
-        class="pagination-previous"
-        :disabled="previousClicked"
-        @click="getPreviousPage()"
-      >
+    <nav class="pagination mt-3 pl-6 pr-5" role="navigation" aria-label="pagination">
+      <button class="pagination-previous" :disabled="previousClicked" @click="getPreviousPage()">
         Previous
       </button>
-      <button
-        class="pagination-next"
-        :disabled="nextPageClicked"
-        @click="getNextPage()"
-      >
+      <button class="pagination-next" :disabled="nextPageClicked" @click="getNextPage()">
         Next page
       </button>
       <ul class="pagination-list">
         <li v-for="index in states.countOfPages" :key="index">
-          <a
-            v-bind:id="'pageId' + (index + 1)"
-            class="pagination-link"
-            @click="changePage(index + 1)"
-            >{{ index + 1 }}</a
-          >
+          <a v-bind:id="'pageId' + (index + 1)" class="pagination-link" @click="changePage(index + 1)">{{ index + 1 }}</a>
         </li>
       </ul>
     </nav>
@@ -62,7 +41,6 @@
 </template>
 
 <script lang="ts">
-import Swal from "sweetalert2";
 import {
   defineComponent,
   onMounted,
@@ -96,7 +74,7 @@ export default defineComponent({
 
     const states = reactive<{
       countOfPages: number[];
-      addItemsPageList: any[];
+      addItemsPageList: ApplicationJob[];
     }>({
       countOfPages: [],
       addItemsPageList: [],
@@ -170,8 +148,8 @@ export default defineComponent({
         ? (previousClicked.value = true)
         : (previousClicked.value = false);
     };
-    const viewApplicant = (id:number) => {
-      router.push("/applicant/"+id)
+    const viewApplicant = (id: string) => {
+      router.push("/applicant/" + id)
     }
     return {
       nextPageClicked,
