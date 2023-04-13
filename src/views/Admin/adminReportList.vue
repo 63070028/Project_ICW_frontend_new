@@ -38,7 +38,8 @@
                   <div class="columns">
                     <div class="column is-11" @click="viewJob(job.id)">
                       <p class="is-size-4 has-text-weight-bold">
-                        {{ index + 1 + "." }} ฝึกงานเภสัช jobID= {{ job.job_id }}
+                        {{ index + 1 + "." }} ฝึกงานเภสัช jobID=
+                        {{ job.job_id }}
                       </p>
                       <div class="columns is-multiline ml-6 mt-1">
                         <p class="column is-6">
@@ -71,7 +72,8 @@ import Company from "@/models/Company";
 import Job from "@/models/JobReport";
 import Swal from "sweetalert2";
 import JobReport from "@/models/JobReport";
-
+import axios from "axios";
+import { PORT } from "@/port";
 export default defineComponent({
   name: "App",
 
@@ -81,13 +83,13 @@ export default defineComponent({
 
     //def
     const company = reactive<Company>({
-      id:"",
+      id: "",
       name: "None",
       description: "None",
       profile_image: "",
       background_image: "",
       video_iframe: "",
-      state:""
+      state: "",
     });
 
     const jobs = reactive<Job[]>([]);
@@ -95,49 +97,31 @@ export default defineComponent({
     onMounted(() => {
       console.log("get api company id: " + route.params.id);
 
-      //set company
-      const get_company = {
-        id: 1,
-        name: "ไม่ทำงาน จำกัด หมาชน",
-        description:
-          "THiNKNET คือ บริษัท IT ที่สร้างสรรค์ผลิตภัณฑ์และบริการที่มุ่งพัฒนาคุณภาพชีวิตของคนไทยให้ดีขึ้น ก่อตั้งขึ้นในปี 2000 ผลงานโดดเด่นคือ JobThai แพลตฟอร์มหาคน หางาน สมัครงานอันดับ 1 ของประเทศ ที่ช่วยให้คนไทยมีงานทำมานานมากกว่า 20 ปี นอกจากนี้แล้ว THiNKNET ยังพัฒนาสินค้าและบริการอื่น ๆ ออกมาอยู่เสมอ เช่น Mapping & GIS Solutions, THiNKNET Design Studio",
-        profile_image:
-          "https://cdn.discordapp.com/attachments/905751963017285634/1089481386349580359/profile-icon-design-free-vector.png",
-        background_image: "https://www.w3schools.com/w3images/workbench.jpg",
-        video_iframe: '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
-      };
-      Object.assign(company, get_company);
-
       console.log("get api job by company_id: " + route.params.id);
+      axios
+        .get(`${PORT}` + "/admin/getReportJob")
+        .then((response) => {
+          console.log(response.data.items);
+          const get_jobReport: JobReport[] = response.data.items;
+          console.log(get_jobReport);
+          get_jobReport.forEach((job) => {
+            jobs.push(job);
+          });
+        })
+        .catch((error) => {
+          // handle error
+          console.log(error);
+          Swal.fire({
+            position: "center",
+            icon: "error",
+            title: "Error",
+            showConfirmButton: false,
+            timer: 1500,
+          });
+        });
+      //let get_jobReport: JobReport[] = [
 
-      let get_jobReport: JobReport[] = [
-        {
-          id: "",
-          user_id: "",
-          job_id: "",
-          message:
-            "งานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับงานนี้ดูมีปัญหานะครับ",
-          creation_date: "xx-xx-xxxx",
-        },
-        {
-          id: "",
-          user_id: "",
-          job_id: "",
-          message: "งานนี้ดูมีปัญหานะครับ",
-          creation_date: "xx-xx-xxxx",
-        },
-        {
-          id: "",
-          user_id: "",
-          job_id: "",
-          message: "งานนี้ดูมีปัญหานะครับ",
-          creation_date: "xx-xx-xxxx",
-        },
-      ];
-
-      get_jobReport.forEach((job) => {
-        jobs.push(job);
-      });
+      //];
     });
 
     const viewJob = (id: string) => {
