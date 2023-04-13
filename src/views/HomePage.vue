@@ -22,17 +22,18 @@
     </div>
     <companyList :items="states.companies"></companyList>
   </div>
-
 </template>
 
 
 <script lang="ts">
-import { defineComponent, reactive } from 'vue'
+import { computed, defineComponent, reactive, unref } from 'vue'
 import companyList from '../components/company-list.vue'
 import Company from '@/models/Company'
 import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 import { useRouter } from 'vue-router'
+// import { useStore } from 'vuex'
+// import User from '@/models/User'
 
 export default defineComponent({
   components: {
@@ -42,9 +43,16 @@ export default defineComponent({
     Pagination,
     Navigation,
   },
+
   setup() {
 
     const router = useRouter();
+    // const store = useStore();
+
+    // const user = reactive<User>(unref(computed(() => store.getters.user)))
+
+
+
 
     const states = reactive<{ companies: Company[] }>({
       companies: [
