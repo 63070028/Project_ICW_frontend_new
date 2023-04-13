@@ -13,5 +13,5 @@ export default interface ApplicationJob {
   transcript: string,
   portfolio: string,
   state: string,
-  type?: string
+  type: string
 }

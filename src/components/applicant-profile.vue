@@ -33,8 +33,8 @@
                 <div class="field-body">
                     <div class="field">
                         <div class="control">
-                            <input class="input" type="email" v-model="v$.f_email.$model">
-                            <div class="has-text-danger" v-for="error of v$.f_email.$errors" :key="error.$uid">
+                            <input class="input" type="email" v-model="v$.f_email_profile.$model">
+                            <div class="has-text-danger" v-for="error of v$.f_email_profile.$errors" :key="error.$uid">
                                 <div class="error-msg">{{ error.$message }}</div>
                             </div>
                         </div>
@@ -121,8 +121,7 @@
             <button v-show="!modify_profile" class="button is-medium ml-2 is-info"
                 @click="modify_profile = !modify_profile">แก้ไข</button>
             <button v-show="modify_profile" class="button is-medium ml-2 is-success" @click="saveProfile()">บันทึก</button>
-            <button v-show="modify_profile" class="button is-medium ml-2 is-danger"
-                @click="resetProfile()">ยกเลิก</button>
+            <button v-show="modify_profile" class="button is-medium ml-2 is-danger" @click="resetProfile()">ยกเลิก</button>
         </div>
     </div>
 </template>
@@ -131,10 +130,10 @@
 
 <script lang="ts">
 import Swal from 'sweetalert2';
-import { defineComponent, ref } from 'vue'
+import { defineComponent, reactive, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { helpers, required } from '@vuelidate/validators'
-
+import Applicant from '@/models/Applicant';
 export default defineComponent({
     props: {
         id: {
@@ -178,19 +177,43 @@ export default defineComponent({
 
         const f_firstName = ref<string>(props.firstName);
         const f_lastName = ref<string>(props.lastName);
-        const f_email = ref<string>(props.email);
+        const f_email_profile = ref<string>(props.email);
         const f_birthDate = ref<string>(props.birthDate);
         const f_gender = ref<string>(props.gender);
         const f_address = ref<string>(props.address);
         const f_phone = ref<string>(props.phone);
 
-
+        const editForm = reactive<Applicant>({
+            id: "",
+            firstName: "",
+            lastName: "",
+            email_profile: "",
+            birthDate: "",
+            gender: "",
+            address: "",
+            phone: "",
+            resume: "",
+            transcript: "",
+            portfolio: "",
+            state: "on"
+        })
 
         const saveProfile = async () => {
             const isFormCorrect = await v$.value.$validate();
             if (!isFormCorrect) return
 
-            //api post applicant/profile
+            editForm.firstName = f_firstName.value;
+            editForm.lastName = f_lastName.value;
+            editForm.email_profile = f_email_profile.value;
+            editForm.birthDate = f_birthDate.value;
+            editForm.gender = f_gender.value;
+            editForm.address = f_address.value;
+            // editForm.resume = 
+            // editForm.transcript =
+            // editForm.portfolio =
+            editForm.state;
+
+            //api post applicant/edit  form editForm
             //update this page
 
             Swal.fire({
@@ -210,7 +233,7 @@ export default defineComponent({
             modify_profile.value = !modify_profile.value;
             f_firstName.value = props.firstName;
             f_lastName.value = props.lastName;
-            f_email.value = props.email;
+            f_email_profile.value = props.email;
             f_birthDate.value = props.birthDate;
             f_gender.value = props.gender;
             f_address.value = props.address;
@@ -219,8 +242,8 @@ export default defineComponent({
 
         return {
             modify_profile, v$,
-            f_firstName, f_lastName, f_email, f_birthDate, f_gender, f_address, f_phone,
-            resetProfile, saveProfile,
+            f_firstName, f_lastName, f_email_profile, f_birthDate, f_gender, f_address, f_phone,
+            resetProfile, saveProfile, editForm
         }
     },
     validations() {
@@ -231,7 +254,7 @@ export default defineComponent({
             f_lastName: {
                 required: helpers.withMessage('กรุณากรอกข้อมูล', required)
             },
-            f_email: {
+            f_email_profile: {
                 required: helpers.withMessage('กรุณากรอกข้อมูล', required)
             },
             f_birthDate: {

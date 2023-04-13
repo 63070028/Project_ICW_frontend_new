@@ -74,22 +74,43 @@ import Program from '@/models/Program'
 import Swal from 'sweetalert2'
 import { useVuelidate } from '@vuelidate/core'
 import { helpers, required } from '@vuelidate/validators'
+import ApplicationProgram from '@/models/ApplicationProgram'
 export default defineComponent({
     setup() {
 
 
         const program = reactive<Program>({
-            id: "0",
-            company_id: "0",
-            name: 'None',
-            description: 'None', // เพิ่มคุณสมบัติ description
-            course: 'None',
+            id: "",
+            company_id: "",
+            name: "",
+            description: "", // เพิ่มคุณสมบัติ description
+            course: "",
             jobs_title: [],
             qualifications: [],
             privileges: [],
             image: '',
-            state:""
+            state: ""
         })
+
+        const applicationProgram = reactive<ApplicationProgram>({
+            id: "",
+            program_id: "",
+            job_title: "",
+            applicant_id: "",
+            firstName: "",
+            lastName: "",
+            email: "",
+            birthDate: "",
+            gender: "",
+            address: "",
+            phone: "",
+            resume: "",
+            transcript: "",
+            portfolio: "",
+            status: "pending",
+            type: "program",
+        })
+
         const router = useRouter();
         const route = useRoute();
         const v$ = useVuelidate();
@@ -100,18 +121,22 @@ export default defineComponent({
 
 
         onMounted(() => {
+
+            //api get program form route.params.id
+
             const get_program: Program = {
-                id: "1",
-                company_id: "1",
-                name: 'Test',
-                description: 'Test', // เพิ่มคุณสมบัติ description
-                course: 'Test',
+                id: "",
+                company_id: "",
+                name: "",
+                description: "", // เพิ่มคุณสมบัติ description
+                course: "",
                 jobs_title: ['SE', 'NW', "ML"],
-                qualifications: ['4.00'],
-                privileges: ['500 บาทต่อวัน'],
+                qualifications: [""],
+                privileges: [""],
                 image: "",
-                state:""
+                state: ""
             }
+
 
             Object.assign(program, get_program)
 
@@ -121,26 +146,9 @@ export default defineComponent({
             const isFormCorrect = await v$.value.$validate();
             if (!isFormCorrect) return
 
-            //ส่งใบสมัครโครงการ
-            //     {
-            //     program_id: 0,
-            //     job_title:'',
-            //     applicant_id: 0,
-            //     firstName: 'test',
-            //     lastName: 'test',
-            //     email: 'xxx@gmail.com',
-            //     birthDate: '2001-08-01',
-            //     gender: 'male',
-            //     address: 'xxxx',
-            //     phone: '08x-xxxxx',
-            //     resume: 'data:application/pdf;base64, ' + ResumeOld,
-            //     transcript: '',
-            //     portfolio: '',
-            //เพิ่ม status:pending
-            //เพิ่ม type: program
-            // }
-
+            //ส่งใบสมัครโครงการ applicationProgram            
             //api post /sendAppplicationProgram
+
 
             Swal.fire({
                 title: 'Are you sure?',

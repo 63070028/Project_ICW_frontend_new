@@ -37,12 +37,12 @@
             </applicantProfileVue>
 
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'"
-                :url="applicant.resume"></uploadPdfVue>
+                :url="applicant.resume" :role="'applicant'"></uploadPdfVue>
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'transcript'"
-                :url="applicant.transcript">
+                :url="applicant.transcript" :role="'applicant'">
             </uploadPdfVue>
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'portfolio'"
-                :url="applicant.portfolio">
+                :url="applicant.portfolio" :role="'applicant'">
             </uploadPdfVue>
 
             <ApplicantDetail v-if="select_option === 'preview'"></ApplicantDetail>
@@ -71,17 +71,17 @@ export default defineComponent({
     setup() {
         const applicant = reactive<Applicant>({
             id: "",
-            firstName: 'test',
-            lastName: 'test',
-            email_profile: 'xxx@gmail.com',
-            birthDate: '2001-08-01',
-            gender: 'male',
-            address: 'xxxx',
-            phone: '08x-xxxxx',
-            resume: 'https://s3.amazonaws.com/chanapon.icw.bucket/resume/xxx-638d7ae3-217f-4631-8ed3-6eaf1ed4c281-ResumeOld.pdf',
-            transcript: '',
-            portfolio: '',
-            state:"on"
+            firstName: "",
+            lastName: "",
+            email_profile: "",
+            birthDate: "",
+            gender: "",
+            address: "",
+            phone: "",
+            resume: 'https://s3.amazonaws.com/chanapon.icw.bucket/resume/xxx-638d7ae3-217f-4631-8ed3-6eaf1ed4c281-ResumeOld.pdf', //ทดสอบ
+            transcript: "",
+            portfolio: "",
+            state:""
         })
 
         let select_option = ref<string>("user_profile")

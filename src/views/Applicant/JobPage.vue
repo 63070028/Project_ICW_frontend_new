@@ -84,6 +84,8 @@ import 'primeicons/primeicons.css';
 import Swal from 'sweetalert2';
 import { useVuelidate } from '@vuelidate/core'
 import { helpers, required } from '@vuelidate/validators'
+import JobReportSendModel from '@/models/formModels/JobReportSendModel';
+import ApplicationJob from '@/models/ApplicationJob';
 
 export default defineComponent({
     setup() {
@@ -94,17 +96,44 @@ export default defineComponent({
         const job = reactive<Job>({
             id: "",
             company_id: "",
-            name: "Job",
-            salary_per_day: 500,
-            location: "None",
+            name: "",
+            salary_per_day: 0,
+            location: "",
             capacity: 0,
-            detail: "None",
-            interview: "online",
-            qualifications: ["111", "2222"],
-            contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" },
-            creation_date: "03/25/2015",
+            detail: "",
+            interview: "",
+            qualifications: [],
+            contact: { name: "", email: "", phone: "" },
+            creation_date: "",
             state: ""
         });
+
+
+        const report = reactive<JobReportSendModel>({
+            user_id: "",
+            job_id: "",
+            creation_date: "",
+            message: ""
+        })
+
+        const applicationJob = reactive<ApplicationJob>({
+            id: "",
+            job_id: "",
+            applicant_id: "",
+            firstName: "",
+            lastName: "",
+            email: "",
+            birthDate: "",
+            gender: "",
+            address: "",
+            phone: "",
+            resume: "",
+            transcript: "",
+            portfolio: "",
+            state: "pending",
+            type: "job"
+        })
+
 
         const isMyFavorite = ref<boolean>(false)
 
@@ -178,12 +207,6 @@ export default defineComponent({
             if (!isFormCorrect) return
 
             //ส่ง report
-            const report = {
-                user_id: 0,
-                job_id: Number(route.params.id),
-                creation_date: new Date().toLocaleDateString('en-GB'),
-                message: messageReport.value
-            }
 
             console.log(report)
             //api post /sendReport
@@ -217,7 +240,8 @@ export default defineComponent({
             messageReport,
             saveMyJobFavorite,
             submitApplication,
-            submitReport
+            submitReport,
+            report
         }
     },
     validations() {
