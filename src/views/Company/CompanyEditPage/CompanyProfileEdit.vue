@@ -6,28 +6,16 @@
           <p class="menu-label">Navigation</p>
           <ul class="menu-list">
             <li>
-              <router-link
-                :class="{ 'is-active': activeTab === 'info' }"
-                @click="setActiveTab('info')"
-                to="/companyProfile"
-                >ข้อมูลบริษัท</router-link
-              >
+              <router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')"
+                to="/companyProfile">ข้อมูลบริษัท</router-link>
             </li>
             <li>
-              <router-link
-                :class="{ 'is-active': activeTab === 'jobs' }"
-                @click="setActiveTab('jobs')"
-                to="/companyJob"
-                >งานที่ประกาศ</router-link
-              >
+              <router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')"
+                to="/companyJob">งานที่ประกาศ</router-link>
             </li>
             <li>
-              <router-link
-                :class="{ 'is-active': activeTab === 'programs' }"
-                @click="setActiveTab('programs')"
-                to="/companyProgram"
-                >โครงการพิเศษ</router-link
-              >
+              <router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')"
+                to="/companyProgram">โครงการพิเศษ</router-link>
             </li>
           </ul>
         </aside>
@@ -48,21 +36,14 @@
                   <div class="field">
                     <label class="label">คำอธิบาย</label>
                     <div class="control">
-                      <textarea
-                        class="textarea"
-                        v-model="company.description"
-                      ></textarea>
+                      <textarea class="textarea" v-model="company.description"></textarea>
                     </div>
                   </div>
                   <div class="field">
                     <label class="label">รูปโปรไฟล์</label>
                     <div class="file">
                       <label class="file-label">
-                        <input
-                          class="file-input"
-                          type="file"
-                          @change="previewProfileImage"
-                        />
+                        <input class="file-input" type="file" @change="previewProfileImage" />
                         <span class="file-cta is-small">
                           <span class="file-label"> Choose a file.. </span>
                         </span>
@@ -70,11 +51,7 @@
                     </div>
 
                     <div class="control">
-                      <img
-                        v-if="profileImagePreview"
-                        :src="profileImagePreview"
-                        class="image-preview profile_image"
-                      />
+                      <img v-if="profileImagePreview" :src="profileImagePreview" class="image-preview profile_image" />
                     </div>
                   </div>
                   <div class="field">
@@ -82,55 +59,31 @@
                     <div class="control">
                       <div class="file">
                         <label class="file-label">
-                          <input
-                            class="file-input"
-                            type="file"
-                            @change="previewBackgroundImage"
-                          />
+                          <input class="file-input" type="file" @change="previewBackgroundImage" />
                           <span class="file-cta is-small">
                             <span class="file-label"> Choose a file.. </span>
                           </span>
                         </label>
                       </div>
                       <br />
-                      <img
-                        v-if="backgroundImagePreview"
-                        :src="backgroundImagePreview"
-                        class="background_image"
-                      />
+                      <img v-if="backgroundImagePreview" :src="backgroundImagePreview" class="background_image" />
                     </div>
                   </div>
                   <div class="field">
                     <label class="label">วิดีโอ</label>
                     <div class="columns">
                       <div class="column">
-                        <img
-                          src="https://sv1.picz.in.th/images/2023/04/02/m1nC4y.png"
-                          alt="m1nC4y.png"
-                          border="0"
-                        />
+                        <img src="https://sv1.picz.in.th/images/2023/04/02/m1nC4y.png" alt="m1nC4y.png" border="0" />
                       </div>
                       <div class="column">
-                        <img
-                          src="https://sv1.picz.in.th/images/2023/04/02/m1nvp8.png"
-                          alt="m1nvp8.png"
-                          border="0"
-                        />
+                        <img src="https://sv1.picz.in.th/images/2023/04/02/m1nvp8.png" alt="m1nvp8.png" border="0" />
                       </div>
                       <div class="column">
-                        <img
-                          src="https://sv1.picz.in.th/images/2023/04/02/m1nJNR.png"
-                          alt="m1nJNR.png"
-                          border="0"
-                        />
+                        <img src="https://sv1.picz.in.th/images/2023/04/02/m1nJNR.png" alt="m1nJNR.png" border="0" />
                       </div>
                     </div>
                     <div class="control">
-                      <input
-                        class="input"
-                        type="text"
-                        v-model="company.video_iframe"
-                      />
+                      <input class="input" type="text" v-model="company.video_iframe" />
                     </div>
                   </div>
                   <div class="field is-grouped">
@@ -140,10 +93,7 @@
                       </button>
                     </div>
                     <div class="control">
-                      <button
-                        class="button is-link is-light"
-                        @click="cancelEdit"
-                      >
+                      <button class="button is-link is-light" @click="cancelEdit">
                         ยกเลิก
                       </button>
                     </div>
@@ -196,28 +146,29 @@ export default defineComponent({
       });
 
       if (result.isConfirmed) {
-        const data = {
-          name: company.name,
-          description: company.description,
-          profile_image: company.profile_image,
-          background_image: company.background_image,
-          video_iframe: company.video_iframe,
-        };
-        console.log(data)
-        const formData = new FormData();
-        //formData.append("data", company.name);
-        // formData.append("description", company.description);
-        //formData.append("profile_image", company.profile_image);
-        //formData.append("background_image", company.background_image);
-        //formData.append("video_iframe", company.video_iframe);
+        // const formData = new FormData();
 
         try {
-          const response = await axios.post(`${PORT} `+ '/company/edit', data, {
-                        headers: {
-                            'Content-Type': 'multipart/form-data'
-                        }
-                    })
-                    console.log(response.data)
+          //   const data = {
+          //   name: company.name,
+          //   description: company.description,
+          //   profile_image: company.profile_image,
+          //   background_image: company.background_image,
+          //   video_iframe: company.video_iframe,
+          // };
+          const formData = new FormData();
+
+          formData.append('name', company.name);
+          formData.append('description', company.description);
+          // formData.append('files', ...)
+          formData.append('video_iframe', company.background_image)
+
+          const response = await axios.post(`${PORT}` + '/company/edit', formData, {
+            headers: {
+              'Content-Type': 'multipart/form-data'
+            }
+          })
+          console.log(response.data)
           Swal.fire({
             title: "Success",
             text: "Company profile updated successfully",
@@ -302,12 +253,15 @@ export default defineComponent({
   width: 150px;
   margin-top: 1rem;
 }
+
 .file-cta.is-small {
   font-size: 0.75rem;
 }
+
 .file-label {
   text-align: center;
 }
+
 .profile_image {
   width: 150px;
   height: 150px;
