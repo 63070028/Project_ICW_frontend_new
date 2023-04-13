@@ -30,7 +30,7 @@
 
 
 
-    <div v-if="isEdit === false & urlOld != ''" style="display: flex; flex-direction: column; align-items: flex-end;">
+    <div v-if="isEdit === false & urlOld != '' & role === 'applicant'" style="display: flex; flex-direction: column; align-items: flex-end;">
         <button class="button mb-3 mt-3 is-info" @click="isEdit = true">Edit</button>
     </div>
 
@@ -76,6 +76,11 @@ export default {
         url: {
             type: String,
             required: true,
+        },
+        role:{
+            type: String,
+            required: true,
+            default: ""
         }
     },
     data() {

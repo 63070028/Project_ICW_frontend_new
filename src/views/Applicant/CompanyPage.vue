@@ -51,8 +51,8 @@ export default defineComponent({
         //def
         const company = reactive<Company>({
             id: "",
-            name: "None",
-            description: "None",
+            name: "",
+            description: "",
             profile_image: "",
             background_image: "",
             video_iframe: "",
@@ -63,31 +63,34 @@ export default defineComponent({
 
 
         onMounted(() => {
+
             console.log('get api company id: ' + route.params.id)
 
             //set company
-            const get_company = {
-                id: 1,
-                name: "ไม่ทำงาน จำกัด หมาชน",
-                description: "THiNKNET คือ บริษัท IT ที่สร้างสรรค์ผลิตภัณฑ์และบริการที่มุ่งพัฒนาคุณภาพชีวิตของคนไทยให้ดีขึ้น ก่อตั้งขึ้นในปี 2000 ผลงานโดดเด่นคือ JobThai แพลตฟอร์มหาคน หางาน สมัครงานอันดับ 1 ของประเทศ ที่ช่วยให้คนไทยมีงานทำมานานมากกว่า 20 ปี นอกจากนี้แล้ว THiNKNET ยังพัฒนาสินค้าและบริการอื่น ๆ ออกมาอยู่เสมอ เช่น Mapping & GIS Solutions, THiNKNET Design Studio",
-                profile_image: "https://cdn.discordapp.com/attachments/905751963017285634/1089481386349580359/profile-icon-design-free-vector.png",
-                background_image: "https://www.w3schools.com/w3images/workbench.jpg",
-                video_iframe: '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>'
+
+            const get_company:Company = {
+                id: "",
+                name: "",
+                description: "",
+                profile_image: "",
+                background_image: "",
+                video_iframe: "",
+                state:""
             }
+
             Object.assign(company, get_company)
 
 
             console.log('get api job by company_id: ' + route.params.id);
 
-            let get_jobs: Job[] = [
+            const get_jobs: Job[] = [
                 { id: "1234-xxxx-xxxx-xxxx-xxxx", company_id: "xxxx-xxxx-xxxx-xxxx", name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015", state:"on" },
-                // { id: 1, company_id: 1, name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015" },
-                // { id: 2, company_id: 1, name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015" },
             ]
 
             get_jobs.forEach(job => {
                 jobs.push(job)
             });
+
         });
 
         const viewJob = (id: string) => {

@@ -46,11 +46,11 @@
               </li>
             </ul>
 
-            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'">
+            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'" :role="'company'">
             </uploadPdfVue>
-            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'transcript'">
+            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'transcript'" :role="'company'">
             </uploadPdfVue>
-            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'portfolio'">
+            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'portfolio'" :role="'company'">
             </uploadPdfVue>
           </div>
 
