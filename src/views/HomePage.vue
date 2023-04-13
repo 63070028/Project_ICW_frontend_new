@@ -56,7 +56,7 @@ export default defineComponent({
 
     const states = reactive<{ companies: Company[] }>({
       companies: [
-        // { id: 1, name: "Company1", description: "", profile_image: "", background_image: "", video_iframe: "" },
+        { id: "xxxx-xxxx-xxxx-xxxx", name: "Company1", description: "xxxxxx", profile_image: "", background_image: "", video_iframe: "", state:"no"},
         // { id: 2, name: "Company2", description: "", profile_image: "", background_image: "", video_iframe: "" },
         // { id: 3, name: "Company3", description: "", profile_image: "", background_image: "", video_iframe: "" },
         // { id: 4, name: "Company4", description: "", profile_image: "", background_image: "", video_iframe: "" },

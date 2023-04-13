@@ -4,7 +4,7 @@
             <div class="column is-2 ml-6" v-for="item, index in states.addItemsPageList" :key="index">
                 <!-- <button class="button" @click="deleteItem(index)">Del</button> -->
                 <div class="card" @click="viewConpany(item.id)">
-                    <div class="card-content">
+                   <div class="card-content">
                         <div class="card-image">
                             <figure class="image is-4by3">
                                 <img src="https://bulma.io/images/placeholders/1280x960.png" alt="Placeholder image">
@@ -121,7 +121,7 @@ export default defineComponent({
             presentPage.value === 1 ? previousClicked.value = true : previousClicked.value = false;
         }
 
-        const viewConpany = (id:number) => {
+        const viewConpany = (id:string) => {
             router.push("/companies/"+id)
         }
 
