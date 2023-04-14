@@ -34,8 +34,11 @@ import 'vue3-carousel/dist/carousel.css'
 import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 import { useRouter } from 'vue-router'
 import Program from '@/models/Program'
-// import { useStore } from 'vuex'
-// import User from '@/models/User'
+import { useStore } from 'vuex'
+import axios from "@/plugins/axios"
+import { PORT } from '@/port'
+import User from '@/models/User'
+
 
 export default defineComponent({
   components: {
@@ -49,21 +52,24 @@ export default defineComponent({
   setup() {
 
     const router = useRouter();
-    // const store = useStore();
+    const store = useStore();
 
-    // const user = reactive<User>(unref(computed(() => store.getters.user)))
+    const user = reactive<User>(store.state.user)
 
     const states = reactive<{ companies: Company[], programs: Program[] }>({
       companies: [
-        { id: "xxxx-xxxx-xxxx-xxxx", name: "Company1", description: "xxxxxx", profile_image: "", background_image: "", video_iframe: "", state:"no"},
+        { id: "xxxx-xxxx-xxxx-xxxx", name: "Company1", description: "xxxxxx", profile_image: "", background_image: "", video_iframe: "", state: "no" },
       ],
-      programs:[
+      programs: [
 
       ]
     });
 
-    onMounted(()=>{
-      //get companies, get programs
+    onMounted(() => {
+        axios.get(`${PORT}` + "/user/getData").then(res => {
+          console.log(res.data.user)
+          store.commit('SET_USER', res.data.user)
+        })
     })
 
 
@@ -81,7 +87,7 @@ export default defineComponent({
       router.push("/contact")
     }
 
-    return { states, deleteCompany, viewProgram, viewContact }
+    return { states, deleteCompany, viewProgram, viewContact, user, store }
   },
 })
 </script>

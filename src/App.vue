@@ -18,25 +18,25 @@
         </div>
         <div class="navbar-end">
           <!-- ของคนหางาน -->
-          <router-link class="navbar-item " to="/applicantProfile">ประวัติของฉัน</router-link>
-          <router-link class="navbar-item " to="/MyJobs">งานของฉัน</router-link>
+          <router-link class="navbar-item " to="/applicantProfile" v-if="store.state.user.role == 'applicant'">ประวัติของฉัน</router-link>
+          <router-link class="navbar-item " to="/MyJobs" v-if="store.state.user.role == 'applicant'">งานของฉัน</router-link>
 
            <!-- ของบริษัท -->
-           <router-link class="navbar-item " to="/companyProfile">ข้อมูลบริษัท</router-link>
-           <router-link class="navbar-item " to="/ListApplicant">คนที่มายื่นสมัคร</router-link>
+           <router-link class="navbar-item " to="/companyProfile" v-if="store.state.user.role == 'company'">ข้อมูลบริษัท</router-link>
+           <router-link class="navbar-item " to="/ListApplicant" v-if="store.state.user.role == 'company'">คนที่มายื่นสมัคร</router-link>
 
            <!-- ของแอดมิน -->
-           <router-link class="navbar-item " to="/dashboard">Dashboard</router-link>
+           <router-link class="navbar-item " to="/dashboard" v-if="store.state.user.role == 'admin'">Dashboard</router-link>
 
           <div class="navbar-item">
             <div class="buttons">
-              <router-link class="button is-dark" to="/signup">
+              <router-link class="button is-dark" to="/signup" v-if="!(store.state.user.role != '')">
                 <strong>Sign Up</strong>
               </router-link>
-              <router-link class="button is-light" to="/signin">
+              <router-link class="button is-light" to="/signin" v-if="!(store.state.user.role != '')">
                 Sign In
               </router-link>
-              <button class="button is-danger" @click="logout()">
+              <button class="button is-danger" @click="logout()" v-if="store.state.user.role != ''">
                 Logout
               </button>
             </div>
@@ -51,16 +51,22 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue'
+import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 export default defineComponent({
     setup() {
 
+        const store = useStore();
+        const router = useRouter();
         const logout = () => {
           localStorage.removeItem('token');
+          store.commit("LOGOUT");
+          router.push("/")
         }
 
         return {
-          logout
+          logout, store
         }
     },
 })
