@@ -151,7 +151,7 @@ export default defineComponent({
             }
             else {
                 formCompanySignUp.email = email.value;
-                formCompanySignUp.password = email.value;
+                formCompanySignUp.password = password.value;
                 console.log(formCompanySignUp)
                 //api post signup/company
                 axios.post(`${PORT}` + '/company/signUp', formCompanySignUp)

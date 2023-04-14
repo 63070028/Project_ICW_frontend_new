@@ -52,6 +52,7 @@ export default defineComponent({
   setup() {
 
     const router = useRouter();
+
     const store = useStore();
 
     const user = reactive<User>(store.state.user)
