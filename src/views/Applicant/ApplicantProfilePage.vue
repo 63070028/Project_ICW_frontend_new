@@ -31,10 +31,11 @@
 
             </ul>
 
-            <applicantProfileVue :id="applicant.id" :firstName="applicant.firstName" :lastName="applicant.lastName"
-                :email="applicant.email_profile" :birthDate="applicant.birthDate" :address="applicant.address"
-                :gender="applicant.gender" :phone="applicant.phone" v-if="select_option === 'user_profile'">
-            </applicantProfileVue>
+            <applicantProfileVue :id="applicant.id" :address="applicant.address" :email_profile="applicant.email_profile"
+                :birth-date="applicant.birthDate" :first-name="applicant.firstName" :last-name="applicant.lastName"
+                :gender="applicant.gender" :phone="applicant.phone" :state="applicant.state"
+                v-if="select_option === 'user_profile' && state.isLoading == false">
+            </applicantProfileVue >
 
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'"
                 :url="applicant.resume" :role="'applicant'"></uploadPdfVue>
@@ -61,6 +62,10 @@ import applicantProfileVue from '@/components/applicant-profile.vue'
 import uploadPdfVue from '@/components/upload-pdf.vue'
 import Applicant from '@/models/Applicant'
 import ApplicantDetail from '@/views/Company/ApplicantDetail.vue';
+import axios from '@/plugins/axios';
+import { useStore } from 'vuex';
+import User from '@/models/User';
+import { PORT } from '@/port';
 
 export default defineComponent({
     components: {
@@ -69,6 +74,13 @@ export default defineComponent({
         ApplicantDetail
     },
     setup() {
+
+        const store = useStore();
+        const user = reactive<User>(store.state.user)
+        const state = reactive({
+            isLoading: true, // Add a loading indicator flag
+         });
+
         const applicant = reactive<Applicant>({
             id: "",
             firstName: "",
@@ -78,21 +90,32 @@ export default defineComponent({
             gender: "",
             address: "",
             phone: "",
-            resume: 'https://s3.amazonaws.com/chanapon.icw.bucket/resume/xxx-638d7ae3-217f-4631-8ed3-6eaf1ed4c281-ResumeOld.pdf', //ทดสอบ
+            resume: "", //ทดสอบ
             transcript: "",
             portfolio: "",
-            state:""
+            state: ""
         })
 
         let select_option = ref<string>("user_profile")
 
-        onMounted(() => {
-            //get applicant/:id
-            //set value in applicant
+        onMounted(async () => {
+
+            await axios.get(`${PORT}` + "/user/getData").then(res => {
+                console.log(res.data.user)
+                store.commit('SET_USER', res.data.user)
+            })
+
+            await axios.get(`${PORT}` + "/applicant/getProfile/" + user.id).then(res => {
+                console.log(res.data.applicant)
+                Object.assign(applicant, res.data.applicant);
+                state.isLoading = false;
+            })
         })
 
+
+
         return {
-            select_option, applicant
+            select_option, applicant, store, user, state
         }
 
     },

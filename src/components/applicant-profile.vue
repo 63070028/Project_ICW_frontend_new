@@ -134,10 +134,12 @@ import { defineComponent, reactive, ref } from 'vue'
 import { useVuelidate } from '@vuelidate/core'
 import { helpers, required } from '@vuelidate/validators'
 import Applicant from '@/models/Applicant';
+import axios from '@/plugins/axios';
+import { PORT } from '@/port';
 export default defineComponent({
     props: {
         id: {
-            type: [String, Number],
+            type: String,
             required: true
         },
         firstName: {
@@ -148,7 +150,7 @@ export default defineComponent({
             type: String,
             required: true
         },
-        email: {
+        email_profile: {
             type: String,
             required: true
         },
@@ -168,6 +170,10 @@ export default defineComponent({
             type: String,
             required: true
         },
+        state: {
+            type: String,
+            required: true
+        }
     },
 
     setup(props) {
@@ -177,11 +183,12 @@ export default defineComponent({
 
         const f_firstName = ref<string>(props.firstName);
         const f_lastName = ref<string>(props.lastName);
-        const f_email_profile = ref<string>(props.email);
+        const f_email_profile = ref<string>(props.email_profile);
         const f_birthDate = ref<string>(props.birthDate);
         const f_gender = ref<string>(props.gender);
         const f_address = ref<string>(props.address);
         const f_phone = ref<string>(props.phone);
+        const f_state = ref<string>(props.state);
 
         const editForm = reactive<Applicant>({
             id: "",
@@ -202,16 +209,23 @@ export default defineComponent({
             const isFormCorrect = await v$.value.$validate();
             if (!isFormCorrect) return
 
+            editForm.id = props.id;
             editForm.firstName = f_firstName.value;
             editForm.lastName = f_lastName.value;
             editForm.email_profile = f_email_profile.value;
             editForm.birthDate = f_birthDate.value;
             editForm.gender = f_gender.value;
             editForm.address = f_address.value;
+            editForm.phone = f_phone.value;
+
+            await axios.post(`${PORT}`+"/applicant/editProfile", editForm).then(res=>{
+                //
+            })
+
             // editForm.resume = 
             // editForm.transcript =
             // editForm.portfolio =
-            editForm.state;
+            // editForm.state;
 
             //api post applicant/edit  form editForm
             //update this page
@@ -233,16 +247,17 @@ export default defineComponent({
             modify_profile.value = !modify_profile.value;
             f_firstName.value = props.firstName;
             f_lastName.value = props.lastName;
-            f_email_profile.value = props.email;
+            f_email_profile.value = props.email_profile;
             f_birthDate.value = props.birthDate;
             f_gender.value = props.gender;
             f_address.value = props.address;
             f_phone.value = props.phone;
+            f_state.value = props.state;
         }
 
         return {
             modify_profile, v$,
-            f_firstName, f_lastName, f_email_profile, f_birthDate, f_gender, f_address, f_phone,
+            f_firstName, f_lastName, f_email_profile, f_birthDate, f_gender, f_address, f_phone, f_state,
             resetProfile, saveProfile, editForm
         }
     },
