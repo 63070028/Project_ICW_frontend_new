@@ -66,8 +66,8 @@ export default defineComponent({
       ]
     });
 
-    onMounted(() => {
-        axios.get(`${PORT}` + "/user/getData").then(res => {
+    onMounted(async () => {
+        await axios.get(`${PORT}` + "/user/getData").then(res => {
           console.log(res.data.user)
           store.commit('SET_USER', res.data.user)
         })

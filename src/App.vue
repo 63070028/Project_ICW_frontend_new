@@ -18,7 +18,7 @@
         </div>
         <div class="navbar-end">
           <!-- ของคนหางาน -->
-          <router-link class="navbar-item " to="/applicantProfile" v-if="store.state.user.role == 'applicant'">ประวัติของฉัน</router-link>
+          <router-link class="navbar-item " to="/applicantProfile" v-if="store.state.user.role == 'applicant'"><i class="pi pi-exclamation-circle pr-3" style="color: red" v-if="store.state.user.state == ''"></i>ประวัติของฉัน</router-link>
           <router-link class="navbar-item " to="/MyJobs" v-if="store.state.user.role == 'applicant'">งานของฉัน</router-link>
 
            <!-- ของบริษัท -->
@@ -53,6 +53,7 @@
 import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
+import "primeicons/primeicons.css";
 
 export default defineComponent({
     setup() {

@@ -240,7 +240,6 @@ export default defineComponent({
         state: "",
       };
       Object.assign(job, get_job);
-      //kong
     });
 
     return {
