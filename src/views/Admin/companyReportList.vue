@@ -42,6 +42,8 @@ import { defineComponent, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Company from '@/models/Company';
 import Swal from "sweetalert2";
+import axios from "axios";
+import { PORT } from "@/port";
 
 export default defineComponent({
   name: 'App',
@@ -53,8 +55,8 @@ export default defineComponent({
     //def
     const company = reactive<Company>({
       id: "",
-      name: "None",
-      description: "None",
+      name: "",
+      description: "",
       profile_image: "",
       background_image: "",
       video_iframe: "",
@@ -62,40 +64,24 @@ export default defineComponent({
     });
 
     const companys = reactive<Company[]>([])
-    const removeCompany = (index: number) => {
-      Swal.fire({
-        title: 'ปฏิเสธผู้สมัครหมายเลข ',
-        text: "คุณแน่ใจแล้วใช่ไหมที่จะปฏิเสธผู้สมัครรายนี้",
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: 'hsl(141, 50%, 48%)',
-        cancelButtonColor: 'hsl(348, 100%, 61%)',
-        confirmButtonText: 'Yes'
-      }).then((result) => {
-        if (result.isConfirmed) {
-          companys.splice(index - 1, 1)
-          Swal.fire({
-            position: 'center',
-            icon: 'error',
-            title: 'ทำการลบผู้สมัครเรียบร้อย',
-            showConfirmButton: false,
-            timer: 1500
-          })
-        }
-      })
-    };
+
 
     onMounted(() => {
+      axios
+        .get(`${PORT}` + "/admin/getCompany")
+        .then((response) => {
+          console.log(response.data.items);
+          const get_company: Company[] = response.data.items;
+          console.log(get_company);
+          get_company.forEach((company) => {
+            companys.push(company);
+          });
+        })
+        .catch((error) => {
+          // handle error
+          console.log(error);
+        });
 
-      let get_companys: Company[] = [
-        //  { id: 1, name: "ไม่ทำงาน จำกัด หมาชน", description:"THiNKNET คือ บริษัท IT ที่สร้างสรรค์ผลิตภัณฑ์และบริการที่มุ่งพัฒนาคุณภาพชีวิตของคนไทยให้ดีขึ้น ก่อตั้งขึ้นในปี 2000 ผลงานโดดเด่นคือ CompanyThai แพลตฟอร์มหาคน หางาน สมัครงานอันดับ 1 ของประเทศ ที่ช่วยให้คนไทยมีงานทำมานานมากกว่า 20 ปี นอกจากนี้แล้ว THiNKNET ยังพัฒนาสินค้าและบริการอื่น ๆ ออกมาอยู่เสมอ เช่น Mapping & GIS Solutions, THiNKNET Design Studio", profile_image:"https://cdn.discordapp.com/attachments/905751963017285634/1089481386349580359/profile-icon-design-free-vector.png", background_image:"https://www.w3schools.com/w3images/workbench.jpg", video_iframe:'<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
-        //  { id: 2, name: "ไม่ทำงาน จำกัด", description:"THiNKNET คือ บริษัท IT ที่สร้างสรรค์ผลิตภัณฑ์และบริการที่มุ่งพัฒนาคุณภาพชีวิตของคนไทยให้ดีขึ้น ก่อตั้งขึ้นในปี 2000 ผลงานโดดเด่นคือ CompanyThai แพลตฟอร์มหาคน หางาน สมัครงานอันดับ 1 ของประเทศ ที่ช่วยให้คนไทยมีงานทำมานานมากกว่า 20 ปี นอกจากนี้แล้ว THiNKNET ยังพัฒนาสินค้าและบริการอื่น ๆ ออกมาอยู่เสมอ เช่น Mapping & GIS Solutions, THiNKNET Design Studio", profile_image:"https://cdn.discordapp.com/attachments/905751963017285634/1089481386349580359/profile-icon-design-free-vector.png", background_image:"https://www.w3schools.com/w3images/workbench.jpg", video_iframe:'<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
-        //  { id: 3, name: "ไม่ทำงาน", description:"THiNKNET คือ บริษัท IT ที่สร้างสรรค์ผลิตภัณฑ์และบริการที่มุ่งพัฒนาคุณภาพชีวิตของคนไทยให้ดีขึ้น ก่อตั้งขึ้นในปี 2000 ผลงานโดดเด่นคือ CompanyThai แพลตฟอร์มหาคน หางาน สมัครงานอันดับ 1 ของประเทศ ที่ช่วยให้คนไทยมีงานทำมานานมากกว่า 20 ปี นอกจากนี้แล้ว THiNKNET ยังพัฒนาสินค้าและบริการอื่น ๆ ออกมาอยู่เสมอ เช่น Mapping & GIS Solutions, THiNKNET Design Studio", profile_image:"https://cdn.discordapp.com/attachments/905751963017285634/1089481386349580359/profile-icon-design-free-vector.png", background_image:"https://www.w3schools.com/w3images/workbench.jpg", video_iframe:'<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>' },
-      ]
-
-      get_companys.forEach(d => {
-        companys.push(d)
-      });
     });
 
     const viewCompany = (id: string) => {
@@ -108,7 +94,6 @@ export default defineComponent({
       company,
       companys,
       viewCompany,
-      removeCompany,
       activeTab: 'companys',
     }
   },

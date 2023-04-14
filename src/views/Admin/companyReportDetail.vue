@@ -13,26 +13,33 @@
 
                 <div class="job-card" v-for="(job, index) in jobs" :key="index">
                   <div class="job-detail">
-                    <p class="is-size-4 has-text-weight-bold" >{{ index + 2 + "." }} {{ job.name }}</p>
-                      <p class="job-detai-text">สถานที่ทำงาน: {{ job.location }}</p>
-                      <p class="job-detai-text">ค่าตอบแทนรายวัน: {{ job.salary_per_day }}</p>
-                      <p class="job-detai-text">รูปแบบการสัมภาษณ์: {{ job.interview }}</p>
-                      <p class="job-detai-text">จำนวนที่รับ: {{ job.capacity }}</p>
-                      <div class="column is-6 edit" style="background-color: #your_color_code;">
-                        <div class="field" style="background-color: #your_color_code;">
-                          <v-switch
-                            v-model="job.active"
-                            hide-details
-                            inset
-                            color="success"
-                            :true-value="JobStatus.Open"
-                            :false-value="JobStatus.Closed"
-                            :label="`สถานะงาน: ${job.active}`"
-                            :style="{ color: jobStatusColor(job.active) }">
-                          </v-switch>
-                        </div>
-                      </div>
+                    <p class="is-size-4 has-text-weight-bold">
+                      {{ index + 2 + "." }} {{ job.name }}
+                    </p>
+                    <p class="job-detai-text">
+                      สถานที่ทำงาน: {{ job.location }}
+                    </p>
+                    <p class="job-detai-text">
+                      ค่าตอบแทนรายวัน: {{ job.salary_per_day }}
+                    </p>
+                    <p class="job-detai-text">
+                      รูปแบบการสัมภาษณ์: {{ job.interview }}
+                    </p>
+                    <p class="job-detai-text">
+                      จำนวนที่รับ: {{ job.capacity }}
+                    </p>
+                    <button v-if="job.state == 'on'" class="button is-success" @click="changeState(job)">on</button>
+                    <button v-else class="button is-danger" @click="changeState(job)">off</button>
+                    <div
+                      class="column is-6 edit"
+                      style="background-color: #your_color_code"
+                    >
+                      <div
+                        class="field"
+                        style="background-color: #your_color_code"
+                      ></div>
                     </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -48,9 +55,10 @@ import "bulma/css/bulma.css";
 import { defineComponent, onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Company from "@/models/Company";
-import Job from "@/models/Job2";
-import { JobStatus } from "@/models/Job2";
+import Job from "@/models/Job";
 import Swal from "sweetalert2";
+import axios from "axios";
+import { PORT } from "@/port";
 
 export default defineComponent({
   name: "App",
@@ -59,104 +67,91 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
 
+
     //def
     const company = reactive<Company>({
-      id:"",
-      name: "None",
-      description: "None",
+      id: "",
+      name: "",
+      description: "",
       profile_image: "",
       background_image: "",
       video_iframe: "",
-      state:""
+      state: "",
     });
 
+    const job = reactive<Job>({
+      id: "",
+      company_id: "",
+      name: "",
+      salary_per_day: 0,
+      location: "",
+      capacity: 0,
+      detail: "",
+      interview: "",
+      qualifications: [""],
+      contact: { name: "", email: "", phone: "" },
+      creation_date: "",
+      state: "on",
+    });
+
+const job2 = reactive<Job>({
+      id: "",
+      company_id: "",
+      name: "",
+      salary_per_day: 0,
+      location: "",
+      capacity: 0,
+      detail: "",
+      interview: "",
+      qualifications: [""],
+      contact: { name: "", email: "", phone: "" },
+      creation_date: "",
+      state: "on",
+    });
     const jobs = reactive<Job[]>([]);
-
     onMounted(() => {
-      console.log("get api company id: " + route.params.id);
-
-      //set company
-      const get_company = {
-        id: 1,
-        name: "ไม่ทำงาน จำกัด หมาชน",
-        description:
-          "THiNKNET คือ บริษัท IT ที่สร้างสรรค์ผลิตภัณฑ์และบริการที่มุ่งพัฒนาคุณภาพชีวิตของคนไทยให้ดีขึ้น ก่อตั้งขึ้นในปี 2000 ผลงานโดดเด่นคือ JobThai แพลตฟอร์มหาคน หางาน สมัครงานอันดับ 1 ของประเทศ ที่ช่วยให้คนไทยมีงานทำมานานมากกว่า 20 ปี นอกจากนี้แล้ว THiNKNET ยังพัฒนาสินค้าและบริการอื่น ๆ ออกมาอยู่เสมอ เช่น Mapping & GIS Solutions, THiNKNET Design Studio",
-        profile_image:
-          "https://cdn.discordapp.com/attachments/905751963017285634/1089481386349580359/profile-icon-design-free-vector.png",
-        background_image: "https://www.w3schools.com/w3images/workbench.jpg",
-        video_iframe: '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
-      };
-      Object.assign(company, get_company);
-
-      console.log("get api job by company_id: " + route.params.id);
-
-      let get_jobs: Job[] = [
-        {
-          id: 1,
-          company_id: 1,
-          name: "ฝึกงาน ตำแหน่ง Software Engineer",
-          salary_per_day: 500,
-          location: "sssss",
-          capacity: 10,
-          detail: "มาร่วมงานกับ THiNKNET ...",
-          interview: "online",
-          qualifications: ["111", "2222"],
-          contact: {
-            name: "chanapon",
-            email: "xxxxx@hotmail.com",
-            phone: "08xxxxxxxx",
-          },
-          creation_date: "03/25/2015",
-          active: JobStatus.Open,
-        },
-        {
-          id: 2,
-          company_id: 1,
-          name: "ฝึกงาน ตำแหน่ง Software Engineer",
-          salary_per_day: 500,
-          location: "sssss",
-          capacity: 10,
-          detail: "มาร่วมงานกับ THiNKNET ...",
-          interview: "online",
-          qualifications: ["111", "2222"],
-          contact: {
-            name: "chanapon",
-            email: "xxxxx@hotmail.com",
-            phone: "08xxxxxxxx",
-          },
-          creation_date: "03/25/2015",
-          active: JobStatus.Closed,
-        },
-        {
-          id: 3,
-          company_id: 1,
-          name: "ฝึกงาน ตำแหน่ง Software Engineer",
-          salary_per_day: 500,
-          location: "sssss",
-          capacity: 10,
-          detail: "มาร่วมงานกับ THiNKNET ...",
-          interview: "online",
-          qualifications: ["111", "2222"],
-          contact: {
-            name: "chanapon",
-            email: "xxxxx@hotmail.com",
-            phone: "08xxxxxxxx",
-          },
-          creation_date: "03/25/2015",
-          active: JobStatus.Open,
-        },
-      ];
-
-      get_jobs.forEach((job) => {
-        jobs.push(job);
-      });
+      axios
+        .get(`${PORT}` + "/admin/getCompanyJob")
+        .then((response) => {
+          console.log(response.data.items);
+          const get_company_job: Job[] = response.data.items;
+          console.log(get_company_job);
+          get_company_job.forEach((job) => {
+            console.log(job.company_id);
+            if (job.company_id == route.params.id) {
+              jobs.push(job);
+            } else {
+              // do nothing
+            }
+          });
+        })
+        .catch((error) => {
+          // handle error
+          console.log(error);
+        });
     });
 
     const viewJob = (id: number) => {
       router.push("/jobs/" + id);
     };
-    const jobStatusColor = (status: JobStatus) => {
-      return status === JobStatus.Open ? "green" : "red";
+
+    const changeState = async (stateChange: Job) => {
+      if(stateChange.state == "on"){
+        stateChange.state = "off"
+      } else {
+        stateChange.state = "on"
+      }
+      
+      console.log(stateChange)
+      axios
+        .post(`${PORT}` + "/admin/changeJobState", stateChange)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          // handle error
+          console.log(error);
+        });
     };
 
     const deleteJob = (index: number) => {
@@ -171,7 +166,6 @@ export default defineComponent({
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.isConfirmed) {
-          jobs.splice(index - 1, 1);
           Swal.fire({
             position: "center",
             icon: "error",
@@ -186,12 +180,13 @@ export default defineComponent({
       router,
       route,
       company,
+      job,
+      job2,
       jobs,
       viewJob,
       deleteJob,
-      jobStatusColor,
-      JobStatus,
       activeTab: "jobs",
+      changeState
     };
   },
   methods: {
