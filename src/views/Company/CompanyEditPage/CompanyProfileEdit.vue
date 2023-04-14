@@ -43,7 +43,7 @@
                     <label class="label">รูปโปรไฟล์</label>
                     <div class="file">
                       <label class="file-label">
-                        <input class="file-input" type="file" @change="previewProfileImage" />
+                        <input class="file-input" type="file" name="profile_image" @change="previewProfileImage" />
                         <span class="file-cta is-small">
                           <span class="file-label"> Choose a file.. </span>
                         </span>
@@ -59,7 +59,7 @@
                     <div class="control">
                       <div class="file">
                         <label class="file-label">
-                          <input class="file-input" type="file" @change="previewBackgroundImage" />
+                          <input class="file-input" type="file" name="background_image" @change="previewBackgroundImage" />
                           <span class="file-cta is-small">
                             <span class="file-label"> Choose a file.. </span>
                           </span>
@@ -160,9 +160,11 @@ export default defineComponent({
 
           formData.append('name', company.name);
           formData.append('description', company.description);
-          // formData.append('files', ...)
-          formData.append('video_iframe', company.background_image)
+          formData.append('profile_image', company.profile_image); // กำหนดชื่อฟิลด์ตามที่กำหนดใน multer
+          formData.append('background_image', company.background_image); // กำหนดชื่อฟิลด์ตามที่กำหนดใน multer
+          formData.append('video_iframe', company.video_iframe);
 
+          
           const response = await axios.post(`${PORT}` + '/company/edit', formData, {
             headers: {
               'Content-Type': 'multipart/form-data'
@@ -190,11 +192,20 @@ export default defineComponent({
       router.push(`/companyProfile`);
     };
     const previewProfileImage = (event: Event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (file) {
-        profileImagePreview.value = URL.createObjectURL(file);
-      }
-    };
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      profileImagePreview.value = URL.createObjectURL(file);
+      //company.profile_image = file; // อัปเดตค่าของ company.profile_image เป็นออบเจ็กต์ไฟล์
+    }
+  };
+
+  const previewBackgroundImage = (event: Event) => {
+    const file = (event.target as HTMLInputElement).files?.[0];
+    if (file) {
+      backgroundImagePreview.value = URL.createObjectURL(file);
+     // company.background_image = file;อัปเดตค่าของ company.background_image เป็นออบเจ็กต์ไฟล์
+    }
+  };
 
     return {
       company,
@@ -207,22 +218,15 @@ export default defineComponent({
       profileImagePreview,
       backgroundImagePreview,
       previewProfileImage,
+      previewBackgroundImage
     };
   },
   methods: {
     setActiveTab(tab: string) {
       this.activeTab = tab;
     },
-    previewBackgroundImage(event: Event) {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          this.company.background_image = reader.result as string;
-        };
-      }
-    },
+
+
   },
 });
 </script>
