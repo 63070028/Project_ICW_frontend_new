@@ -51,12 +51,14 @@ import Swal from 'sweetalert2';
 
 import axios from 'axios';
 import {PORT} from '@/port';
+import { useStore } from 'vuex'
 
 export default defineComponent({
     setup() {
-        let v$ = useVuelidate()
-        let email = ref<string>("");
-        let password = ref<string>("");
+        const v$ = useVuelidate()
+        const store = useStore();
+        const email = ref<string>("");
+        const password = ref<string>("");
         const router = useRouter();
         const select_role = ref<string>("applicant")
 
@@ -84,7 +86,6 @@ export default defineComponent({
                 axios.post(`${PORT}`+'/applicant/signIn', data)
                     .then(response => {
                         // handle success
-                        console.log(response.data);
                         localStorage.setItem("token", response.data.token);
                         Swal.fire({
                             position: 'center',
@@ -143,7 +144,7 @@ export default defineComponent({
 
         }
 
-        return { email, password, v$, submitSignIn, select_role, siwtchApplicant, siwtchCompany }
+        return { email, password, v$, submitSignIn, select_role, siwtchApplicant, siwtchCompany, store }
     },
     validations() {
         return {

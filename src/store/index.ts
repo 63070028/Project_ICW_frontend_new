@@ -1,23 +1,29 @@
-import { createStore } from 'vuex'
+import { createStore } from "vuex";
 
-export default createStore({
+const store = createStore({
   state: {
-    user: null
+    user: {
+      id: "",
+      email: "",
+      role: "",
+      state: "",
+    },
+    isSignIn:false
   },
   mutations: {
     SET_USER(state, user) {
-      state.user = user
+      Object.assign(state.user, user)
+    },
+    LOGOUT(state) {
+      state.user.id = "",
+      state.user.email = "",
+      state.user.role = "",
+      state.user.state = ""
+    },
+    IS_SIGNIN(state, data){
+      state.isSignIn = data;
     }
   },
-  actions: {
-     setUser({ commit }, data) {
-        const user = data
-        commit('SET_USER', user)
-    }
-  },
-  getters: {
-    user(state) {
-      return state.user
-    }
-  }
-})
+});
+
+export default store;

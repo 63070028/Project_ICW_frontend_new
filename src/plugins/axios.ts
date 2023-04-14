@@ -1,6 +1,7 @@
 import axios from 'axios'
+import { PORT } from '../port';
 const instance = axios.create({
-    baseURL: `http://localhost:5000`,
+    baseURL: `${PORT}`,
 })
 
 instance.interceptors.request.use(
