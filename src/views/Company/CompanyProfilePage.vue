@@ -5,9 +5,12 @@
         <aside class="menu">
           <p class="menu-label">Navigation</p>
           <ul class="menu-list">
-            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')" to="/companyProfile">ข้อมูลบริษัท</router-link></li>
-            <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')" to="/companyJob">งานที่ประกาศ</router-link></li>
-            <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')" to="/companyProgram" >โครงการพิเศษ</router-link ></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')"
+                to="/companyProfile">ข้อมูลบริษัท</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')"
+                to="/companyJob">งานที่ประกาศ</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')"
+                to="/companyProgram">โครงการพิเศษ</router-link></li>
           </ul>
         </aside>
       </div>
@@ -18,17 +21,18 @@
               <div v-show="activeTab === 'info'" style="background-color: #fafafa;">
                 <div class="card-content">
                   <div class="container mt-4">
-                    <img :src="company.background_image" class="background_image"/>
+                    <img :src="company.background_image" class="background_image" />
                     <div class="columns is-gapless ml-6 mb-6" style="position: relative; top: -80px;">
                       <img :src="company.profile_image" class="column is-2 profile_image" />
-                      <div class="column ml-4" style="position: relative; top: 100px;" >
+                      <div class="column ml-4" style="position: relative; top: 100px;">
                         <p class="is-size-4 has-text-weight-bold">{{ company.name }}</p>
                         <!-- Add the edit button here -->
                         <button class="button is-primary is-small" @click="editProfile">แก้ไข</button>
                       </div>
                     </div>
                     <p class="is-size-5" style="position: relative; top: -40px;">{{ company.description }}</p>
-                    <div v-if="company.video_iframe != ''" class="video_iframe mt-4 mb-6" v-html="company.video_iframe"></div>
+                    <div v-if="company.video_iframe != ''" class="video_iframe mt-4 mb-6" v-html="company.video_iframe">
+                    </div>
                   </div>
                 </div>
               </div>
@@ -43,6 +47,11 @@
 import { defineComponent, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Company from '@/models/Company';
+import { useStore } from 'vuex';
+import User from '@/models/User';
+import axios from '@/plugins/axios';
+import { PORT } from '@/port';
+
 export default defineComponent({
   name: 'App',
   data() {
@@ -54,6 +63,7 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
+
     const company = reactive<Company>({
       id: String(route.params.id),
       name: 'None',
@@ -61,13 +71,22 @@ export default defineComponent({
       profile_image: '',
       background_image: '',
       video_iframe: '',
-      state:""
+      state: ""
 
     });
-    onMounted(() => {
+    const store = useStore();
+    const user = reactive<User>(store.state.user)
+
+    onMounted(async () => {
+
+      await axios.get(`${PORT}` + "/user/getData").then(res => {
+        console.log(res.data.user)
+        store.commit('SET_USER', res.data.user)
+      })
+
       console.log('get api company id: ' + route.params.id);
       // set company
-      const get_company:Company = {
+      const get_company: Company = {
         id: "",
         name:
           'ไม่ทำงาน จำกัด หมาชน',
@@ -79,7 +98,7 @@ export default defineComponent({
           'https://www.w3schools.com/w3images/workbench.jpg',
         video_iframe:
           '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
-        state:""
+        state: ""
       };
       Object.assign(company, get_company);
     });
@@ -91,6 +110,8 @@ export default defineComponent({
       route,
       company,
       viewJob,
+      user,
+      store
     };
   },
   methods: {
@@ -115,19 +136,21 @@ export default defineComponent({
   width: 100%;
   height: 300px;
 }
+
 .profile_image {
   width: 150px;
   height: 150px;
   border: 2px solid gray;
   border-radius: 25px;
 }
+
 .video_iframe {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
+
 .job_content:hover {
   background-color: hsl(0, 0%, 96%);
-}
-</style>
+}</style>
 
