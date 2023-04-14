@@ -50,7 +50,7 @@ import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2';
 
 import axios from 'axios';
-import {PORT} from '@/port';
+import { PORT } from '@/port';
 import { useStore } from 'vuex'
 
 export default defineComponent({
@@ -75,73 +75,36 @@ export default defineComponent({
             const isFormCorrect = await v$.value.$validate();
             if (!isFormCorrect) return
 
-
-            if (select_role.value === "applicant") {
-                const data = {
-                    email: email.value,
-                    password: password.value
-                }
-                console.log(data)
-                //api get applicant by check email & pass return role
-                axios.post(`${PORT}`+'/applicant/signIn', data)
-                    .then(response => {
-                        // handle success
-                        localStorage.setItem("token", response.data.token);
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'เข้าสู้ระบบสำเร็จ',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        setTimeout(() => { router.push("/") }, 1500);
-                    })
-                    .catch(error => {
-                        // handle error
-                        console.log(error);
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: 'ผิดพลาด',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                    })
+            const data = {
+                email: email.value,
+                password: password.value,
+                role: select_role.value
             }
-            else {
-                const data = {
-                    email: email.value,
-                    password: password.value
-                }
-                console.log(data)
-                //api get company by check email & pass return role
-                axios.post(`${PORT}`+'/company/signIn', data)
-                    .then(response => {
-                        // handle success
-                        console.log(response.data);
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'success',
-                            title: 'เข้าสู้ระบบสำเร็จ',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
-                        setTimeout(() => { router.push("/") }, 1500);
+            console.log(data)
+            axios.post(`${PORT}` + '/user/signIn', data)
+                .then(response => {
+                    // handle success
+                    localStorage.setItem("token", response.data.token);
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'success',
+                        title: 'เข้าสู้ระบบสำเร็จ',
+                        showConfirmButton: false,
+                        timer: 1500
                     })
-                    .catch(error => {
-                        // handle error
-                        console.log(error);
-                        Swal.fire({
-                            position: 'center',
-                            icon: 'error',
-                            title: 'ผิดพลาด',
-                            showConfirmButton: false,
-                            timer: 1500
-                        })
+                    setTimeout(() => { router.push("/") }, 1500);
+                })
+                .catch(error => {
+                    // handle error
+                    console.log(error);
+                    Swal.fire({
+                        position: 'center',
+                        icon: 'error',
+                        title: 'ผิดพลาด',
+                        showConfirmButton: false,
+                        timer: 1500
                     })
-            }
-
-
+                })
         }
 
         return { email, password, v$, submitSignIn, select_role, siwtchApplicant, siwtchCompany, store }

@@ -33,13 +33,16 @@ import myjobApplication from '@/components/myjob-application.vue';
 import myjobFavoriteListVue from '@/components/myjob-favorite-list.vue';
 import Applications from '@/models/Applications';
 import Job from '@/models/Job';
+import User from '@/models/User';
+import { useStore } from 'vuex';
 export default defineComponent({
     components: {
         myjobApplication,
         myjobFavoriteListVue,
     },
     setup() {
-
+        const store = useStore()
+        const user = reactive<User>(store.state.user)
         const select_option = ref<string>('application')
         const myApplications = reactive<Applications>({
             applicationJob: [],
@@ -56,7 +59,7 @@ export default defineComponent({
         });
 
         return {
-            select_option, myApplications, myFavoriteJobs
+            select_option, myApplications, myFavoriteJobs, store, user
         }
     },
 })
