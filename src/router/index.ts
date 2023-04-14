@@ -11,6 +11,7 @@ import Applicant from '@/views/Company/ApplicantDetail.vue';
 import MyJobsPage from '@/views/Applicant/MyJobsPage.vue';
 import CompanyAddProgram from '@/views/Company/CompanyEditPage/CompanyAddProgram.vue';
 import CompanyAddJob from '@/views/Company/CompanyEditPage/CompanyAddJob.vue';
+import AdminSignIn from '@/views/Admin/AdminSignIn.vue'
 
 const routes: Array<RouteRecordRaw> = [
   {
@@ -108,7 +109,11 @@ const routes: Array<RouteRecordRaw> = [
     name: 'adminCompanyDetail',
     component: () => import(/* webpackChunkName: "about" */ '../views/Admin/companyReportDetail.vue')
   },
- 
+  {
+    path: '/adminSignIn',
+    component: AdminSignIn
+  }
+
 ]
 
 const router = createRouter({
