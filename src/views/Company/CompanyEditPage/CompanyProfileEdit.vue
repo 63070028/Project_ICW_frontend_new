@@ -43,7 +43,7 @@
                     <label class="label">รูปโปรไฟล์</label>
                     <div class="file">
                       <label class="file-label">
-                        <input class="file-input" type="file" @change="previewProfileImage" />
+                        <input class="file-input" type="file" name="profile_image" @change="previewProfileImage" />
                         <span class="file-cta is-small">
                           <span class="file-label"> Choose a file.. </span>
                         </span>
@@ -59,7 +59,7 @@
                     <div class="control">
                       <div class="file">
                         <label class="file-label">
-                          <input class="file-input" type="file" @change="previewBackgroundImage" />
+                          <input class="file-input" type="file" name="background_image" @change="previewBackgroundImage" />
                           <span class="file-cta is-small">
                             <span class="file-label"> Choose a file.. </span>
                           </span>
@@ -130,71 +130,78 @@ export default defineComponent({
       state: "",
     });
 
-    const profileImageInput = ref(null);
-    const backgroundImageInput = ref(null);
+    const profileImageInput = ref<HTMLInputElement | null>(null);
+    const backgroundImageInput = ref<HTMLInputElement | null>(null);
     const profileImagePreview = ref("");
     const backgroundImagePreview = ref("");
 
     const saveProfile = async () => {
-      const result = await Swal.fire({
-        title: "ยืนยันการบันทึก?",
-        text: "คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "ยืนยัน",
-        cancelButtonText: "ยกเลิก",
+  const result = await Swal.fire({
+    title: "ยืนยันการบันทึก?",
+    text: "คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "ยืนยัน",
+    cancelButtonText: "ยกเลิก",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      const formData = new FormData();
+
+      formData.append("name", company.name);
+      formData.append("description", company.description);
+      formData.append("video_iframe", company.video_iframe);
+
+      if (profileImageInput.value?.files?.[0]) {
+    formData.append("profile_image", profileImageInput.value.files[0]);
+  }
+  if (backgroundImageInput.value?.files?.[0]) {
+    formData.append("background_image", backgroundImageInput.value.files[0]);
+  }
+
+      const response = await axios.post(`${PORT}` + '/company/edit', formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
       });
 
-      if (result.isConfirmed) {
-        // const formData = new FormData();
+      console.log(response.data);
+      Swal.fire({
+        title: "Success",
+        text: "Company profile updated successfully",
+        icon: "success",
+      });
 
-        try {
-          //   const data = {
-          //   name: company.name,
-          //   description: company.description,
-          //   profile_image: company.profile_image,
-          //   background_image: company.background_image,
-          //   video_iframe: company.video_iframe,
-          // };
-          const formData = new FormData();
-
-          formData.append('name', company.name);
-          formData.append('description', company.description);
-          // formData.append('files', ...)
-          formData.append('video_iframe', company.background_image)
-
-          const response = await axios.post(`${PORT}` + '/company/edit', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          })
-          console.log(response.data)
-          Swal.fire({
-            title: "Success",
-            text: "Company profile updated successfully",
-            icon: "success",
-          });
-
-          router.push("/companyProfile");
-        } catch (error) {
-          Swal.fire({
-            title: "Error",
-            text: "Failed to update company profile",
-            icon: "error",
-          });
-        }
-      }
-    };
+      router.push("/companyProfile");
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "Failed to update company profile",
+        icon: "error",
+      });
+    }
+  }
+};
 
     const cancelEdit = async () => {
       router.push(`/companyProfile`);
     };
     const previewProfileImage = (event: Event) => {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (file) {
-        profileImagePreview.value = URL.createObjectURL(file);
-      }
-    };
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (file) {
+    profileImagePreview.value = URL.createObjectURL(file);
+    profileImageInput.value = event.target as HTMLInputElement; // Update the profileImageInput ref with the input element
+  }
+};
+
+const previewBackgroundImage = (event: Event) => {
+  const file = (event.target as HTMLInputElement).files?.[0];
+  if (file) {
+    backgroundImagePreview.value = URL.createObjectURL(file);
+    backgroundImageInput.value = event.target as HTMLInputElement; // Update the backgroundImageInput ref with the input element
+  }
+};
 
     return {
       company,
@@ -207,22 +214,15 @@ export default defineComponent({
       profileImagePreview,
       backgroundImagePreview,
       previewProfileImage,
+      previewBackgroundImage
     };
   },
   methods: {
     setActiveTab(tab: string) {
       this.activeTab = tab;
     },
-    previewBackgroundImage(event: Event) {
-      const file = (event.target as HTMLInputElement).files?.[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = () => {
-          this.company.background_image = reader.result as string;
-        };
-      }
-    },
+
+
   },
 });
 </script>
