@@ -44,7 +44,7 @@
       
     </div>
   </div>
-  <companyProfileEdit v-if="isEdited" @updateProfileEdit="($event)=>{isEdited = $event}"></companyProfileEdit>
+  <companyProfileEdit :id="company.id" :description="company.description" :profile_image="company.profile_image" :name="company.name" :background_image="company.background_image" :video_iframe="company.video_iframe" :state="company.state" v-if="isEdited" @updateProfileEdit="($event)=>{isEdited = $event}" @saveEdit=" updateCompanyProfile($event)"></companyProfileEdit>
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue';
@@ -114,12 +114,16 @@ export default defineComponent({
     const viewJob = (id: number) => {
       router.push('/jobs/' + id);
     };
+    const updateCompanyProfile = (change_data: Company) => {
+      Object.assign(company, change_data);
+    }
     return {
       router,
       route,
       company,
       viewJob,
       user,
+      updateCompanyProfile,
       store
     };
   },
@@ -134,6 +138,7 @@ export default defineComponent({
     saveProfile() {
       this.editingProfile = false;
     },
+    
   },
 });
 </script>
