@@ -160,7 +160,9 @@ export default defineComponent({
   })
   });
 
-    const saveProfile = async () => {
+  const saveProfile = async () => {
+  
+
   const result = await Swal.fire({
     title: "ยืนยันการบันทึก?",
     text: "คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?",
@@ -168,24 +170,31 @@ export default defineComponent({
     showCancelButton: true,
     confirmButtonText: "ยืนยัน",
     cancelButtonText: "ยกเลิก",
+    
   });
-
+  let swalWaiting = Swal.fire({
+    position: 'center',
+    title: 'Uploading file...',
+    showConfirmButton: false,
+    didOpen: () => {
+      Swal.showLoading()
+    }
+  });
   if (result.isConfirmed) {
     try {
       const formData = new FormData();
-        formData.append("id", store.state.user.id);
-        formData.append("name", company.name);
-        formData.append("description", company.description);
-        formData.append("video_iframe", company.video_iframe);
-        formData.append("state", company.state); // ใส่ค่า state เป็น on ใน form data
+      formData.append("id", store.state.user.id);
+      formData.append("name", company.name);
+      formData.append("description", company.description);
+      formData.append("video_iframe", company.video_iframe);
+      formData.append("state", company.state); // ใส่ค่า state เป็น on ใน form data
 
-        if (profileImageInput.value?.files?.[0]) {
-          formData.append("profile_image", profileImageInput.value.files[0]);
-        }
-        if (backgroundImageInput.value?.files?.[0]) {
-          formData.append("background_image", backgroundImageInput.value.files[0]);
-        }
-
+      if (profileImageInput.value?.files?.[0]) {
+        formData.append("profile_image", profileImageInput.value.files[0]);
+      }
+      if (backgroundImageInput.value?.files?.[0]) {
+        formData.append("background_image", backgroundImageInput.value.files[0]);
+      }
 
       const response = await axios.post(`${PORT}` + '/company/edit', formData, {
         headers: {
@@ -207,9 +216,19 @@ export default defineComponent({
         text: "Failed to update company profile",
         icon: "error",
       });
+    } finally {
+      swalWaiting.then((result) => {
+        if (result.dismiss === Swal.DismissReason.timer) {
+          console.log('I was closed by the timer')
+        }
+        else {
+          Swal.close();
+        }
+      });
     }
   }
 };
+
 
     const cancelEdit = async () => {
       router.push(`/companyProfile`);
