@@ -44,7 +44,7 @@
       
     </div>
   </div>
-  <CompanyProfileEdit v-if="isEdited" @updateProfileEdit="($event)=>{isEdited = $event}"></CompanyProfileEdit>
+  <companyProfileEdit v-if="isEdited" @updateProfileEdit="($event)=>{isEdited = $event}"></companyProfileEdit>
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue';
@@ -55,12 +55,12 @@ import User from '@/models/User';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
 import preloadingVue from '@/components/preloading.vue'
-import CompanyProfileEdit from '@/components/company-profileEdit.vue';
+import companyProfileEdit from '@/components/company-profileEdit.vue';
 
 export default defineComponent({
   name: 'App',
   components: {
-        CompanyProfileEdit,
+        companyProfileEdit,
         preloadingVue,
     },
   data() {
