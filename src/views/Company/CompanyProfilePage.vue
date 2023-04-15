@@ -1,6 +1,6 @@
 <template>
   <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
-  <div class="company p-3" v-if="!store.state.isLoadingData && !isEdited" >
+  <div class="company p-3" v-if="!isEdited" >
     <div class="columns">
       <div class="column is-3" style="background-color: #f8f8f8;">
         <aside class="menu">
@@ -44,7 +44,7 @@
       
     </div>
   </div>
-  <CompanyProfileEdit v-if="isEdited" @update-profile-edit="(event)=>{isEdited = event}"></CompanyProfileEdit>
+  <CompanyProfileEdit v-if="isEdited" @updateProfileEdit="($event)=>{isEdited = $event}"></CompanyProfileEdit>
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue';
@@ -88,11 +88,14 @@ export default defineComponent({
     });
 
     onMounted(async () => {
+
       if (!localStorage.getItem('token')) {
         router.push('/signIn')
         return
       }
+      
       store.commit('LOADING_DATA', true)
+
       await axios.get(`${PORT}` + "/user/getData").then(res => {
         console.log(res.data.user)
         store.commit('SET_USER', res.data.user)
@@ -102,10 +105,12 @@ export default defineComponent({
         console.log(res.data.company)
         Object.assign(company, res.data.company);
       })
+
       store.commit('LOADING_DATA', false)
       console.log('get api company id: ' + route.params.id);
 
     });
+
     const viewJob = (id: number) => {
       router.push('/jobs/' + id);
     };

@@ -115,11 +115,8 @@
 
   export default defineComponent({
     name: "CompanyProfileEdit",
-
     emits:['updateProfileEdit'],
-    
     setup(props, {emit}) {
-        emit('updateProfileEdit')
       const store = useStore();
       const user = reactive<User>(store.state.user)
       const router = useRouter();
