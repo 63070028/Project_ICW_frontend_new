@@ -5,7 +5,6 @@ import ProgramPage from '@/views/Applicant/ProgramPage.vue';
 import ContactPage from '@/views/Applicant/ContactPage.vue';
 import ApplicantProfilePage from '@/views/Applicant/ApplicantProfilePage.vue';
 import JobPage from '@/views/Applicant/JobPage.vue';
-import CompanyProfileEdit from '@/views/Company/CompanyEditPage/CompanyProfileEdit.vue';
 import CompanyEditProgramPage from '@/views/Company/CompanyEditPage/CompanyEditProgramPage.vue';
 import Applicant from '@/views/Company/ApplicantDetail.vue';
 import MyJobsPage from '@/views/Applicant/MyJobsPage.vue';
@@ -39,9 +38,7 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/Company/CompanyProgramPage.vue')
   },
   
-  { path: '/companyProfile/edit',
-    component:CompanyProfileEdit
-  },
+
   {
     path: '/companyEditJob/:id',
     component: () => import('../views/Company/CompanyEditPage/CompanyEditJob.vue')

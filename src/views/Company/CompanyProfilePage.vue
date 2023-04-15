@@ -1,5 +1,6 @@
 <template>
-  <div class="company p-3">
+  <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
+  <div class="company p-3" v-if="!store.state.isLoadingData && !isEdited" >
     <div class="columns">
       <div class="column is-3" style="background-color: #f8f8f8;">
         <aside class="menu">
@@ -27,7 +28,7 @@
                       <div class="column ml-4" style="position: relative; top: 100px;">
                         <p class="is-size-4 has-text-weight-bold">{{ company.name }}</p>
                         <!-- Add the edit button here -->
-                        <button class="button is-primary is-small" @click="editProfile">แก้ไข</button>
+                        <button class="button is-primary is-small" @click="isEdited = true">แก้ไข</button>
                       </div>
                     </div>
                     <p class="is-size-5" style="position: relative; top: -40px;">{{ company.description }}</p>
@@ -40,8 +41,10 @@
           </div>
         </div>
       </div>
+      
     </div>
   </div>
+  <CompanyProfileEdit v-if="isEdited" @update-profile-edit="(event)=>{isEdited = event}"></CompanyProfileEdit>
 </template>
 <script lang="ts">
 import { defineComponent, onMounted, reactive } from 'vue';
@@ -51,18 +54,28 @@ import { useStore } from 'vuex';
 import User from '@/models/User';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
+import preloadingVue from '@/components/preloading.vue'
+import CompanyProfileEdit from '@/components/company-profileEdit.vue';
 
 export default defineComponent({
   name: 'App',
+  components: {
+        CompanyProfileEdit,
+        preloadingVue,
+    },
   data() {
     return {
       activeTab: 'info',
       editingProfile: false,
+      isEdited: false,
     };
   },
   setup() {
     const router = useRouter();
     const route = useRoute();
+
+    const store = useStore();
+    const user = reactive<User>(store.state.user)
 
     const company = reactive<Company>({
       id: String(route.params.id),
@@ -72,35 +85,26 @@ export default defineComponent({
       background_image: '',
       video_iframe: '',
       state: ""
-
     });
-    const store = useStore();
-    const user = reactive<User>(store.state.user)
 
     onMounted(async () => {
-
+      if (!localStorage.getItem('token')) {
+        router.push('/signIn')
+        return
+      }
+      store.commit('LOADING_DATA', true)
       await axios.get(`${PORT}` + "/user/getData").then(res => {
         console.log(res.data.user)
         store.commit('SET_USER', res.data.user)
       })
 
+      await axios.get(`${PORT}` + "/company/getProfile/" + user.id).then(res => {
+        console.log(res.data.company)
+        Object.assign(company, res.data.company);
+      })
+      store.commit('LOADING_DATA', false)
       console.log('get api company id: ' + route.params.id);
-      // set company
-      const get_company: Company = {
-        id: "",
-        name:
-          'ไม่ทำงาน จำกัด หมาชน',
-        description:
-          'THiNKNET คือ บริษัท IT ที่สร้างสรรค์ผลิตภัณฑ์และบริการที่มุ่งพัฒนาคุณภาพชีวิตของคนไทยให้ดีขึ้น ก่อตั้งขึ้นในปี 2000 ผลงานโดดเด่นคือ JobThai แพลตฟอร์มหาคน หางาน สมัครงานอันดับ 1 ของประเทศ ที่ช่วยให้คนไทยมีงานทำมานานมากกว่า 20 ปี นอกจากนี้แล้ว THiNKNET ยังพัฒนาสินค้าและบริการอื่น ๆ ออกมาอยู่เสมอ เช่น Mapping & GIS Solutions, THiNKNET Design Studio',
-        profile_image:
-          'https://cdn.discordapp.com/attachments/905751963017285634/1089481386349580359/profile-icon-design-free-vector.png',
-        background_image:
-          'https://www.w3schools.com/w3images/workbench.jpg',
-        video_iframe:
-          '<iframe width="560" height="315" src="https://www.youtube.com/embed/dQw4w9WgXcQ" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>',
-        state: ""
-      };
-      Object.assign(company, get_company);
+
     });
     const viewJob = (id: number) => {
       router.push('/jobs/' + id);
@@ -118,10 +122,7 @@ export default defineComponent({
     setActiveTab(tab: string) {
       this.activeTab = tab;
     },
-    editProfile() {
-      // Navigate to the edit page
-      this.router.push(`/companyProfile/edit`);
-    },
+
     cancelEdit() {
       this.editingProfile = false;
     },
@@ -152,5 +153,6 @@ export default defineComponent({
 
 .job_content:hover {
   background-color: hsl(0, 0%, 96%);
-}</style>
+}
+</style>
 
