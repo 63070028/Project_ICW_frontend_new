@@ -118,10 +118,10 @@ export default defineComponent({
     const route = useRoute();
 
     const program = reactive<Program>({
-      id: "",
-      company_id: "",
-      name: "",
-      description: "", // เพิ่มคุณสมบัติ description
+      id: "0",
+      company_id: "0",
+      name: 'None',
+      description: 'None', // เพิ่มคุณสมบัติ description
       course: 'None',
       jobs_title: [],
       qualifications: [],
