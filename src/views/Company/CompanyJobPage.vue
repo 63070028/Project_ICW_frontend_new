@@ -34,9 +34,9 @@
                     <p class="job-detai-text">จำนวนที่รับ: {{ job.capacity }}</p>
                     <div class="column is-6 edit" style="background-color: #your_color_code;">
                       <div class="field" style="background-color: #your_color_code;">
-                        <v-switch v-model="job.active" hide-details inset color="success" :true-value="JobStatus.Open"
-                          :false-value="JobStatus.Closed" :label="`สถานะงาน: ${job.active}`"
-                          :style="{ color: jobStatusColor(job.active) }">
+                        <v-switch v-model="job.state" hide-details inset color="success" :true-value="JobStatus.Open"
+                          :false-value="JobStatus.Closed" :label="`สถานะงาน: ${job.state}`"
+                          :style="{ color: jobStateColor(job.state) }">
                         </v-switch>
                         <router-link :to="'/companyEditJob/' + job.id">
                           <button class="button is-small is-info">แก้ไขงาน</button>
@@ -56,11 +56,11 @@
   <CompanyAddjob v-if="isAddingjob"></CompanyAddjob>
 </template>
 <script lang="ts">
+
 import "bulma/css/bulma.css";
 import { defineComponent, onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Company from "@/models/Company";
-import Job2 from "@/models/Job2";
 import Swal from "sweetalert2";
 import { JobStatus } from "@/models/Job2";
 import preloadingVue from '@/components/preloading.vue'
@@ -69,9 +69,9 @@ import axios from '@/plugins/axios';
 import { PORT } from '@/port';
 import { useStore } from "vuex";
 import User from "@/models/User";
+import Job from "@/models/Job";
 
 export default defineComponent({
-  name: "App",
   components: {
     CompanyAddjob,
     // preloadingVue,
@@ -89,14 +89,14 @@ export default defineComponent({
 
     const company = reactive<Company>({
       id: "",
-      name: "None",
-      description: "None",
+      name: "",
+      description: "",
       profile_image: "",
       background_image: "",
       video_iframe: "",
       state: ""
     });
-    const jobs = reactive<Job2[]>([]);
+    const jobs = reactive<Job[]>([]);
 
 
     onMounted(async () => {
@@ -135,8 +135,8 @@ export default defineComponent({
         Swal.fire("Cancelled", "ยกเลิกแล้ว :)", "error");
       }
     };
-    const jobStatusColor = (status: JobStatus) => {
-      return status === JobStatus.Open ? "green" : "red";
+    const jobStateColor = (state: string) => {
+      return state === "on" ? "green" : "red";
     };
     return {
       router,
@@ -148,7 +148,7 @@ export default defineComponent({
       activeTab: "jobs",
       isEnabled: false,
       JobStatus,
-      jobStatusColor,
+      jobStateColor,
       user,
       store
       //  jobActiveComputed,
@@ -203,4 +203,5 @@ export default defineComponent({
   align-items: center;
 }
 
-/*toggle swtch*/</style>
+/*toggle swtch*/
+</style>

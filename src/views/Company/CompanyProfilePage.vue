@@ -58,7 +58,6 @@ import preloadingVue from '@/components/preloading.vue'
 import companyProfileEdit from '@/components/company-profile.vue';
 
 export default defineComponent({
-  name: 'App',
   components: {
         companyProfileEdit,
         preloadingVue,

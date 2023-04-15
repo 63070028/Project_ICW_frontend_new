@@ -82,6 +82,7 @@
         id: "",
         company_id: "",
         name: "",
+        company_name:"",
         salary_per_day: 0,
         location: "",
         capacity: 0,
