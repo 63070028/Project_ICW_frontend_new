@@ -1,4 +1,5 @@
 <template>
+    <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
     <div class="columns mt-6" v-if="!store.state.isLoadingData">
         <div class="column is-2"></div>
         <div class="tabs is-boxed column is-8">
@@ -65,12 +66,14 @@ import { useStore } from 'vuex';
 import User from '@/models/User';
 import { PORT } from '@/port';
 import router from '@/router'
+import preloadingVue from '@/components/preloading.vue'
 
 export default defineComponent({
     components: {
         applicantProfileVue,
         uploadPdfVue,
         applicantPreview,
+        preloadingVue
     },
     setup() {
 
@@ -95,12 +98,13 @@ export default defineComponent({
         let select_option = ref<string>("user_profile")
         onMounted(async () => {
 
-            if(store.state.user.id == ""){
+            if(!localStorage.getItem('token')){
                 router.push('/signIn')
                 return
             }
             
             store.commit('LOADING_DATA', true)
+
             await axios.get(`${PORT}` + "/user/getData").then(res => {
                 console.log(res.data.user)
                 store.commit('SET_USER', res.data.user)
