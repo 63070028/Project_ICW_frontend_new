@@ -1,5 +1,6 @@
 <template>
     <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
+
     <div class="columns mt-6" v-if="!store.state.isLoadingData">
         <div class="column is-2"></div>
         <div class="tabs is-boxed column is-8">
@@ -34,7 +35,7 @@
             <applicantProfileVue :id="applicant.id" :address="applicant.address" :email_profile="applicant.email_profile"
                 :birth-date="applicant.birthDate" :first-name="applicant.firstName" :last-name="applicant.lastName"
                 :gender="applicant.gender" :phone="applicant.phone" :state="applicant.state"
-                v-if="select_option === 'user_profile'">
+                v-if="select_option === 'user_profile'" @changeProfile="updateProfile($event)">
             </applicantProfileVue>
 
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'" 
@@ -110,15 +111,21 @@ export default defineComponent({
                 store.commit('SET_USER', res.data.user)
             })
 
-            await axios.get(`${PORT}` + "/applicant/getProfile/" + user.id).then(res => {
+            await axios.get(`${PORT}` + "/applicant/getProfileById/" + user.id).then(res => {
                 console.log(res.data.applicant)
                 Object.assign(applicant, res.data.applicant);
             })
+            
             store.commit('LOADING_DATA', false)
         })
 
+        const updateProfile = (change_data: Applicant) => {
+            Object.assign(applicant, change_data);
+        }
+    
+
         return {
-            select_option, applicant, store, user
+            select_option, applicant, store, user, updateProfile
         }
 
     },

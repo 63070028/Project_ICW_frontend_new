@@ -139,8 +139,8 @@ export default defineComponent({
     const router = useRouter();
     const company = reactive<Company>({
       id: "",
-      name: "None",
-      description: "None",
+      name: "",
+      description: "",
       profile_image: "",
       background_image: "",
       video_iframe: "",
