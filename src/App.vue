@@ -1,5 +1,5 @@
 <template>
-  <section>
+  <section v-if="!store.state.isLoadingData">
     <nav class="navbar is-transparent is-warning" role="navigation" aria-label="main navigation">
       <div class="navbar-brand">
         <router-link to="/" class="navbar-item">
@@ -14,19 +14,25 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
-          
+
         </div>
         <div class="navbar-end">
           <!-- ของคนหางาน -->
-          <router-link class="navbar-item " to="/applicantProfile" v-if="store.state.user.role == 'applicant'"><i class="pi pi-exclamation-circle pr-3" style="color: red" v-if="store.state.user.state == ''"></i>ประวัติของฉัน</router-link>
-          <router-link class="navbar-item " to="/MyJobs" v-if="store.state.user.role == 'applicant'">งานของฉัน</router-link>
+          <router-link class="navbar-item " to="/applicantProfile" v-if="store.state.user.role == 'applicant'"><i
+              class="pi pi-exclamation-circle pr-3" style="color: red"
+              v-if="store.state.user.state == ''"></i>ประวัติของฉัน</router-link>
+          <router-link class="navbar-item " to="/MyJobs"
+            v-if="store.state.user.role == 'applicant'">งานของฉัน</router-link>
 
-           <!-- ของบริษัท -->
-           <router-link class="navbar-item " to="/companyProfile" v-if="store.state.user.role == 'company'">ข้อมูลบริษัท</router-link>
-           <router-link class="navbar-item " to="/ListApplicant" v-if="store.state.user.role == 'company'">คนที่มายื่นสมัคร</router-link>
+          <!-- ของบริษัท -->
+          <router-link class="navbar-item " to="/companyProfile"
+            v-if="store.state.user.role == 'company'">ข้อมูลบริษัท</router-link>
+          <router-link class="navbar-item " to="/ListApplicant"
+            v-if="store.state.user.role == 'company'">คนที่มายื่นสมัคร</router-link>
 
-           <!-- ของแอดมิน -->
-           <router-link class="navbar-item " to="/dashboard" v-if="store.state.user.role == 'admin'">Dashboard</router-link>
+          <!-- ของแอดมิน -->
+          <router-link class="navbar-item " to="/dashboard"
+            v-if="store.state.user.role == 'admin'">Dashboard</router-link>
 
           <div class="navbar-item">
             <div class="buttons">
@@ -54,22 +60,28 @@ import { defineComponent } from 'vue'
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 import "primeicons/primeicons.css";
+import { reactive } from 'vue';
+import User from './models/User';
 
 export default defineComponent({
-    setup() {
+  setup() {
+    const store = useStore();
+    const user = reactive<User>(store.state.user)
+    const router = useRouter();
 
-        const store = useStore();
-        const router = useRouter();
-        const logout = () => {
-          localStorage.removeItem('token');
-          store.commit("LOGOUT");
-          router.push("/")
-        }
 
-        return {
-          logout, store
-        }
-    },
+    const logout = () => {
+      localStorage.removeItem('token');
+      store.commit("LOGOUT");
+      router.push("/")
+    }
+
+
+
+    return {
+      logout, store, user
+    }
+  },
 })
 </script>
 

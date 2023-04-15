@@ -129,7 +129,7 @@ export default defineComponent({
 
     const formReportSend = reactive<reportSendModel>({
       user_id: "",
-      job_id: "",
+      job_id: "" + route.params.id,
       creation_date: "",
       message: "",
     });
@@ -186,7 +186,6 @@ export default defineComponent({
 
       //ส่ง report
       formReportSend.message = messageReport.value;
-      formReportSend.job_id = "" + route.params.id;
       formReportSend.creation_date = new Date().toLocaleDateString("en-US");
 
       console.log(formReportSend.creation_date);

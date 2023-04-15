@@ -1,5 +1,5 @@
 <template>
-    <div class="columns mt-6">
+    <div class="columns mt-6" v-if="!store.state.isLoadingData">
         <div class="column is-2"></div>
         <div class="tabs is-boxed column is-8">
             <ul>
@@ -28,16 +28,15 @@
                         <span>ตัวอย่างใบยื่นสมัคร</span>
                     </a>
                 </li>
-
             </ul>
 
             <applicantProfileVue :id="applicant.id" :address="applicant.address" :email_profile="applicant.email_profile"
                 :birth-date="applicant.birthDate" :first-name="applicant.firstName" :last-name="applicant.lastName"
                 :gender="applicant.gender" :phone="applicant.phone" :state="applicant.state"
-                v-if="select_option === 'user_profile' && state.isLoading == false">
-            </applicantProfileVue >
+                v-if="select_option === 'user_profile'">
+            </applicantProfileVue>
 
-            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'"
+            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'" 
                 :url="applicant.resume" :role="'applicant'"></uploadPdfVue>
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'transcript'"
                 :url="applicant.transcript" :role="'applicant'">
@@ -45,10 +44,9 @@
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'portfolio'"
                 :url="applicant.portfolio" :role="'applicant'">
             </uploadPdfVue>
-
-            <ApplicantDetail v-if="select_option === 'preview'"></ApplicantDetail>
-
+            <applicantPreview :appliacnt="applicant" v-if="select_option === 'preview' "></applicantPreview>
         </div>
+        
 
         <div class="column is-2"></div>
     </div>
@@ -61,25 +59,23 @@ import { defineComponent, onMounted, reactive, ref } from 'vue'
 import applicantProfileVue from '@/components/applicant-profile.vue'
 import uploadPdfVue from '@/components/upload-pdf.vue'
 import Applicant from '@/models/Applicant'
-import ApplicantDetail from '@/views/Company/ApplicantDetail.vue';
+import applicantPreview from '@/components/applicant-preview.vue'
 import axios from '@/plugins/axios';
 import { useStore } from 'vuex';
 import User from '@/models/User';
 import { PORT } from '@/port';
+import router from '@/router'
 
 export default defineComponent({
     components: {
         applicantProfileVue,
         uploadPdfVue,
-        ApplicantDetail
+        applicantPreview,
     },
     setup() {
 
         const store = useStore();
         const user = reactive<User>(store.state.user)
-        const state = reactive({
-            isLoading: true, // Add a loading indicator flag
-         });
 
         const applicant = reactive<Applicant>({
             id: "",
@@ -90,16 +86,21 @@ export default defineComponent({
             gender: "",
             address: "",
             phone: "",
-            resume: "", //ทดสอบ
+            resume: "",
             transcript: "",
             portfolio: "",
             state: ""
         })
 
         let select_option = ref<string>("user_profile")
-
         onMounted(async () => {
 
+            if(store.state.user.id == ""){
+                router.push('/signIn')
+                return
+            }
+            
+            store.commit('LOADING_DATA', true)
             await axios.get(`${PORT}` + "/user/getData").then(res => {
                 console.log(res.data.user)
                 store.commit('SET_USER', res.data.user)
@@ -108,14 +109,12 @@ export default defineComponent({
             await axios.get(`${PORT}` + "/applicant/getProfile/" + user.id).then(res => {
                 console.log(res.data.applicant)
                 Object.assign(applicant, res.data.applicant);
-                state.isLoading = false;
             })
+            store.commit('LOADING_DATA', false)
         })
 
-
-
         return {
-            select_option, applicant, store, user, state
+            select_option, applicant, store, user
         }
 
     },

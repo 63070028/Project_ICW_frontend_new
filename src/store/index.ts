@@ -8,7 +8,7 @@ const store = createStore({
       role: "",
       state: "",
     },
-    isSignIn:false
+    isLoadingData:true
   },
   mutations: {
     SET_USER(state, user) {
@@ -20,8 +20,8 @@ const store = createStore({
       state.user.role = "",
       state.user.state = ""
     },
-    IS_SIGNIN(state, data){
-      state.isSignIn = data;
+    LOADING_DATA(state, data){
+      state.isLoadingData = data;
     }
   },
 });

@@ -218,10 +218,7 @@ export default defineComponent({
             editForm.address = f_address.value;
             editForm.phone = f_phone.value;
 
-            await axios.post(`${PORT}`+"/applicant/editProfile", editForm).then(res=>{
-                //
-            })
-
+            await axios.post(`${PORT}`+"/applicant/editProfile", editForm)
             // editForm.resume = 
             // editForm.transcript =
             // editForm.portfolio =

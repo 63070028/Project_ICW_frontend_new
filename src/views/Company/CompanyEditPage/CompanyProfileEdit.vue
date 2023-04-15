@@ -59,7 +59,8 @@
                     <div class="control">
                       <div class="file">
                         <label class="file-label">
-                          <input class="file-input" type="file" name="background_image" @change="previewBackgroundImage" />
+                          <input class="file-input" type="file" name="background_image"
+                            @change="previewBackgroundImage" />
                           <span class="file-cta is-small">
                             <span class="file-label"> Choose a file.. </span>
                           </span>
@@ -154,22 +155,22 @@ export default defineComponent({
 
     onMounted(async () => {
 
-  await axios.get(`${PORT}` + "/user/getData").then(res => {
-    console.log(res.data.user)
-    store.commit('SET_USER', res.data.user)
-  })
-  });
+      await axios.get(`${PORT}` + "/user/getData").then(res => {
+        console.log(res.data.user)
+        store.commit('SET_USER', res.data.user)
+      })
+    });
 
   const saveProfile = async () => {
   
 
-  const result = await Swal.fire({
-    title: "ยืนยันการบันทึก?",
-    text: "คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?",
-    icon: "warning",
-    showCancelButton: true,
-    confirmButtonText: "ยืนยัน",
-    cancelButtonText: "ยกเลิก",
+      const result = await Swal.fire({
+        title: "ยืนยันการบันทึก?",
+        text: "คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "ยืนยัน",
+        cancelButtonText: "ยกเลิก",
     
   });
   let swalWaiting = Swal.fire({
@@ -179,75 +180,67 @@ export default defineComponent({
     didOpen: () => {
       Swal.showLoading()
     }
-  });
-  if (result.isConfirmed) {
-    try {
-      const formData = new FormData();
-      formData.append("id", store.state.user.id);
-      formData.append("name", company.name);
-      formData.append("description", company.description);
-      formData.append("video_iframe", company.video_iframe);
-      formData.append("state", company.state); // ใส่ค่า state เป็น on ใน form data
-
-      if (profileImageInput.value?.files?.[0]) {
-        formData.append("profile_image", profileImageInput.value.files[0]);
-      }
-      if (backgroundImageInput.value?.files?.[0]) {
-        formData.append("background_image", backgroundImageInput.value.files[0]);
-      }
-
-      const response = await axios.post(`${PORT}` + '/company/edit', formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
       });
+      if (result.isConfirmed) {
+        try {
+          const formData = new FormData();
+        formData.append("id", store.state.user.id);
+        formData.append("name", company.name);
+        formData.append("description", company.description);
+        formData.append("video_iframe", company.video_iframe);
+        formData.append("state", company.state); // ใส่ค่า state เป็น on ใน form data
 
-      console.log(response.data);
-      Swal.fire({
-        title: "Success",
-        text: "Company profile updated successfully",
-        icon: "success",
-      });
+          if (profileImageInput.value?.files?.[0]) {
+            formData.append("profile_image", profileImageInput.value.files[0]);
+          }
+          if (backgroundImageInput.value?.files?.[0]) {
+            formData.append("background_image", backgroundImageInput.value.files[0]);
+          }
 
-      router.push("/companyProfile");
-    } catch (error) {
-      Swal.fire({
-        title: "Error",
-        text: "Failed to update company profile",
-        icon: "error",
-      });
-    } finally {
-      swalWaiting.then((result) => {
-        if (result.dismiss === Swal.DismissReason.timer) {
-          console.log('I was closed by the timer')
+
+          const response = await axios.post(`${PORT}` + '/company/edit', formData, {
+            headers: {
+              "Content-Type": "multipart/form-data",
+            },
+          });
+
+          console.log(response.data);
+          Swal.fire({
+            title: "Success",
+            text: "Company profile updated successfully",
+            icon: "success",
+          });
+
+          router.push("/companyProfile");
+        } catch (error) {
+          Swal.fire({
+            title: "Error",
+            text: "Failed to update company profile",
+            icon: "error",
+          });
         }
-        else {
-          Swal.close();
-        }
-      });
-    }
-  }
-};
+      }
+    };
 
 
     const cancelEdit = async () => {
       router.push(`/companyProfile`);
     };
     const previewProfileImage = (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (file) {
-    profileImagePreview.value = URL.createObjectURL(file);
-    profileImageInput.value = event.target as HTMLInputElement; // Update the profileImageInput ref with the input element
-  }
-};
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        profileImagePreview.value = URL.createObjectURL(file);
+        profileImageInput.value = event.target as HTMLInputElement; // Update the profileImageInput ref with the input element
+      }
+    };
 
-const previewBackgroundImage = (event: Event) => {
-  const file = (event.target as HTMLInputElement).files?.[0];
-  if (file) {
-    backgroundImagePreview.value = URL.createObjectURL(file);
-    backgroundImageInput.value = event.target as HTMLInputElement; // Update the backgroundImageInput ref with the input element
-  }
-};
+    const previewBackgroundImage = (event: Event) => {
+      const file = (event.target as HTMLInputElement).files?.[0];
+      if (file) {
+        backgroundImagePreview.value = URL.createObjectURL(file);
+        backgroundImageInput.value = event.target as HTMLInputElement; // Update the backgroundImageInput ref with the input element
+      }
+    };
 
     return {
       company,
