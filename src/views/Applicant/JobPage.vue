@@ -4,7 +4,7 @@
       <p class="has-text-right">{{ job.creation_date }}</p>
       <div class="columns mt-1">
         <div class="column is-11">
-          <p class="is-size-3 has-text-weight-bold p-4"><b>บริษัท xxx</b></p>
+          <p class="is-size-3 has-text-weight-bold p-4"><b>บริษัท {{ job.company_name }}</b></p>
           <p class="is-size-5 p-4">
             <b>{{ job.name }}</b>
           </p>
@@ -26,10 +26,10 @@
           </div>
         </div>
         <div class="column my-3" style="
-                    display: flex;
-                    flex-direction: column;
-                    justify-content: space-between;
-                  ">
+                            display: flex;
+                            flex-direction: column;
+                            justify-content: space-between;
+                          ">
           <button class="button is-danger" @click="isReport = !isReport">
             รายงาน
           </button>
@@ -99,18 +99,23 @@ import Swal from "sweetalert2";
 import { useVuelidate } from "@vuelidate/core";
 import { helpers, required } from "@vuelidate/validators";
 import reportSendModel from "@/models/formModels/JobReportSendModel";
-import axios from "axios";
+import axios from "@/plugins/axios";
 import { PORT } from "@/port";
+import User from "@/models/User";
+import { useStore } from "vuex";
 
 export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
     const v$ = useVuelidate();
+    const store = useStore();
+    const user = reactive<User>(store.state.user)
 
     const job = reactive<Job>({
       id: "",
       company_id: "",
+      company_name: "",
       name: "",
       salary_per_day: 0,
       location: "",
@@ -129,11 +134,13 @@ export default defineComponent({
 
     const formReportSend = reactive<reportSendModel>({
       user_id: "",
-      job_id: "" + route.params.id,
+      company_name: "",
+      job_name: "",
+      job_id: "",
       creation_date: "",
       message: "",
     });
-    
+
     const isMyFavorite = ref<boolean>(false);
 
     const isReport = ref<boolean>(false);
@@ -185,6 +192,10 @@ export default defineComponent({
       if (!isFormCorrect) return;
 
       //ส่ง report
+      formReportSend.user_id = user.id
+      formReportSend.company_name = job.company_name,
+      formReportSend.job_id = "" + route.params.id;
+      formReportSend.job_name = job.name;
       formReportSend.message = messageReport.value;
       formReportSend.creation_date = new Date().toLocaleDateString("en-US");
 
@@ -218,26 +229,16 @@ export default defineComponent({
         });
     };
 
-    onMounted(() => {
+    onMounted(async () => {
       //get api job
-      const get_job: Job = {
-        id: "",
-        company_id: "",
-        name: "",
-        salary_per_day: 0,
-        location: "",
-        capacity: 0,
-        detail: "",
-        interview: "",
-        qualifications: ["", ""],
-        contact: {
-          name: "",
-          email: "",
-          phone: "",
-        },
-        creation_date: "",
-        state: "",
-      };
+
+      await axios.get(`${PORT}` + "/user/getData").then(res => {
+        console.log(res.data.user)
+        store.commit('SET_USER', res.data.user)
+      })
+
+
+      const get_job: Job = { id: "1234-xxxx-xxxx-xxxx-xxxx", company_id: "xxxx-xxxx-xxxx-xxxx", company_name: "c_name", name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015", state: "on" }
       Object.assign(job, get_job);
     });
 
@@ -253,6 +254,8 @@ export default defineComponent({
       submitApplication,
       submitReport,
       formReportSend,
+      store,
+      user
     };
   },
   validations() {

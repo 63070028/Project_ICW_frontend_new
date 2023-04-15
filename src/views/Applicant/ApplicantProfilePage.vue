@@ -39,12 +39,12 @@
             </applicantProfileVue>
 
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'" 
-                :url="applicant.resume" :role="'applicant'"></uploadPdfVue>
+                :url="applicant.resume" :role="'applicant'" @resume="applicant.resume = $event"></uploadPdfVue>
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'transcript'"
-                :url="applicant.transcript" :role="'applicant'">
+                :url="applicant.transcript" :role="'applicant'" @transcript="applicant.resume = $event">
             </uploadPdfVue>
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'portfolio'"
-                :url="applicant.portfolio" :role="'applicant'">
+                :url="applicant.portfolio" :role="'applicant'" @portfolio="applicant.resume = $event">
             </uploadPdfVue>
             <applicantPreview :appliacnt="applicant" v-if="select_option === 'preview' "></applicantPreview>
         </div>

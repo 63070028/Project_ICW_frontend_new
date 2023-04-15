@@ -64,6 +64,7 @@ import Swal from 'sweetalert2';
 import axios from '@/plugins/axios'
 import { PORT } from '@/port';
 export default {
+    emits:['resume', 'transcript', 'portfolio'],
     props: {
         upload_category: {
             type: String,
@@ -211,6 +212,7 @@ export default {
                     })
                     console.log(response.data.url)
                     this.urlOld = response.data.url
+                    this.$emit(this.file.upload_category, response.data.url)
                 }
                 else {
                     console.log('upload')
@@ -221,6 +223,7 @@ export default {
                     })
                     console.log(response.data.url)
                     this.urlOld = response.data.url
+                    this.$emit(this.file.upload_category, response.data.url)
                 }
                 swalWaiting.close()
                 Swal.fire({

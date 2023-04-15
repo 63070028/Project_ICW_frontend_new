@@ -23,26 +23,29 @@
               <div v-show="activeTab === 'jobs'" style="background-color: #f6f6f6">
                 <h1 class="title">งานที่ได้รับแจ้ง</h1>
 
-                <div class="job-card" v-for="(job, index) in jobs" :key="index">
+                <div class="job-card" v-for="(jobReport, index) in jobReports" :key="index">
                   <div class="columns">
-                    <div class="column is-11" @click="viewJob(job.id)">
+                    <div class="column is-11" @click="viewJob(jobReport.job_id)">
                       <p class="is-size-4 has-text-weight-bold">
-                        {{ index + 1 + "." }} ฝึกงานเภสัช jobID=
-                        {{ job.job_id }}
+                        {{ index + 1 + "." }} {{ jobReport.company_name }}
                       </p>
-                      <div class="columns is-multiline ml-6 mt-1">
-                        <p class="column is-6">
-                          ข้อความจากผู้รายงาน: {{ job.message }}
+                      <p class="is-size-4 has-text-weight-bold ml-6">
+                        {{ jobReport.job_name }} ({{ jobReport.job_id }})
+                      </p>
+                      <div class="columns is-multiline ml-5 mt-1">
+                        <p class="column is-8">
+                          หมายเลข ID ของผู้รายงาน: {{ jobReport.user_id }}
                         </p>
-                        <p class="column is-6">
-                          หมายเลข ID ของผู้รายงาน: {{ job.user_id }}
-                        </p>
-                        <p class="column is-6">
-                          วันที่รายงาน: {{ job.creation_date }}
+                        <p class="column">
+                          วันที่รายงาน: {{ jobReport.creation_date }}
                         </p>
                       </div>
                     </div>
                   </div>
+                  <p class="column is-6 ml-5 has-text-weight-bold">
+                    ข้อความจากผู้รายงาน:
+                  </p>
+                  <p class="column is-6  ml-5 "> {{ jobReport.message }}</p>
                 </div>
               </div>
             </div>
@@ -58,7 +61,6 @@ import "bulma/css/bulma.css";
 import { defineComponent, onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Company from "@/models/Company";
-import Job from "@/models/JobReport";
 import Swal from "sweetalert2";
 import JobReport from "@/models/JobReport";
 import axios from "axios";
@@ -83,7 +85,7 @@ export default defineComponent({
       state: "",
     });
 
-    const jobs = reactive<Job[]>([]);
+    const jobReports = reactive<JobReport[]>([]);
 
     onMounted(() => {
       console.log("get api company id: " + route.params.id);
@@ -96,7 +98,8 @@ export default defineComponent({
           const get_jobReport: JobReport[] = response.data.items;
           console.log(get_jobReport);
           get_jobReport.forEach((job) => {
-            jobs.push(job);
+            console.log(job)
+            jobReports.push(job);
           });
         })
         .catch((error) => {
@@ -120,7 +123,7 @@ export default defineComponent({
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.isConfirmed) {
-          jobs.splice(index - 1, 1);
+          jobReports.splice(index - 1, 1);
           Swal.fire({
             position: "center",
             icon: "error",
@@ -135,7 +138,7 @@ export default defineComponent({
       router,
       route,
       company,
-      jobs,
+      jobReports,
       viewJob,
       deleteJob,
       activeTab: "jobs",

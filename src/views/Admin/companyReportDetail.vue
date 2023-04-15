@@ -9,7 +9,7 @@
                 v-show="activeTab === 'jobs'"
                 style="background-color: #f6f6f6"
               >
-                <h1 class="title">งานทั้งหมดของบริษัท {{ route.params.id }}</h1>
+                <h1 class="title">งานทั้งหมดของบริษัท {{ company.name }}</h1>
 
                 <div class="job-card" v-for="(job, index) in jobs" :key="index">
                   <div class="job-detail">
@@ -83,6 +83,7 @@ export default defineComponent({
       id: "",
       company_id: "",
       name: "",
+      company_name:"",
       salary_per_day: 0,
       location: "",
       capacity: 0,
@@ -97,6 +98,7 @@ export default defineComponent({
 const job2 = reactive<Job>({
       id: "",
       company_id: "",
+      company_name:"",
       name: "",
       salary_per_day: 0,
       location: "",
