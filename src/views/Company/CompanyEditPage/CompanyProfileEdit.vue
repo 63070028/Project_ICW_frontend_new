@@ -86,6 +86,18 @@
                       <input class="input" type="text" v-model="company.video_iframe" />
                     </div>
                   </div>
+                  <div class="field">
+                    <label class="label">สถานะ</label>
+                    <div class="control">
+                      <div class="select">
+                        <select v-model="company.state">
+                          <option value="on">เปิดการแสดงข้อมูลบริษัท</option>
+                          <option value="off">ปิดการแสดงข้อมูลบริษัท</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
                   <div class="field is-grouped">
                     <div class="control">
                       <button class="button is-link" @click="saveProfile">
@@ -114,11 +126,15 @@ import Company from "@/models/Company";
 import Swal from "sweetalert2";
 import { PORT } from "@/port";
 import axios from "axios";
+import { useStore } from "vuex";
+import User from "@/models/User";
 
 export default defineComponent({
   name: "CompanyProfileEdit",
 
   setup() {
+    const store = useStore();
+    const user = reactive<User>(store.state.user)
     const router = useRouter();
     const company = reactive<Company>({
       id: "",
@@ -135,6 +151,15 @@ export default defineComponent({
     const profileImagePreview = ref("");
     const backgroundImagePreview = ref("");
 
+
+    onMounted(async () => {
+
+  await axios.get(`${PORT}` + "/user/getData").then(res => {
+    console.log(res.data.user)
+    store.commit('SET_USER', res.data.user)
+  })
+  });
+
     const saveProfile = async () => {
   const result = await Swal.fire({
     title: "ยืนยันการบันทึก?",
@@ -148,17 +173,19 @@ export default defineComponent({
   if (result.isConfirmed) {
     try {
       const formData = new FormData();
+        formData.append("id", store.state.user.id);
+        formData.append("name", company.name);
+        formData.append("description", company.description);
+        formData.append("video_iframe", company.video_iframe);
+        formData.append("state", company.state); // ใส่ค่า state เป็น on ใน form data
 
-      formData.append("name", company.name);
-      formData.append("description", company.description);
-      formData.append("video_iframe", company.video_iframe);
+        if (profileImageInput.value?.files?.[0]) {
+          formData.append("profile_image", profileImageInput.value.files[0]);
+        }
+        if (backgroundImageInput.value?.files?.[0]) {
+          formData.append("background_image", backgroundImageInput.value.files[0]);
+        }
 
-      if (profileImageInput.value?.files?.[0]) {
-    formData.append("profile_image", profileImageInput.value.files[0]);
-  }
-  if (backgroundImageInput.value?.files?.[0]) {
-    formData.append("background_image", backgroundImageInput.value.files[0]);
-  }
 
       const response = await axios.post(`${PORT}` + '/company/edit', formData, {
         headers: {
@@ -214,7 +241,9 @@ const previewBackgroundImage = (event: Event) => {
       profileImagePreview,
       backgroundImagePreview,
       previewProfileImage,
-      previewBackgroundImage
+      previewBackgroundImage,
+      user,
+      store
     };
   },
   methods: {

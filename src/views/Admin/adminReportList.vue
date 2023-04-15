@@ -63,6 +63,8 @@ import Swal from "sweetalert2";
 import JobReport from "@/models/JobReport";
 import axios from "axios";
 import { PORT } from "@/port";
+
+
 export default defineComponent({
   name: "App",
 
@@ -73,8 +75,8 @@ export default defineComponent({
     //def
     const company = reactive<Company>({
       id: "",
-      name: "None",
-      description: "None",
+      name: "",
+      description: "",
       profile_image: "",
       background_image: "",
       video_iframe: "",
