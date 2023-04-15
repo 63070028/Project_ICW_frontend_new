@@ -107,12 +107,12 @@ export default defineComponent({
       })
 
       await axios.get(`${PORT}` + "/company/getJob/" + user.id).then(res => {
+        console.log(res.data)
         Object.assign(jobs, res.data.items)
       })
 
-
-      console.log("get api company id: " + route.params.id);
-
+      console.log("get api company id: " + user.id);
+      
 
     });
     const viewJob = (id: number) => {
@@ -149,8 +149,9 @@ export default defineComponent({
       isEnabled: false,
       JobStatus,
       jobStateColor,
+      store,
       user,
-      store
+      
       //  jobActiveComputed,
     };
   },
