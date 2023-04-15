@@ -137,6 +137,7 @@ import Applicant from '@/models/Applicant';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
 export default defineComponent({
+    emits: ['changeProfile'],
     props: {
         id: {
             type: String,
@@ -176,7 +177,7 @@ export default defineComponent({
         }
     },
 
-    setup(props) {
+    setup(props, { emit }) {
 
         const modify_profile = ref<boolean>(false);
         const v$ = useVuelidate();
@@ -202,7 +203,7 @@ export default defineComponent({
             resume: "",
             transcript: "",
             portfolio: "",
-            state: "on"
+            state: ""
         })
 
         const saveProfile = async () => {
@@ -217,8 +218,12 @@ export default defineComponent({
             editForm.gender = f_gender.value;
             editForm.address = f_address.value;
             editForm.phone = f_phone.value;
+            editForm.state = "on"
 
-            await axios.post(`${PORT}`+"/applicant/editProfile", editForm)
+            await axios.post(`${PORT}`+"/applicant/editProfile", editForm).then(res=>{
+                console.log(res.data.message)
+                emit('changeProfile', editForm)
+            })
             // editForm.resume = 
             // editForm.transcript =
             // editForm.portfolio =
