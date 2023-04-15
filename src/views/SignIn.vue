@@ -48,7 +48,6 @@ import { defineComponent, ref } from 'vue'
 import { required, helpers } from '@vuelidate/validators'
 import { useRouter } from 'vue-router'
 import Swal from 'sweetalert2';
-
 import axios from 'axios';
 import { PORT } from '@/port';
 import { useStore } from 'vuex'
@@ -81,10 +80,11 @@ export default defineComponent({
                 role: select_role.value
             }
             console.log(data)
-            axios.post(`${PORT}` + '/user/signIn', data)
+            await axios.post(`${PORT}` + '/user/signIn', data)
                 .then(response => {
                     // handle success
                     localStorage.setItem("token", response.data.token);
+                    store.commit('SET_USER', response.data.user)
                     Swal.fire({
                         position: 'center',
                         icon: 'success',

@@ -30,11 +30,12 @@
 
 
 
-    <div v-if="isEdit === false & urlOld != '' & role === 'applicant'" style="display: flex; flex-direction: column; align-items: flex-end;">
+    <div v-if="isEdit === false & urlOld != '' & role === 'applicant'"
+        style="display: flex; flex-direction: column; align-items: flex-end;">
         <button class="button mb-3 mt-3 is-info" @click="isEdit = true">Edit</button>
     </div>
 
-    <div v-if="isEdit === false & urlOld === ''" style="display: flex; flex-direction: column; align-items: flex-end;">
+    <div v-if="isEdit === false & urlOld === '' & role === 'applicant'" style="display: flex; flex-direction: column; align-items: flex-end;">
         <button class="button mb-3 mt-3 is-info" @click="isEdit = true">Upload</button>
     </div>
 
@@ -77,7 +78,7 @@ export default {
             type: String,
             required: true,
         },
-        role:{
+        role: {
             type: String,
             required: true,
             default: ""
@@ -99,7 +100,6 @@ export default {
             errors: [],
             file_test: null,
             urlOld: this.url
-
         };
     },
 
@@ -199,15 +199,14 @@ export default {
                 const file = this.$refs.fileInput.files[0]
                 const formData = new FormData()
                 formData.append('file', file)
-                formData.append('user_id', 'xxx')
+                formData.append('id', this.$store.state.user.id)
                 formData.append('urlOld', this.urlOld)
-                console.log(localStorage.getItem("token"))
+                formData.append('category', this.file.upload_category)
                 if (this.urlOld != '') {
                     console.log('edit')
-                    const response = await axios.post(`${PORT}` + '/applicant/resume/edit', formData, {
+                    const response = await axios.post(`${PORT}` + '/applicant/pdf/edit', formData, {
                         headers: {
                             'Content-Type': 'multipart/form-data',
-                            'Authorization': `Bearer ${localStorage.getItem("token")}`
                         }
                     })
                     console.log(response.data.url)
@@ -215,9 +214,9 @@ export default {
                 }
                 else {
                     console.log('upload')
-                    const response = await axios.post(`${PORT}` + '/applicant/resume/upload', formData, {
+                    const response = await axios.post(`${PORT}` + '/applicant/pdf/upload', formData, {
                         headers: {
-                            'Content-Type': 'multipart/form-data'
+                            'Content-Type': 'multipart/form-data',
                         }
                     })
                     console.log(response.data.url)

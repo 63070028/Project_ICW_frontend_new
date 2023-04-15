@@ -178,7 +178,8 @@ export default defineComponent({
             isSubmit,
             selectedJob,
             v$,
-            submitApplication
+            submitApplication,
+            applicationProgram 
         }
     },
     validations() {

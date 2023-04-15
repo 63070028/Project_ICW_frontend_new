@@ -108,7 +108,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import Company from "@/models/Company";
 import Swal from "sweetalert2";

@@ -1,5 +1,6 @@
 <template>
-  <div class="container">
+  <PreloaderVue v-if="store.state.isLoadingData"></PreloaderVue>
+  <div class="container"  v-if="!store.state.isLoadingData" >
     <div class="columns ml-6 mt-5 pl-3 pr-3">
 
       <div class="column has-background-dark is-2 mr-6 has-text-white box" @click="viewContact()"
@@ -27,7 +28,7 @@
 
 
 <script lang="ts">
-import { computed, defineComponent, onMounted, reactive, unref } from 'vue'
+import { defineComponent, onMounted, reactive} from 'vue'
 import companyList from '../components/company-list.vue'
 import Company from '@/models/Company'
 import 'vue3-carousel/dist/carousel.css'
@@ -38,6 +39,7 @@ import { useStore } from 'vuex'
 import axios from "@/plugins/axios"
 import { PORT } from '@/port'
 import User from '@/models/User'
+import PreloaderVue from '@/components/preloading.vue'
 
 
 export default defineComponent({
@@ -45,6 +47,7 @@ export default defineComponent({
     companyList,
     Carousel,
     Slide,
+    PreloaderVue,
     Pagination,
     Navigation,
   },
@@ -67,10 +70,15 @@ export default defineComponent({
     });
 
     onMounted(async () => {
+        store.commit('LOADING_DATA', true)
+
         await axios.get(`${PORT}` + "/user/getData").then(res => {
           console.log(res.data.user)
           store.commit('SET_USER', res.data.user)
+        }).finally(()=>{
+          store.commit('LOADING_DATA', false)
         })
+
     })
 
 
