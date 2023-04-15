@@ -86,6 +86,7 @@ export default defineComponent({
     const job = reactive<Job>({
       id: "",
       company_id: "",
+      company_name:"",
       name: "",
       salary_per_day: 0,
       location: "",

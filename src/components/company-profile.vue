@@ -184,7 +184,7 @@
               },
             });
   
-            console.log(response.data);
+            console.log(response.data.urls.profile);
             Swal.fire({
               title: "Success",
               text: "Company profile updated successfully",

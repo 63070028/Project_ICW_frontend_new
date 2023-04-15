@@ -89,6 +89,7 @@ export default defineComponent({
     {
     id:"",
     company_id:"",
+    company_name:"",
     name:"",
     salary_per_day:0,
     location:"",
