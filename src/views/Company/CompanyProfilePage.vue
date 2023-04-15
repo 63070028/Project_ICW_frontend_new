@@ -55,7 +55,7 @@ import User from '@/models/User';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
 import preloadingVue from '@/components/preloading.vue'
-import companyProfileEdit from '@/components/company-profileEdit.vue';
+import companyProfileEdit from '@/components/company-profile.vue';
 
 export default defineComponent({
   name: 'App',

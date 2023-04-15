@@ -114,7 +114,7 @@
   import User from "@/models/User";
 
   export default defineComponent({
-    name: "CompanyProfileEdit",
+   
     emits:['updateProfileEdit'],
     setup(props, {emit}) {
       const store = useStore();
