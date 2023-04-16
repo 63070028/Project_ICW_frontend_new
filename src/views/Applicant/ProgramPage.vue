@@ -74,7 +74,12 @@ import Program from '@/models/Program'
 import Swal from 'sweetalert2'
 import { useVuelidate } from '@vuelidate/core'
 import { helpers, required } from '@vuelidate/validators'
-import ApplicationProgram from '@/models/ApplicationProgram'
+import ApplicationProgramModel from '@/models/formModels/ApplicationProgramModel'
+import { useStore } from 'vuex'
+import User from '@/models/User'
+import { PORT } from '@/port'
+import axios from '@/plugins/axios';
+import Applicant from '@/models/Applicant'
 export default defineComponent({
     setup() {
 
@@ -82,6 +87,7 @@ export default defineComponent({
         const program = reactive<Program>({
             id: "",
             company_id: "",
+            company_name:"",
             name: "",
             description: "", // เพิ่มคุณสมบัติ description
             course: "",
@@ -92,8 +98,22 @@ export default defineComponent({
             state: ""
         })
 
-        const applicationProgram = reactive<ApplicationProgram>({
+        const applicant = reactive<Applicant>({
             id: "",
+            firstName: "",
+            lastName: "",
+            email_profile: "",
+            birthDate: "",
+            gender: "",
+            address: "",
+            phone: "",
+            resume: "",
+            transcript: "",
+            portfolio: "",
+            state: ""
+        })
+
+        const fromApplicationProgram = reactive<ApplicationProgramModel>({
             applicant_id: "",
             company_name: "",
             program_id: "",
@@ -109,47 +129,69 @@ export default defineComponent({
             resume: "",
             transcript: "",
             portfolio: "",
-            status: "",
+            state: "pending",
         })
 
         const router = useRouter();
         const route = useRoute();
         const v$ = useVuelidate();
 
-        const selectedJob = ref('')
+        const store = useStore();
+        const user = reactive<User>(store.state.user)
+        const selectedJob = ref<string>("")
 
-        const isSubmit = ref(false);
+        const isSubmit = ref<boolean>(false);
 
 
-        onMounted(() => {
+        onMounted(async () => {
 
-            //api get program form route.params.id
+            // await axios.get(`${PORT}` + "/user/getData").then(res => {
+            //     console.log(res.data.user)
+            //     store.commit('SET_USER', res.data.user)
+            // })
+
+
+            console.log("api get program form" + route.params.id)
 
             const get_program: Program = {
-                id: "",
-                company_id: "",
-                name: "",
-                description: "", // เพิ่มคุณสมบัติ description
-                course: "",
+                id: "p123-xxxx-xxxx-xxxx",
+                company_id: "xxxx-xxxx-xxxx-xxxx",
+                company_name:"company1",
+                name: "program1",
+                description: "sdfsadfkdsjfklasvklfalksdfasdlfkv", // เพิ่มคุณสมบัติ description
+                course: "dsafkdls;fk;sldkf;ldksf;lavmcvopgowpegjodf",
                 jobs_title: ['SE', 'NW', "ML"],
-                qualifications: [""],
-                privileges: [""],
-                image: "",
-                state: ""
+                qualifications: ["11111"],
+                privileges: ["111111"],
+                image: "https://www.w3schools.com/w3images/workbench.jpg",
+                state: "on"
             }
-
-
             Object.assign(program, get_program)
 
+            if (store.state.user.role === "applicant") {
+                await axios.get(`${PORT}` + "/applicant/getProfileById/" + store.state.user.id).then(res => Object.assign(applicant, res.data.applicant))
+            }
+
         });
+
 
         const submitApplication = async () => {
             const isFormCorrect = await v$.value.$validate();
             if (!isFormCorrect) return
 
+            // if (applicant.state == '') {
+            //     Swal.fire({
+            //         position: "center",
+            //         icon: "error",
+            //         title: "คุณยังไม่ได้ลงประวัติ",
+            //         showConfirmButton: false,
+            //         timer: 1500,
+            //     });
+            //     return
+            // }
+
             //ส่งใบสมัครโครงการ applicationProgram            
             //api post /sendAppplicationProgram
-
 
             Swal.fire({
                 title: 'Are you sure?',
@@ -161,6 +203,25 @@ export default defineComponent({
                 confirmButtonText: 'Yes'
             }).then((result) => {
                 if (result.isConfirmed) {
+
+                    fromApplicationProgram.applicant_id = applicant.id
+                    fromApplicationProgram.company_name = program.company_name
+                    fromApplicationProgram.program_id = program.id
+                    fromApplicationProgram.program_name = program.name
+                    fromApplicationProgram.job_title = selectedJob.value
+                    fromApplicationProgram.firstName = applicant.firstName
+                    fromApplicationProgram.lastName = applicant.lastName
+                    fromApplicationProgram.email_profile = applicant.email_profile
+                    fromApplicationProgram.birthDate = applicant.birthDate
+                    fromApplicationProgram.gender = applicant.gender
+                    fromApplicationProgram.address = applicant.address
+                    fromApplicationProgram.phone = applicant.phone
+                    fromApplicationProgram.resume  = applicant.resume
+                    fromApplicationProgram.transcript = applicant.transcript
+                    fromApplicationProgram.portfolio = applicant.portfolio
+
+                    console.log(fromApplicationProgram)
+
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
@@ -180,7 +241,10 @@ export default defineComponent({
             selectedJob,
             v$,
             submitApplication,
-            applicationProgram
+            store,
+            user,
+            applicant,
+            fromApplicationProgram
         }
     },
     validations() {

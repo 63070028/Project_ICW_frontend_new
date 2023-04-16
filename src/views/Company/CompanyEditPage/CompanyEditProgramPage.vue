@@ -120,6 +120,7 @@ export default defineComponent({
     const program = reactive<Program>({
       id: "0",
       company_id: "0",
+      company_name:"",
       name: "",
       description: "", // เพิ่มคุณสมบัติ description
       course: "",

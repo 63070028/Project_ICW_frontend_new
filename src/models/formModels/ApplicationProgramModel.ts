@@ -1,5 +1,4 @@
-export default interface ApplicationProgram {
-  id: string,
+export default interface ApplicationProgramModel {
   applicant_id: string,
   company_name: string,
   program_id: string,

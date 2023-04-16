@@ -1,6 +1,7 @@
 export default interface Program {
     id: string,
     company_id:string,
+    company_name:string,
     image: string,
     name: string,
     description: string, // เพิ่มคุณสมบัติ description

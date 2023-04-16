@@ -41,6 +41,8 @@ import { useRoute, useRouter } from 'vue-router'
 import 'primeicons/primeicons.css';
 import Company from '@/models/Company';
 import Job from '@/models/Job';
+import axios from '@/plugins/axios';
+import { PORT } from '@/port';
 
 
 export default defineComponent({
@@ -62,34 +64,22 @@ export default defineComponent({
         const jobs = reactive<Job[]>([])
 
 
-        onMounted(() => {
+        onMounted(async () => {
 
             console.log('get api company id: ' + route.params.id)
-
             //set company
+            await axios.get(`${PORT}`+'/company/getProfile/'+route.params.id).then(res => Object.assign(company, res.data.company))
 
-            const get_company:Company = {
-                id: "",
-                name: "",
-                description: "",
-                profile_image: "",
-                background_image: "",
-                video_iframe: "",
-                state:""
-            }
+            await axios.get(`${PORT}`+'/company//getJob/'+route.params.id).then(res=>{
+                res.data.items.forEach((job:Job) =>{
+                    jobs.push(job)
+                })
+            })
 
-            Object.assign(company, get_company)
+            // const get_jobs: Job[] = [
+            //     { id: "1234-xxxx-xxxx-xxxx-xxxx", company_id: "xxxx-xxxx-xxxx-xxxx", company_name:"c_name", name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015", state:"on" },
+            // ]
 
-
-            console.log('get api job by company_id: ' + route.params.id);
-
-            const get_jobs: Job[] = [
-                { id: "1234-xxxx-xxxx-xxxx-xxxx", company_id: "xxxx-xxxx-xxxx-xxxx", company_name:"c_name", name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015", state:"on" },
-            ]
-
-            get_jobs.forEach(job => {
-                jobs.push(job)
-            });
 
         });
 
