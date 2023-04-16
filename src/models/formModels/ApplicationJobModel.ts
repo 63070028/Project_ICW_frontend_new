@@ -1,9 +1,8 @@
-export default interface ApplicationJob {
-  id: string,
+export default interface ApplicationJobModel {
   applicant_id: string,
-  company_name: string,
-  job_name: string,
-  job_id: string,
+  company_name:string,
+  job_name:string
+  job_id:string,
   firstName: string,
   lastName: string,
   email_profile: string,

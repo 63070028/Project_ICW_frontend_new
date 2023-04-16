@@ -74,7 +74,6 @@ import {ProgramStatus} from '@/models/Program2';
 import Swal from 'sweetalert2';
 
 export default defineComponent({
-  name: 'CompanyProgramPage',
   setup() {
     const router = useRouter();
     const route = useRoute();

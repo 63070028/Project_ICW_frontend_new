@@ -94,12 +94,14 @@ export default defineComponent({
 
         const applicationProgram = reactive<ApplicationProgram>({
             id: "",
-            program_id: "",
-            job_title: "",
             applicant_id: "",
+            company_name: "",
+            program_id: "",
+            program_name: "",
+            job_title: "",
             firstName: "",
             lastName: "",
-            email: "",
+            email_profile: "",
             birthDate: "",
             gender: "",
             address: "",
@@ -107,8 +109,7 @@ export default defineComponent({
             resume: "",
             transcript: "",
             portfolio: "",
-            status: "pending",
-            type: "program",
+            status: "",
         })
 
         const router = useRouter();
@@ -179,7 +180,7 @@ export default defineComponent({
             selectedJob,
             v$,
             submitApplication,
-            applicationProgram 
+            applicationProgram
         }
     },
     validations() {

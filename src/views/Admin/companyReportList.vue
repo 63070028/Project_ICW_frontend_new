@@ -41,7 +41,6 @@ import 'bulma/css/bulma.css';
 import { defineComponent, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Company from '@/models/Company';
-import Swal from "sweetalert2";
 import axios from "axios";
 import { PORT } from "@/port";
 

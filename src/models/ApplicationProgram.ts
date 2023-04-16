@@ -1,11 +1,13 @@
 export default interface ApplicationProgram {
-  id:string,
-  program_id:string,
+  id: string,
+  applicant_id: string,
+  company_name: string,
+  program_id: string,
+  program_name: string,
   job_title: string,
-  applicant_id:string,
   firstName: string,
   lastName: string,
-  email: string,
+  email_profile: string,
   birthDate: string,
   gender: string,
   address: string,
@@ -14,5 +16,4 @@ export default interface ApplicationProgram {
   transcript: string,
   portfolio: string,
   status: string,
-  type: string
 }

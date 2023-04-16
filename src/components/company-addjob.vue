@@ -67,12 +67,10 @@
 </template>
   
   <script lang="ts">
-  import { defineComponent, onMounted, reactive } from "vue";
+  import { defineComponent, reactive } from "vue";
   import { useRouter } from "vue-router";
   import Swal from "sweetalert2";
   import Job from "@/models/Job";
-  import { PORT } from "@/port";
-  import axios from "axios";
 
 
   export default defineComponent({

@@ -7,7 +7,7 @@
                     <div class="card-content">
                         <div class="card-content">  
                             <div class="media-content">
-                                <p class="title has-text-centered is-size-4">{{ item.id }}.{{ item.fullName }}</p>
+                                <p class="title has-text-centered is-size-4">{{ item.id }}.{{ item.firstName}} {{ item.lastName}}</p>
                             </div>
                         </div>
                     </div>

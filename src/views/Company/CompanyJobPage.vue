@@ -63,7 +63,6 @@ import { useRoute, useRouter } from "vue-router";
 import Company from "@/models/Company";
 import Swal from "sweetalert2";
 import { JobStatus } from "@/models/Job2";
-import preloadingVue from '@/components/preloading.vue'
 import CompanyAddjob from "@/components/company-addjob.vue";
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';

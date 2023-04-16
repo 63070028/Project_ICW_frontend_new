@@ -25,15 +25,11 @@
             </p>
           </div>
         </div>
-        <div class="column my-3" style="
-                            display: flex;
-                            flex-direction: column;
-                            justify-content: space-between;
-                          ">
+        <div class="column my-3" style="display: flex;flex-direction: column;justify-content: space-between;">
           <button class="button is-danger" @click="isReport = !isReport">
             รายงาน
           </button>
-          <button class="button is-success" @click="submitApplication()">
+          <button class="button is-success" @click="submitApplication()" v-if="store.state.user.role == 'applicant'">
             ยื่นสมัคร
           </button>
         </div>
@@ -103,6 +99,8 @@ import axios from "@/plugins/axios";
 import { PORT } from "@/port";
 import User from "@/models/User";
 import { useStore } from "vuex";
+import ApplicationJobModel from "@/models/formModels/ApplicationJobModel";
+import Applicant from "@/models/Applicant";
 
 export default defineComponent({
   setup() {
@@ -141,6 +139,40 @@ export default defineComponent({
       message: "",
     });
 
+    const applicant = reactive<Applicant>({
+      id: "",
+      firstName: "",
+      lastName: "",
+      email_profile: "",
+      birthDate: "",
+      gender: "",
+      address: "",
+      phone: "",
+      resume: "",
+      transcript: "",
+      portfolio: "",
+      state: ""
+    })
+
+
+    const formApplicationJob = reactive<ApplicationJobModel>({
+      applicant_id: "",
+      company_name: "",
+      job_name: "",
+      job_id: "",
+      firstName: "",
+      lastName: "",
+      email_profile: "",
+      birthDate: "",
+      gender: "",
+      address: "",
+      phone: "",
+      resume: "",
+      transcript: "",
+      portfolio: "",
+      state: "pending"
+    })
+
     const isMyFavorite = ref<boolean>(false);
 
     const isReport = ref<boolean>(false);
@@ -163,8 +195,18 @@ export default defineComponent({
       }
     };
 
-    const submitApplication = () => {
-      //api post /sendAppplicationJob
+    const submitApplication = async () => {
+      if (applicant.state == '') {
+        Swal.fire({
+          position: "center",
+          icon: "error",
+          title: "คุณยังไม่ได้ลงประวัติ",
+          showConfirmButton: false,
+          timer: 1500,
+        });
+        return
+      }
+
 
       Swal.fire({
         title: "Are you sure?",
@@ -174,15 +216,35 @@ export default defineComponent({
         confirmButtonColor: "hsl(141, 50%, 48%)",
         cancelButtonColor: "hsl(348, 100%, 61%)",
         confirmButtonText: "Yes",
-      }).then((result) => {
+      }).then(async (result) => {
         if (result.isConfirmed) {
-          Swal.fire({
+
+          formApplicationJob.applicant_id = applicant.id
+          formApplicationJob.company_name = job.company_name
+          formApplicationJob.job_name = job.name
+          formApplicationJob.job_id = job.id
+          formApplicationJob.firstName = applicant.firstName
+          formApplicationJob.lastName = applicant.lastName
+          formApplicationJob.email_profile = applicant.email_profile
+          formApplicationJob.birthDate = applicant.birthDate
+          formApplicationJob.gender = applicant.gender
+          formApplicationJob.address = applicant.address
+          formApplicationJob.phone = applicant.phone
+          formApplicationJob.resume = applicant.resume
+          formApplicationJob.transcript = applicant.transcript
+          formApplicationJob.portfolio = applicant.portfolio
+
+          await axios.post(`${PORT}` + "/application/sendApplicationJob", formApplicationJob).then(res =>{
+            console.log(res.data.message)
+            Swal.fire({
             position: "center",
             icon: "success",
             title: "ดำเนิดการสำเร็จ",
             showConfirmButton: false,
             timer: 1500,
           });
+          });
+
         }
       });
     };
@@ -194,14 +256,14 @@ export default defineComponent({
       //ส่ง report
       formReportSend.user_id = user.id
       formReportSend.company_name = job.company_name,
-      formReportSend.job_id = "" + route.params.id;
+        formReportSend.job_id = "" + route.params.id;
       formReportSend.job_name = job.name;
       formReportSend.message = messageReport.value;
       formReportSend.creation_date = new Date().toLocaleDateString("en-US");
 
       console.log(formReportSend.creation_date);
       //api post /sendReport
-      axios
+      await axios
         .post(`${PORT}` + "/applicant/sendReport", formReportSend)
         .then((response) => {
           // handle success
@@ -237,9 +299,12 @@ export default defineComponent({
         store.commit('SET_USER', res.data.user)
       })
 
+      await axios.get(`${PORT}` + "/company/getJobById/" + route.params.id).then(res => Object.assign(job, res.data.job))
 
-      const get_job: Job = { id: "1234-xxxx-xxxx-xxxx-xxxx", company_id: "xxxx-xxxx-xxxx-xxxx", company_name: "c_name", name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015", state: "on" }
-      Object.assign(job, get_job);
+      if (store.state.user.role === "applicant") {
+        await axios.get(`${PORT}` + "/applicant/getProfileById/" + store.state.user.id).then(res => Object.assign(applicant, res.data.applicant))
+      }
+
     });
 
     return {
@@ -255,7 +320,8 @@ export default defineComponent({
       submitReport,
       formReportSend,
       store,
-      user
+      user,
+      applicant
     };
   },
   validations() {
