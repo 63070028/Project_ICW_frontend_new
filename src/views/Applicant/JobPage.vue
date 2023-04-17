@@ -138,6 +138,7 @@ export default defineComponent({
     const formReportSend = reactive<reportSendModel>({
       user_id: "",
       company_name: "",
+      company_id:"",
       job_name: "",
       job_id: "",
       creation_date: "",
@@ -163,6 +164,7 @@ export default defineComponent({
     const formApplicationJob = reactive<ApplicationJobModel>({
       applicant_id: "",
       company_name: "",
+      company_id:"",
       job_name: "",
       job_id: "",
       firstName: "",
@@ -227,6 +229,7 @@ export default defineComponent({
 
           formApplicationJob.applicant_id = applicant.id
           formApplicationJob.company_name = job.company_name
+          formApplicationJob.company_id = job.company_id
           formApplicationJob.job_name = job.name
           formApplicationJob.job_id = job.id
           formApplicationJob.firstName = applicant.firstName
@@ -272,7 +275,8 @@ export default defineComponent({
       //ส่ง report
       formReportSend.user_id = user.id
       formReportSend.company_name = job.company_name,
-        formReportSend.job_id = "" + route.params.id;
+      formReportSend.company_id = job.company_id,
+      formReportSend.job_id = "" + route.params.id;
       formReportSend.job_name = job.name;
       formReportSend.message = messageReport.value;
       formReportSend.creation_date = new Date().toLocaleDateString("en-US");
@@ -351,7 +355,8 @@ export default defineComponent({
       formReportSend,
       store,
       user,
-      applicant
+      applicant,
+      formApplicationJob
     };
   },
   validations() {

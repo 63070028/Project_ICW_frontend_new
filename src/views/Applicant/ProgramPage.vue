@@ -117,6 +117,7 @@ export default defineComponent({
         const fromApplicationProgram = reactive<ApplicationProgramModel>({
             applicant_id: "",
             company_name: "",
+            company_id:"",
             program_id: "",
             program_name: "",
             job_title: "",
@@ -211,6 +212,7 @@ export default defineComponent({
 
                     fromApplicationProgram.applicant_id = applicant.id
                     fromApplicationProgram.company_name = program.company_name
+                    fromApplicationProgram.company_id = program.company_id
                     fromApplicationProgram.program_id = program.id
                     fromApplicationProgram.program_name = program.name
                     fromApplicationProgram.job_title = selectedJob.value

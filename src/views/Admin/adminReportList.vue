@@ -27,7 +27,7 @@
                   <div class="columns">
                     <div class="column is-11" @click="viewJob(jobReport.job_id)">
                       <p class="is-size-4 has-text-weight-bold">
-                        {{ index + 1 + "." }} {{ jobReport.company_name }}
+                        {{ index + 1 + "." }} {{ jobReport.company_name }} ({{jobReport.company_id}})
                       </p>
                       <p class="is-size-4 has-text-weight-bold ml-6">
                         {{ jobReport.job_name }} ({{ jobReport.job_id }})

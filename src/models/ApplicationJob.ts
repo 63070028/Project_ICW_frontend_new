@@ -2,6 +2,7 @@ export default interface ApplicationJob {
   id: string,
   applicant_id: string,
   company_name: string,
+  company_id:string,
   job_name: string,
   job_id: string,
   firstName: string,
