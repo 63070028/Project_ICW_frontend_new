@@ -38,7 +38,7 @@
                 v-if="select_option === 'user_profile'" @changeProfile="updateProfile($event)">
             </applicantProfileVue>
 
-            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'" 
+            <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'"
                 :url="applicant.resume" :role="'applicant'" @resume="applicant.resume = $event"></uploadPdfVue>
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'transcript'"
                 :url="applicant.transcript" :role="'applicant'" @transcript="applicant.resume = $event">
@@ -46,9 +46,9 @@
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'portfolio'"
                 :url="applicant.portfolio" :role="'applicant'" @portfolio="applicant.resume = $event">
             </uploadPdfVue>
-            <applicantPreview :appliacnt="applicant" v-if="select_option === 'preview' "></applicantPreview>
+            <applicantPreview :appliacnt="applicant" v-if="select_option === 'preview'"></applicantPreview>
         </div>
-        
+
 
         <div class="column is-2"></div>
     </div>
@@ -99,30 +99,32 @@ export default defineComponent({
         let select_option = ref<string>("user_profile")
         onMounted(async () => {
 
-            if(!localStorage.getItem('token')){
+            if (!localStorage.getItem('token')) {
                 router.push('/signIn')
                 return
             }
-            
+
             store.commit('LOADING_DATA', true)
 
             await axios.get(`${PORT}` + "/user/getData").then(res => {
                 console.log(res.data.user)
                 store.commit('SET_USER', res.data.user)
+            }).catch(() => {
+                store.commit('LOADING_DATA', false)
             })
 
             await axios.get(`${PORT}` + "/applicant/getProfileById/" + user.id).then(res => {
                 console.log(res.data.applicant)
                 Object.assign(applicant, res.data.applicant);
             })
-            
+
             store.commit('LOADING_DATA', false)
         })
 
         const updateProfile = (change_data: Applicant) => {
             Object.assign(applicant, change_data);
         }
-    
+
 
         return {
             select_option, applicant, store, user, updateProfile

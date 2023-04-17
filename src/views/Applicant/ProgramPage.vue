@@ -32,7 +32,8 @@
             </ul>
         </div>
         <div class="columns mt-6 submit_button">
-            <button class="button column is-6 m-3 is-success is-medium" @click="isSubmit = !isSubmit">ยืนสมัตร</button>
+            <button class="button column is-6 m-3 is-success is-medium" @click="isSubmit = !isSubmit"
+                v-if="store.state.user.role == 'applicant'">ยืนสมัตร</button>
         </div>
     </div>
 
@@ -87,7 +88,7 @@ export default defineComponent({
         const program = reactive<Program>({
             id: "",
             company_id: "",
-            company_name:"",
+            company_name: "",
             name: "",
             description: "", // เพิ่มคุณสมบัติ description
             course: "",
@@ -145,18 +146,21 @@ export default defineComponent({
 
         onMounted(async () => {
 
-            // await axios.get(`${PORT}` + "/user/getData").then(res => {
-            //     console.log(res.data.user)
-            //     store.commit('SET_USER', res.data.user)
-            // })
-
-
             console.log("api get program form" + route.params.id)
+
+            store.commit('LOADING_DATA', true)
+
+            await axios.get(`${PORT}` + "/user/getData").then(res => {
+                console.log(res.data.user)
+                store.commit('SET_USER', res.data.user)
+            }).catch(() => {
+                store.commit('LOADING_DATA', false)
+            })
 
             const get_program: Program = {
                 id: "p123-xxxx-xxxx-xxxx",
                 company_id: "xxxx-xxxx-xxxx-xxxx",
-                company_name:"company1",
+                company_name: "company1",
                 name: "program1",
                 description: "sdfsadfkdsjfklasvklfalksdfasdlfkv", // เพิ่มคุณสมบัติ description
                 course: "dsafkdls;fk;sldkf;ldksf;lavmcvopgowpegjodf",
@@ -172,6 +176,7 @@ export default defineComponent({
                 await axios.get(`${PORT}` + "/applicant/getProfileById/" + store.state.user.id).then(res => Object.assign(applicant, res.data.applicant))
             }
 
+            store.commit('LOADING_DATA', false)
         });
 
 
@@ -179,16 +184,16 @@ export default defineComponent({
             const isFormCorrect = await v$.value.$validate();
             if (!isFormCorrect) return
 
-            // if (applicant.state == '') {
-            //     Swal.fire({
-            //         position: "center",
-            //         icon: "error",
-            //         title: "คุณยังไม่ได้ลงประวัติ",
-            //         showConfirmButton: false,
-            //         timer: 1500,
-            //     });
-            //     return
-            // }
+            if (applicant.state == '') {
+                Swal.fire({
+                    position: "center",
+                    icon: "error",
+                    title: "คุณยังไม่ได้ลงประวัติ",
+                    showConfirmButton: false,
+                    timer: 1500,
+                });
+                return
+            }
 
             //ส่งใบสมัครโครงการ applicationProgram            
             //api post /sendAppplicationProgram
@@ -201,7 +206,7 @@ export default defineComponent({
                 confirmButtonColor: 'hsl(141, 50%, 48%)',
                 cancelButtonColor: 'hsl(348, 100%, 61%)',
                 confirmButtonText: 'Yes'
-            }).then((result) => {
+            }).then(async (result) => {
                 if (result.isConfirmed) {
 
                     fromApplicationProgram.applicant_id = applicant.id
@@ -216,11 +221,31 @@ export default defineComponent({
                     fromApplicationProgram.gender = applicant.gender
                     fromApplicationProgram.address = applicant.address
                     fromApplicationProgram.phone = applicant.phone
-                    fromApplicationProgram.resume  = applicant.resume
+                    fromApplicationProgram.resume = applicant.resume
                     fromApplicationProgram.transcript = applicant.transcript
                     fromApplicationProgram.portfolio = applicant.portfolio
 
                     console.log(fromApplicationProgram)
+                    const swalWaiting: any = Swal.fire({
+                        position: 'center',
+                        title: 'Uploading...',
+                        showConfirmButton: false,
+                        didOpen: () => {
+                            Swal.showLoading()
+                        }
+                    })
+
+                    await axios.post(`${PORT}` + "/application/sendApplicationProgram", fromApplicationProgram).then(res => {
+                        console.log(res.data.message)
+                        swalWaiting.close();
+                        Swal.fire({
+                            position: "center",
+                            icon: "success",
+                            title: "ดำเนิดการสำเร็จ",
+                            showConfirmButton: false,
+                            timer: 1500,
+                        });
+                    });
 
                     Swal.fire({
                         position: 'center',

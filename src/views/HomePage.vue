@@ -1,6 +1,6 @@
 <template>
   <PreloaderVue v-if="store.state.isLoadingData"></PreloaderVue>
-  <div class="container"  v-if="!store.state.isLoadingData" >
+  <div class="container" v-if="!store.state.isLoadingData">
     <div class="columns ml-6 mt-5 pl-3 pr-3">
 
       <div class="column has-background-dark is-2 mr-6 has-text-white box" @click="viewContact()"
@@ -75,9 +75,11 @@ export default defineComponent({
         await axios.get(`${PORT}` + "/user/getData").then(res => {
           console.log(res.data.user)
           store.commit('SET_USER', res.data.user)
-        }).finally(()=>{
+        }).catch(()=>{
           store.commit('LOADING_DATA', false)
         })
+
+        store.commit('LOADING_DATA', false)
 
     })
 

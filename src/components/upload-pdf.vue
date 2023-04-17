@@ -187,7 +187,7 @@ export default {
             this.isEdit = false;
         },
         async uploadFile() {
-            let swalWaiting = Swal.fire({
+            const swalWaiting = Swal.fire({
                 position: 'center',
                 title: 'Uploading file...',
                 showConfirmButton: false,

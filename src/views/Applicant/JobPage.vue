@@ -1,5 +1,6 @@
 <template>
-  <div class="container mt-4">
+  <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
+  <div class="container mt-4" v-if="!store.state.isLoadingData">
     <div class="has-background-light box mt-3 pl-3 pr-4 pt-4 pb-4">
       <p class="has-text-right">{{ job.creation_date }}</p>
       <div class="columns mt-1">
@@ -101,8 +102,12 @@ import User from "@/models/User";
 import { useStore } from "vuex";
 import ApplicationJobModel from "@/models/formModels/ApplicationJobModel";
 import Applicant from "@/models/Applicant";
+import preloadingVue from "@/components/preloading.vue";
 
 export default defineComponent({
+  components: {
+    preloadingVue
+  },
   setup() {
     const router = useRouter();
     const route = useRoute();
@@ -219,6 +224,7 @@ export default defineComponent({
       }).then(async (result) => {
         if (result.isConfirmed) {
 
+
           formApplicationJob.applicant_id = applicant.id
           formApplicationJob.company_name = job.company_name
           formApplicationJob.job_name = job.name
@@ -234,15 +240,25 @@ export default defineComponent({
           formApplicationJob.transcript = applicant.transcript
           formApplicationJob.portfolio = applicant.portfolio
 
-          await axios.post(`${PORT}` + "/application/sendApplicationJob", formApplicationJob).then(res =>{
-            console.log(res.data.message)
-            Swal.fire({
-            position: "center",
-            icon: "success",
-            title: "ดำเนิดการสำเร็จ",
+          const swalWaiting: any = Swal.fire({
+            position: 'center',
+            title: 'Uploading...',
             showConfirmButton: false,
-            timer: 1500,
-          });
+            didOpen: () => {
+              Swal.showLoading()
+            }
+          })
+
+          await axios.post(`${PORT}` + "/application/sendApplicationJob", formApplicationJob).then(res => {
+            console.log(res.data.message)
+            swalWaiting.close();
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "ดำเนิดการสำเร็จ",
+              showConfirmButton: false,
+              timer: 1500,
+            });
           });
 
         }
@@ -262,12 +278,20 @@ export default defineComponent({
       formReportSend.creation_date = new Date().toLocaleDateString("en-US");
 
       console.log(formReportSend.creation_date);
-      //api post /sendReport
+      const swalWaiting: any = Swal.fire({
+        position: 'center',
+        title: 'Uploading...',
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading()
+        }
+      })
       await axios
         .post(`${PORT}` + "/applicant/sendReport", formReportSend)
         .then((response) => {
           // handle success
           console.log(response.data.message);
+          swalWaiting.close()
           Swal.fire({
             position: "center",
             icon: "success",
@@ -294,16 +318,22 @@ export default defineComponent({
     onMounted(async () => {
       //get api job
 
+      store.commit('LOADING_DATA', true)
+
+      await axios.get(`${PORT}` + "/company/getJobById/" + route.params.id).then(res => Object.assign(job, res.data.job))
+
       await axios.get(`${PORT}` + "/user/getData").then(res => {
         console.log(res.data.user)
         store.commit('SET_USER', res.data.user)
+      }).catch(() => {
+        store.commit('LOADING_DATA', false)
       })
-
-      await axios.get(`${PORT}` + "/company/getJobById/" + route.params.id).then(res => Object.assign(job, res.data.job))
 
       if (store.state.user.role === "applicant") {
         await axios.get(`${PORT}` + "/applicant/getProfileById/" + store.state.user.id).then(res => Object.assign(applicant, res.data.applicant))
       }
+
+      store.commit('LOADING_DATA', false)
 
     });
 

@@ -62,7 +62,6 @@ import { useStore } from 'vuex';
 import "primeicons/primeicons.css";
 import { reactive } from 'vue';
 import User from './models/User';
-
 export default defineComponent({
   setup() {
     const store = useStore();
