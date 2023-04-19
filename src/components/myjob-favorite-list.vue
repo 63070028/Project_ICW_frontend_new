@@ -20,7 +20,7 @@
                     <p class="is-size-5 column is-6"><b>รูปแบบการสัมภาษณ์: </b>{{ job.interview }}</p>
                 </div>
                 <div style="display: flex; flex-direction: row; justify-content: flex-end;">
-                    <button class="button mx-4 mb-4 is-danger"  @click.stop="removeFavorieJob()">ลบ</button>
+                    <button class="button mx-4 mb-4 is-danger" @click.stop="removeFavorieJob(job.id)">ลบ</button>
                 </div>
             </div>
 
@@ -42,10 +42,13 @@
 </template>
 
 <script lang="ts">
-import Swal from 'sweetalert2';
 import { defineComponent, onMounted, onUpdated, PropType, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router';
 import Job from '@/models/Job';
+import JobFavoriteModel from '@/models/formModels/JobFavoriteModel';
+import { def_JobFavorit } from '@/plugins/defaultValue';
+import { PORT } from '@/port';
+import axios from '@/plugins/axios';
 
 export default defineComponent({
     props: {
@@ -56,14 +59,18 @@ export default defineComponent({
         itemPerEachPage: {
             type: Number,
             default: 3
-        }
+        },
+        appicant_id: {
+            type: String,
+            required: true,
+        },
     },
     setup(props) {
         const router = useRouter();
         let presentPage = ref<number>(1);
         let pastPage = ref<number>(1);
 
-        const states = reactive<{ countOfPages: number[], addItemsPageList: Job[] }>(
+        const states = reactive<{ countOfPages: number[], addItemsPageList: Job[]}>(
             {
                 countOfPages: [],
                 addItemsPageList: [],
@@ -73,13 +80,15 @@ export default defineComponent({
         const nextPageClicked = ref<boolean>(false);
         const previousClicked = ref<boolean>(false);
 
+        const setJobFavorite = reactive<JobFavoriteModel>(def_JobFavorit)
+
         onMounted(() => {
             loadMyPaginationList();
             states.countOfPages = Array.from(Array(Math.ceil(props.items.length / props.itemPerEachPage)).keys());
         })
 
         onUpdated(() => {
-            loadMyPaginationList();
+            // loadMyPaginationList();
             document.getElementById('pageId' + presentPage.value)?.classList.add('is-current');
         })
 
@@ -125,20 +134,17 @@ export default defineComponent({
             router.push("/jobs/" + id)
         }
 
-        const removeFavorieJob = () => {
-             //api post /removeMyJobFavorite
-                // const data = {
-                //     applicant_id:"xxx",
-                //     job_id:'xxx'
-                // }
-            Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'ดำเนิดการสำเร็จ',
-                showConfirmButton: false,
-                timer: 1500
-            })
+        const removeFavorieJob = (job_id: string) => {
+            setJobFavorite.applicant_id = props.appicant_id
+            setJobFavorite.job_id = job_id
+            axios.post(`${PORT}` + "/applicant/removeMyJobFavorite", setJobFavorite)
+            const index = states.addItemsPageList.findIndex(job => job.id === job_id);
+            if (index !== -1) {
+                states.addItemsPageList.splice(index, 1);
+            }
+
         }
+
 
         return {
             nextPageClicked, previousClicked, getNextPage, getPreviousPage, states, presentPage, changePage, router, viewJob, removeFavorieJob
