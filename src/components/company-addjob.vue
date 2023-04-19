@@ -1,18 +1,26 @@
 <template>
   <div class="company p-3">
     <div class="columns">
-      <div class="column is-3" style="background-color: #f8f8f8">
-      </div>
+      <div class="column is-3" style="background-color: #f8f8f8"></div>
       <div class="column is-9" style="background-color: #f1f1f1">
         <div class="card" style="min-height: 100vh">
           <div class="card-content">
             <div class="content">
-              <div v-show="activeTab === 'jobs'" style="background-color: #f6f6f6">
+              <div
+                v-show="activeTab === 'jobs'"
+                style="background-color: #f6f6f6"
+              >
                 <h1 class="title">เพิ่มประกาศงาน</h1>
                 <div class="field">
                   <label class="label">ชื่องาน</label>
                   <div class="control">
                     <input class="input" type="text" v-model="job.name" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">รายละเอียด</label>
+                  <div class="control">
+                    <input class="input" type="text" v-model="job.detail" />
                   </div>
                 </div>
                 <div class="field">
@@ -24,7 +32,11 @@
                 <div class="field">
                   <label class="label">ค่าตอบแทนรายวัน</label>
                   <div class="control">
-                    <input class="input" type="number" v-model="job.salary_per_day" />
+                    <input
+                      class="input"
+                      type="number"
+                      v-model="job.salary_per_day"
+                    />
                   </div>
                 </div>
                 <div class="field">
@@ -65,8 +77,8 @@ import { defineComponent, reactive } from "vue";
 import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import Job from "@/models/Job";
-import axios from '@/plugins/axios';
-import { PORT } from '@/port';
+import axios from "@/plugins/axios";
+import { PORT } from "@/port";
 export default defineComponent({
   emits: ["addNewJob", "saveNewJob"],
   props: {
@@ -74,15 +86,19 @@ export default defineComponent({
       type: String,
       required: true,
     },
+    company_name: {
+      type: String,
+      required: true,
+    },
   },
-  setup(props,{emit}) {
-   // const router = useRouter();
-   
+  setup(props, { emit }) {
+    // const router = useRouter();
+
     const job = reactive<Job>({
       id: "",
       company_id: props.company_id,
+      company_name: props.company_name,
       name: "",
-      company_name: "",
       salary_per_day: 0,
       location: "",
       capacity: 0,
@@ -91,20 +107,36 @@ export default defineComponent({
       qualifications: [],
       contact: { name: "", email: "", phone: "" },
       creation_date: "",
-      state: ""
+      state: "",
     });
-    
 
+    const editForm = reactive<Job>({
+            id: "",
+            company_id: "",
+            name: "",
+            company_name: "",
+            salary_per_day: 0,
+            capacity: 0,
+            location: "",
+            detail: "",
+            interview: "",
+            qualifications: [],
+            contact: {name:"", email:"", phone:""},
+            creation_date: "",
+            state: ""
+        })
+    console.log('ไอดีcompany'+props.company_id)
     const addJob = async () => {
       try {
+        Object.assign(editForm,  editForm);
         await axios.post(`${PORT}/company/addJob`, job);
         Swal.fire({
           title: "Success",
           text: "Job added successfully",
           icon: "success",
         });
-        emit("saveNewJob", job)
-         emit("addNewJob", false);
+        emit("saveNewJob",  job);
+        emit("addNewJob", false);
       } catch (error) {
         Swal.fire({
           title: "Error",
@@ -129,8 +161,6 @@ export default defineComponent({
         console.log("Save updated job data:", job);
         await addJob();
       }
-
-     
     };
 
     const cancel = async () => {

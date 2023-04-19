@@ -28,29 +28,26 @@
                 </div>
                 <div class="job-card" v-for="(job, index) in jobs" :key="index">
                   <div class="job-detail">
-                    <p class="is-size-4 has-text-weight-bold">{{ index + 2 + "." }} {{ job.name }}</p>
+                    <p class="is-size-4 has-text-weight-bold">{{ index + 1 + "." }} {{ job.name }}</p>
                     <p class="job-detai-text">สถานที่ทำงาน: {{ job.location }}</p>
                     <p class="job-detai-text">ค่าตอบแทนรายวัน: {{ job.salary_per_day }}</p>
                     <p class="job-detai-text">รูปแบบการสัมภาษณ์: {{ job.interview }}</p>
                     <p class="job-detai-text">จำนวนที่รับ: {{ job.capacity }}</p>
                     <div class="column is-6 edit" style="background-color: #your_color_code;">
                       <div class="field" style="background-color: #your_color_code;">
-                        
-                        <v-switch
-                            v-model="job.state"
-                            hide-details
-                            inset
-                            color="success"
-                            :true-value="JobStatus.Open"
-                            :false-value="JobStatus.Closed"
-                            :label="`สถานะงาน: ${job.state}`"
-                            :style="{ color: jobStateColor(job.state) }"
-                            @change="updateJobState(job.id, job.state)"
-                        ></v-switch>
-
-
-                          <button class="button is-small is-info" @click="isEditjob = true" >แก้ไขงาน</button>
-                        <button class="button is-small is-danger" @click="deleteForm">ลบงาน</button>
+                      <v-switch
+                        v-model="job.state"
+                        hide-details
+                        inset
+                        color="success"
+                        :true-value="JobStatus.Open"
+                        :false-value="JobStatus.Closed"
+                        :label="`สถานะงาน: ${job.state}`"
+                        :style="{ color: jobStateColor(job.state) }"
+                        @change="updateJobState(job.id, job.state)">
+                      </v-switch>
+                      <button class="button is-small is-info" @click="isEditjob = true" >แก้ไขงาน</button>
+                      <button class="button is-small is-danger" @click="deleteForm">ลบงาน</button>
                       </div>
                     </div>
                   </div>
@@ -62,7 +59,10 @@
       </div>
     </div>
   </div>
-  <CompanyAddjob :company_id="company.id" v-if="isAddingjob" @addNewJob="($event)=>{isAddingjob= $event}" @saveNewJob="updateNewJob($event)"></CompanyAddjob>
+  <CompanyAddjob 
+  :company_name="company.name" 
+  :company_id="company.id" v-if="isAddingjob" 
+  @addNewJob="($event)=>{isAddingjob= $event}" @saveNewJob="updateNewJob($event)"></CompanyAddjob>
 
   <template v-for="(job) in jobs">
   <companyEditjob
@@ -138,6 +138,11 @@ export default defineComponent({
         store.commit('SET_USER', res.data.user)
       })
 
+      await axios.get(`${PORT}` + "/company/getProfile/" + user.id).then(res => {
+        console.log(res.data.company)
+        Object.assign(company, res.data.company);
+      })
+
       await axios.get(`${PORT}` + "/company/getJob/" + user.id).then(res => {
         console.log(res.data)
         Object.assign(jobs, res.data.job)
@@ -172,9 +177,9 @@ export default defineComponent({
     }
 
     const updateNewJob = (change_data: Job) => {
-      Object.assign(jobs, change_data);
+    jobs.push(change_data);
     }
-    
+
     return {
       router,
       route,

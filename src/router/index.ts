@@ -5,10 +5,8 @@ import ProgramPage from '@/views/Applicant/ProgramPage.vue';
 import ContactPage from '@/views/Applicant/ContactPage.vue';
 import ApplicantProfilePage from '@/views/Applicant/ApplicantProfilePage.vue';
 import JobPage from '@/views/Applicant/JobPage.vue';
-import CompanyEditProgramPage from '@/views/Company/CompanyEditPage/CompanyEditProgramPage.vue';
 import Applicant from '@/views/Company/ApplicantDetail.vue';
 import MyJobsPage from '@/views/Applicant/MyJobsPage.vue';
-import CompanyAddProgram from '@/views/Company/CompanyEditPage/CompanyAddProgram.vue';
 import AdminSignIn from '@/views/Admin/AdminSignIn.vue'
 
 const routes: Array<RouteRecordRaw> = [
@@ -37,17 +35,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/Company/CompanyProgramPage.vue')
   },
   
-  {
-    path: '/companyEditProgram/:id',
-    name: 'CompanyEditProgram',
-    component: CompanyEditProgramPage,
-  },
-  {
-    path: '/companyAddProgram',
-    name: 'CompanyAddProgram',
-    component: CompanyAddProgram, // กำหนด component ให้กับ route
-  },
-
   {
     path: '/programs/:id',
     component:ProgramPage
