@@ -50,7 +50,9 @@ import {
   PropType,
 } from "vue";
 import ApplicationJob from "@/models/ApplicationJob";
-import { useRouter } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
+import axios from "axios";
+import { PORT } from "@/port";
 
 export default defineComponent({
   props: {
@@ -88,6 +90,21 @@ export default defineComponent({
       states.countOfPages = Array.from(
         Array(Math.ceil(props.items.length / props.itemPerEachPage)).keys()
       );
+      axios
+        .get(`${PORT}` + "/application/getApplicantJob")
+        .then((response) => {
+          console.log(response.data.items);
+          const get_applicantJob: ApplicationJob[] = response.data.items;
+          console.log(get_applicantJob);
+          get_applicantJob.forEach((applicant) => {
+            console.log(applicant)
+            states.addItemsPageList.push(applicant);
+          });
+        })
+        .catch((error) => {
+          // handle error
+          console.log(error);
+        });
     });
 
     onUpdated(() => {
