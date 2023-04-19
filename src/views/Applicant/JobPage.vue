@@ -95,7 +95,7 @@ import "primeicons/primeicons.css";
 import Swal from "sweetalert2";
 import { useVuelidate } from "@vuelidate/core";
 import { helpers, required } from "@vuelidate/validators";
-import reportSendModel from "@/models/formModels/JobReportSendModel";
+import JobReportModel from "@/models/formModels/JobReportModel";
 import axios from "@/plugins/axios";
 import { PORT } from "@/port";
 import User from "@/models/User";
@@ -104,6 +104,14 @@ import ApplicationJobModel from "@/models/formModels/ApplicationJobModel";
 import Applicant from "@/models/Applicant";
 import preloadingVue from "@/components/preloading.vue";
 import JobFavoriteModel from "@/models/formModels/JobFavoriteModel"
+import getUserData from "@/plugins/getUser";
+import {
+  def_job,
+  def_applicant,
+  def_formApplicationJob,
+  def_formReport,
+  def_JobFavorit
+} from "@/plugins/defaultValue";
 
 
 export default defineComponent({
@@ -117,79 +125,15 @@ export default defineComponent({
     const store = useStore();
     const user = reactive<User>(store.state.user)
 
-    const job = reactive<Job>({
-      id: "",
-      company_id: "",
-      company_name: "",
-      name: "",
-      salary_per_day: 0,
-      location: "",
-      capacity: 0,
-      detail: "",
-      interview: "",
-      qualifications: [],
-      contact: {
-        name: "",
-        email: "",
-        phone: "",
-      },
-      creation_date: "",
-      state: "",
-    });
+    const job = reactive<Job>(def_job);
+    const formReportSend = reactive<JobReportModel>(def_formReport);
+    const applicant = reactive<Applicant>(def_applicant)
+    const formApplicationJob = reactive<ApplicationJobModel>(def_formApplicationJob)
 
-    const formReportSend = reactive<reportSendModel>({
-      user_id: "",
-      company_name: "",
-      company_id: "",
-      job_name: "",
-      job_id: "",
-      creation_date: "",
-      message: "",
-    });
-
-    const applicant = reactive<Applicant>({
-      id: "",
-      firstName: "",
-      lastName: "",
-      email_profile: "",
-      birthDate: "",
-      gender: "",
-      address: "",
-      phone: "",
-      resume: "",
-      transcript: "",
-      portfolio: "",
-      state: ""
-    })
-
-
-    const formApplicationJob = reactive<ApplicationJobModel>({
-      applicant_id: "",
-      company_name: "",
-      company_id: "",
-      job_name: "",
-      job_id: "",
-      firstName: "",
-      lastName: "",
-      email_profile: "",
-      birthDate: "",
-      gender: "",
-      address: "",
-      phone: "",
-      resume: "",
-      transcript: "",
-      portfolio: "",
-      state: ""
-    })
-
-    const setJobFavorite = reactive<JobFavoriteModel>({
-      applicant_id: "",
-      job_id: "",
-    })
+    const setJobFavorite = reactive<JobFavoriteModel>(def_JobFavorit)
 
 
     const isMyFavorite = ref<boolean>(false);
-
     const isReport = ref<boolean>(false);
     const messageReport = ref<string>("");
 
@@ -327,18 +271,9 @@ export default defineComponent({
       //get api job
 
       store.commit('LOADING_DATA', true)
-
-      if (store.state.user.id === "") {
-        await axios.get(`${PORT}` + "/user/getData").then(res => {
-          console.log(res.data.user)
-          store.commit('SET_USER', res.data.user)
-        }).catch(() => {
-          store.commit('LOADING_DATA', false)
-        })
-      }
-
+      await getUserData();
       if (store.state.user.role === "applicant") {
-        await axios.get(`${PORT}` + "/applicant/getProfileById/" + store.state.user.id).then(res => Object.assign(applicant, res.data.applicant))
+        await axios.get(`${PORT}` + "/applicant/getProfileById/" + user.id).then(res => Object.assign(applicant, res.data.applicant))
       }
 
       await axios.post(`${PORT}` + "/company/getJobById", { job_id: route.params.id, applicant_id: user.id }).then((res) => {

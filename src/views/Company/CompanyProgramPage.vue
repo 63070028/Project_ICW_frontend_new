@@ -40,14 +40,14 @@
                         <p class="job-detai-text">คุณสมบัติ: {{ program.qualifications.join(', ') }}</p>
                         <p class="job-detai-text">สิทธิประโยชน์: {{ program.privileges.join(', ') }}</p>
                         <v-switch
-                          v-model="program.active"
+                          v-model="program.state"
                           hide-details
                           inset
                           color="success"
                           :true-value="ProgramStatus.Open"
                           :false-value="ProgramStatus.Closed"
-                          :label="`สถานะงาน: ${program.active}`"
-                          :style="{ color: ProgramStatusColor(program.active) }">
+                          :label="`สถานะงาน: ${program.state}`"
+                          :style="{ color: ProgramStatusColor(program.state) }">
                         </v-switch>
                         <router-link :to="'/companyEditProgram/' + program.id">
                           <button class="button is-small is-info">แก้ไขงาน</button>
@@ -69,42 +69,42 @@
 import 'bulma/css/bulma.css';
 import { defineComponent, onMounted, reactive } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import Program2 from '@/models/Program2';
 import {ProgramStatus} from '@/models/Program2';
 import Swal from 'sweetalert2';
+import Program from '@/models/Program';
 
 export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
-    const programs = reactive<Program2[]>([])
+    const programs = reactive<Program[]>([])
     onMounted(() => {
       console.log('get api program by company_id: ' + route.params.id);
-      let get_programs: Program2[] = [
-        {
-          id: 0,
-          company_id: 1,
-          name: "โครงการพิเศษ 1",
-          description: "คำอธิบายโครงการพิเศษ 1",
-          course: "คอร์สเรียน 1",
-          jobs_title: ["ตำแหน่งงาน 1", "ตำแหน่งงาน 2"],
-          qualifications: ["คุณสมบัติ 1", "คุณสมบัติ 2"],
-          privileges: ["สิทธิประโยชน์ 1", "สิทธิประโยชน์ 2"],
-          image: "https://www.w3schools.com/w3images/workbench.jpg", // เพิ่ม URL ของรูปภาพโครงการ
-          active: ProgramStatus.Closed,
-        },
-        {
-          id: 2,
-          company_id: 2,
-          name: "โครงการพิเศษ 2",
-          description: "คำอธิบายโครงการพิเศษ 1",
-          course: "คอร์สเรียน 1",
-          jobs_title: ["ตำแหน่งงาน 1", "ตำแหน่งงาน 2"],
-          qualifications: ["คุณสมบัติ 1", "คุณสมบัติ 2"],
-          privileges: ["สิทธิประโยชน์ 1", "สิทธิประโยชน์ 2"],
-          image: "https://images.unsplash.com/photo-1680562725444-5a9aaa12525b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80", // เพิ่ม URL ของรูปภาพโครงการ
-          active: ProgramStatus.Open,
-        },
+      let get_programs: Program[] = [
+        // {
+        //   id: "0",
+        //   company_id: "1",
+        //   name: "โครงการพิเศษ 1",
+        //   description: "คำอธิบายโครงการพิเศษ 1",
+        //   course: "คอร์สเรียน 1",
+        //   jobs_title: ["ตำแหน่งงาน 1", "ตำแหน่งงาน 2"],
+        //   qualifications: ["คุณสมบัติ 1", "คุณสมบัติ 2"],
+        //   privileges: ["สิทธิประโยชน์ 1", "สิทธิประโยชน์ 2"],
+        //   image: "https://www.w3schools.com/w3images/workbench.jpg", // เพิ่ม URL ของรูปภาพโครงการ
+        //   state:"on"
+        // },
+        // {
+        //   id: 2,
+        //   company_id: 2,
+        //   name: "โครงการพิเศษ 2",
+        //   description: "คำอธิบายโครงการพิเศษ 1",
+        //   course: "คอร์สเรียน 1",
+        //   jobs_title: ["ตำแหน่งงาน 1", "ตำแหน่งงาน 2"],
+        //   qualifications: ["คุณสมบัติ 1", "คุณสมบัติ 2"],
+        //   privileges: ["สิทธิประโยชน์ 1", "สิทธิประโยชน์ 2"],
+        //   image: "https://images.unsplash.com/photo-1680562725444-5a9aaa12525b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1470&q=80", // เพิ่ม URL ของรูปภาพโครงการ
+        //   active: ProgramStatus.Open,
+        // },
         // โครงการพิเศษอื่น ๆ
     ];
     get_programs.forEach(program => {
@@ -131,7 +131,7 @@ export default defineComponent({
       Swal.fire('Cancelled', 'ยกเลิกแล้ว :)', 'error');
     }
   };
-    const ProgramStatusColor = (status: ProgramStatus) => {
+    const ProgramStatusColor = (status: string) => {
       return status === ProgramStatus.Open ? "green" : "red";
     };
     return {

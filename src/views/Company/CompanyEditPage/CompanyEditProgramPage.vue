@@ -109,6 +109,9 @@ import { defineComponent, onMounted, reactive ,ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import Program from '@/models/Program';
 import Swal from 'sweetalert2';
+import {
+  def_program,
+} from "@/plugins/defaultValue"
 
 export default defineComponent({
   name: 'CompanyEditProgramPage',
@@ -117,19 +120,7 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
 
-    const program = reactive<Program>({
-      id: "0",
-      company_id: "0",
-      company_name:"",
-      name: "",
-      description: "", // เพิ่มคุณสมบัติ description
-      course: "",
-      jobs_title: [],
-      qualifications: [],
-      privileges: [],
-      image:'https://images.unsplash.com/photo-1535551951406-a19828b0a76b?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1166&q=80',
-      state:""
-    });
+    const program = reactive<Program>(def_program);
     const programImageInput = ref(null);
     const programImagePreview = ref('https://www.w3schools.com/w3images/workbench.jpg');
     onMounted(() => {

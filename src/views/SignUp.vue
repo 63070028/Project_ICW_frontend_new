@@ -67,6 +67,7 @@ import { defineComponent, ref } from 'vue'
 import ApplicantSignUpModel from '@/models/formModels/ApplicantSignUpModel';
 import CompanySignUpModel from '@/models/formModels/CompanySignUpModel';
 import { reactive } from 'vue';
+import {def_formApplicantSignUp, def_formCompanySignUp} from "@/plugins/defaultValue";
 
 // const alpha = helpers.regex(/^[a-zA-Z]*$/)
 const emailValid = helpers.regex(/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/)
@@ -80,32 +81,9 @@ export default defineComponent({
         const confirmPassword = ref<string>("");
         const select_role = ref<string>("applicant")
 
-        const formApplicantSignUp = reactive<ApplicantSignUpModel>({
-            email: "",
-            password: "",
-            firstName: "",
-            lastName: "",
-            email_profile: "",
-            birthDate: "",
-            gender: "",
-            address: "",
-            phone: "",
-            resume: "",
-            transcript: "",
-            portfolio: "",
-            state:""
-        })
+        const formApplicantSignUp = reactive<ApplicantSignUpModel>(def_formApplicantSignUp)
 
-        const formCompanySignUp = reactive<CompanySignUpModel>({
-            email: "",
-            password: "",
-            name: "",
-            description: "",
-            profile_image: "",
-            background_image: "",
-            video_iframe: "",
-            state:""
-        })
+        const formCompanySignUp = reactive<CompanySignUpModel>(def_formCompanySignUp)
 
         const siwtchApplicant = () => {
             select_role.value = "applicant";

@@ -97,23 +97,14 @@ import { defineComponent, reactive, ref } from 'vue';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 import Program from '@/models/Program';
+import {
+  def_program,
+} from "@/plugins/defaultValue"
 
 export default defineComponent({
   setup() {
     const router = useRouter();
-    const program = reactive<Program>({
-      id: "0",
-      company_id: "0",
-      company_name:"",
-      image: '',
-      name: '',
-      description: '',
-      course: '',
-      jobs_title: [],
-      qualifications: [],
-      privileges: [],
-      state:""
-    });
+    const program = reactive<Program>(def_program);
     const programImageInput = ref(null);
     const programImagePreview = ref('https://www.w3schools.com/w3images/workbench.jpg');
     const onFileChange = (event: Event) => {

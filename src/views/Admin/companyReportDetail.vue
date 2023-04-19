@@ -5,10 +5,7 @@
         <div class="card" style="min-height: 100vh">
           <div class="card-content">
             <div class="content">
-              <div
-                v-show="activeTab === 'jobs'"
-                style="background-color: #f6f6f6"
-              >
+              <div v-show="activeTab === 'jobs'" style="background-color: #f6f6f6">
                 <h1 class="title">งานทั้งหมดของบริษัท {{ company.name }}</h1>
 
                 <div class="job-card" v-for="(job, index) in jobs" :key="index">
@@ -30,14 +27,8 @@
                     </p>
                     <button v-if="job.state == 'on'" class="button is-success" @click="changeState(job)">on</button>
                     <button v-else class="button is-danger" @click="changeState(job)">off</button>
-                    <div
-                      class="column is-6 edit"
-                      style="background-color: #your_color_code"
-                    >
-                      <div
-                        class="field"
-                        style="background-color: #your_color_code"
-                      ></div>
+                    <div class="column is-6 edit" style="background-color: #your_color_code">
+                      <div class="field" style="background-color: #your_color_code"></div>
                     </div>
                   </div>
                 </div>
@@ -59,6 +50,7 @@ import Job from "@/models/Job";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { PORT } from "@/port";
+import {def_company, def_job} from "@/plugins/defaultValue"
 
 export default defineComponent({
   name: "App",
@@ -69,47 +61,12 @@ export default defineComponent({
 
 
     //def
-    const company = reactive<Company>({
-      id: "",
-      name: "",
-      description: "",
-      profile_image: "",
-      background_image: "",
-      video_iframe: "",
-      state: "",
-    });
+    const company = reactive<Company>(def_company);
 
-    const job = reactive<Job>({
-      id: "",
-      company_id: "",
-      name: "",
-      company_name:"",
-      salary_per_day: 0,
-      location: "",
-      capacity: 0,
-      detail: "",
-      interview: "",
-      qualifications: [""],
-      contact: { name: "", email: "", phone: "" },
-      creation_date: "",
-      state: "on",
-    });
+    const job = reactive<Job>(def_job);
 
-const job2 = reactive<Job>({
-      id: "",
-      company_id: "",
-      company_name:"",
-      name: "",
-      salary_per_day: 0,
-      location: "",
-      capacity: 0,
-      detail: "",
-      interview: "",
-      qualifications: [""],
-      contact: { name: "", email: "", phone: "" },
-      creation_date: "",
-      state: "on",
-    });
+    const job2 = reactive<Job>(def_job);
+
     const jobs = reactive<Job[]>([]);
     onMounted(() => {
       axios
@@ -138,12 +95,12 @@ const job2 = reactive<Job>({
     };
 
     const changeState = async (stateChange: Job) => {
-      if(stateChange.state == "on"){
+      if (stateChange.state == "on") {
         stateChange.state = "off"
       } else {
         stateChange.state = "on"
       }
-      
+
       console.log(stateChange)
       axios
         .post(`${PORT}` + "/admin/changeJobState", stateChange)

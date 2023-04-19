@@ -56,6 +56,7 @@ import axios from '@/plugins/axios';
 import { PORT } from '@/port';
 import preloadingVue from '@/components/preloading.vue'
 import companyProfileEdit from '@/components/company-profile.vue';
+import {def_company} from "@/plugins/defaultValue"
 
 export default defineComponent({
   components: {
@@ -75,15 +76,7 @@ export default defineComponent({
     const store = useStore();
     const user = reactive<User>(store.state.user)
 
-    const company = reactive<Company>({
-      id: String(route.params.id),
-      name: '',
-      description: '',
-      profile_image: '',
-      background_image: '',
-      video_iframe: '',
-      state: ""
-    });
+    const company = reactive<Company>(def_company);
 
     onMounted(async () => {
 

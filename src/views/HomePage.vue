@@ -36,10 +36,9 @@ import { Carousel, Slide, Pagination, Navigation } from 'vue3-carousel'
 import { useRouter } from 'vue-router'
 import Program from '@/models/Program'
 import { useStore } from 'vuex'
-import axios from "@/plugins/axios"
-import { PORT } from '@/port'
 import User from '@/models/User'
 import PreloaderVue from '@/components/preloading.vue'
+import getUserData from '@/plugins/getUser'
 
 
 export default defineComponent({
@@ -71,19 +70,8 @@ export default defineComponent({
 
     onMounted(async () => {
       store.commit('LOADING_DATA', true)
-
-      if (store.state.user.id === "") {
-        await axios.get(`${PORT}` + "/user/getData").then(res => {
-          console.log(res.data.user)
-          store.commit('SET_USER', res.data.user)
-        }).catch(() => {
-          store.commit('LOADING_DATA', false)
-        })
-      }
-
-
+      await getUserData();
       store.commit('LOADING_DATA', false)
-
     })
 
 

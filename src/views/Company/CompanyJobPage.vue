@@ -102,6 +102,7 @@ import { useStore } from "vuex";
 import User from "@/models/User";
 import Job from "@/models/Job";
 import preloadingVue from '@/components/preloading.vue'
+import { def_company } from "@/plugins/defaultValue";
 
 export default defineComponent({
   components: {
@@ -121,17 +122,7 @@ export default defineComponent({
     const store = useStore();
     const user = reactive<User>(store.state.user)
 
-    const company = reactive<Company>({
-      id: "",
-      name: "",
-      description: "",
-      profile_image: "",
-      background_image: "",
-      video_iframe: "",
-      state: ""
-    });
-  
-
+    const company = reactive<Company>(def_company);
     const jobs = reactive<Job[]>([]);
 
     onMounted(async () => {

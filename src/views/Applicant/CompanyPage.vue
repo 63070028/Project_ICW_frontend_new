@@ -43,7 +43,9 @@ import Company from '@/models/Company';
 import Job from '@/models/Job';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
-
+import {
+  def_company,
+} from "@/plugins/defaultValue"
 
 export default defineComponent({
     setup() {
@@ -51,15 +53,7 @@ export default defineComponent({
         const route = useRoute();
 
         //def
-        const company = reactive<Company>({
-            id: "",
-            name: "",
-            description: "",
-            profile_image: "",
-            background_image: "",
-            video_iframe: "",
-            state: ""
-        });
+        const company = reactive<Company>(def_company);
 
         const jobs = reactive<Job[]>([])
 
