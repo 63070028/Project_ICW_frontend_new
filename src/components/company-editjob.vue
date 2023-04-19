@@ -20,6 +20,12 @@
                                     <div class="control">
                                         <input class="input" type="text" v-model="job.name" />
                                     </div>
+                                    <div class="field">
+                                    <label class="label">รายละเอียด</label>
+                                    <div class="control">
+                                        <input class="input" type="text" v-model="job.detail" />
+                                    </div>
+                                    </div>
                                     </div>
                                     <div class="field">
                                     <label class="label">สถานที่ทำงาน</label>
