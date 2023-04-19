@@ -129,7 +129,6 @@ props: {
       required: true,
     },
   },
-
   setup(props, {emit}) {
     const router = useRouter();
     const job = reactive<Job>({
@@ -147,7 +146,6 @@ props: {
       creation_date: props.creation_date,
       state: props.state,
     });
-
     const editForm = reactive<Job>({
             id: "",
             company_id: "",
@@ -211,7 +209,6 @@ props: {
     const cancel = async () => {
       emit("updateJobEdit", false);
     };
-
     return {
       job,
       saveJob,
@@ -222,16 +219,13 @@ props: {
       
     };
   },
-
   methods: {
     setActiveTab(tab: string) {
       this.activeTab = tab;
     },
   },
 });
-
   </script>
-  
   <style scoped>
   .title {
     margin-bottom: 2rem;

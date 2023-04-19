@@ -60,12 +60,9 @@
 import "bulma/css/bulma.css";
 import { defineComponent, onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
-import Company from "@/models/Company";
-import Swal from "sweetalert2";
 import JobReport from "@/models/JobReport";
 import axios from "axios";
 import { PORT } from "@/port";
-import {def_company} from "@/plugins/defaultValue"
 
 
 export default defineComponent({
@@ -75,8 +72,8 @@ export default defineComponent({
     const router = useRouter();
     const route = useRoute();
 
-    //def
-    const company = reactive<Company>(def_company);
+
+
     const jobReports = reactive<JobReport[]>([]);
 
     onMounted(() => {
@@ -103,36 +100,11 @@ export default defineComponent({
     const viewJob = (id: string) => {
       router.push("/jobs/" + id);
     };
-    const deleteJob = (index: number) => {
-      //ปฏิs
-      Swal.fire({
-        title: "ยืนยันลบงานนี้หรือไม่",
-        text: "",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "hsl(141, 50%, 48%)",
-        cancelButtonColor: "hsl(348, 100%, 61%)",
-        confirmButtonText: "Yes",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          jobReports.splice(index - 1, 1);
-          Swal.fire({
-            position: "center",
-            icon: "error",
-            title: "ทำการลบผู้สมัครเรียบร้อย",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      });
-    };
     return {
       router,
       route,
-      company,
       jobReports,
       viewJob,
-      deleteJob,
       activeTab: "jobs",
     };
   },
