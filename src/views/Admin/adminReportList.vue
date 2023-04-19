@@ -65,6 +65,7 @@ import Swal from "sweetalert2";
 import JobReport from "@/models/JobReport";
 import axios from "axios";
 import { PORT } from "@/port";
+import {def_company} from "@/plugins/defaultValue"
 
 
 export default defineComponent({
@@ -75,16 +76,7 @@ export default defineComponent({
     const route = useRoute();
 
     //def
-    const company = reactive<Company>({
-      id: "",
-      name: "",
-      description: "",
-      profile_image: "",
-      background_image: "",
-      video_iframe: "",
-      state: "",
-    });
-
+    const company = reactive<Company>(def_company);
     const jobReports = reactive<JobReport[]>([]);
 
     onMounted(() => {

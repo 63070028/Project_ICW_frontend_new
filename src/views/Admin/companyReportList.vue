@@ -43,6 +43,9 @@ import { useRoute, useRouter } from 'vue-router';
 import Company from '@/models/Company';
 import axios from "axios";
 import { PORT } from "@/port";
+import {
+  def_company,
+} from "@/plugins/defaultValue"
 
 export default defineComponent({
   name: 'App',
@@ -52,15 +55,7 @@ export default defineComponent({
     const route = useRoute();
 
     //def
-    const company = reactive<Company>({
-      id: "",
-      name: "",
-      description: "",
-      profile_image: "",
-      background_image: "",
-      video_iframe: "",
-      state: ""
-    });
+    const company = reactive<Company>(def_company);
 
     const companys = reactive<Company[]>([])
 

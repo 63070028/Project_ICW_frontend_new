@@ -68,6 +68,8 @@ import User from '@/models/User';
 import { PORT } from '@/port';
 import router from '@/router'
 import preloadingVue from '@/components/preloading.vue'
+import getUserData from '@/plugins/getUser'
+import {def_applicant} from "@/plugins/defaultValue";
 
 export default defineComponent({
     components: {
@@ -81,20 +83,7 @@ export default defineComponent({
         const store = useStore();
         const user = reactive<User>(store.state.user)
 
-        const applicant = reactive<Applicant>({
-            id: "",
-            firstName: "",
-            lastName: "",
-            email_profile: "",
-            birthDate: "",
-            gender: "",
-            address: "",
-            phone: "",
-            resume: "",
-            transcript: "",
-            portfolio: "",
-            state: ""
-        })
+        const applicant = reactive<Applicant>(def_applicant)
 
         let select_option = ref<string>("user_profile")
         onMounted(async () => {
@@ -106,15 +95,7 @@ export default defineComponent({
 
             store.commit('LOADING_DATA', true)
 
-            if (store.state.user.id === "") {
-                await axios.get(`${PORT}` + "/user/getData").then(res => {
-                    console.log(res.data.user)
-                    store.commit('SET_USER', res.data.user)
-                }).catch(() => {
-                    store.commit('LOADING_DATA', false)
-                })
-            }
-
+            getUserData()
 
             await axios.get(`${PORT}` + "/applicant/getProfileById/" + user.id).then(res => {
                 console.log(res.data.applicant)

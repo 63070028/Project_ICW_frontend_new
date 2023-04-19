@@ -81,58 +81,15 @@ import User from '@/models/User'
 import { PORT } from '@/port'
 import axios from '@/plugins/axios';
 import Applicant from '@/models/Applicant'
+import getUserData from '@/plugins/getUser'
+import { def_applicant, def_fromApplicationProgram, def_program } from '@/plugins/defaultValue'
 export default defineComponent({
     setup() {
 
 
-        const program = reactive<Program>({
-            id: "",
-            company_id: "",
-            company_name: "",
-            name: "",
-            description: "", // เพิ่มคุณสมบัติ description
-            course: "",
-            jobs_title: [],
-            qualifications: [],
-            privileges: [],
-            image: '',
-            state: ""
-        })
-
-        const applicant = reactive<Applicant>({
-            id: "",
-            firstName: "",
-            lastName: "",
-            email_profile: "",
-            birthDate: "",
-            gender: "",
-            address: "",
-            phone: "",
-            resume: "",
-            transcript: "",
-            portfolio: "",
-            state: ""
-        })
-
-        const fromApplicationProgram = reactive<ApplicationProgramModel>({
-            applicant_id: "",
-            company_name: "",
-            company_id: "",
-            program_id: "",
-            program_name: "",
-            job_title: "",
-            firstName: "",
-            lastName: "",
-            email_profile: "",
-            birthDate: "",
-            gender: "",
-            address: "",
-            phone: "",
-            resume: "",
-            transcript: "",
-            portfolio: "",
-            state: "pending",
-        })
+        const program = reactive<Program>(def_program)
+        const applicant = reactive<Applicant>(def_applicant)
+        const fromApplicationProgram = reactive<ApplicationProgramModel>(def_fromApplicationProgram)
 
         const router = useRouter();
         const route = useRoute();
@@ -140,8 +97,8 @@ export default defineComponent({
 
         const store = useStore();
         const user = reactive<User>(store.state.user)
-        const selectedJob = ref<string>("")
 
+        const selectedJob = ref<string>("")
         const isSubmit = ref<boolean>(false);
 
 
@@ -190,6 +147,7 @@ export default defineComponent({
                     fromApplicationProgram.resume = applicant.resume
                     fromApplicationProgram.transcript = applicant.transcript
                     fromApplicationProgram.portfolio = applicant.portfolio
+                    fromApplicationProgram.state = "pending"
 
                     console.log(fromApplicationProgram)
                     const swalWaiting: any = Swal.fire({
@@ -230,15 +188,7 @@ export default defineComponent({
 
                 store.commit('LOADING_DATA', true)
 
-                if (store.state.user.id === "") {
-                    await axios.get(`${PORT}` + "/user/getData").then(res => {
-                        console.log(res.data.user)
-                        store.commit('SET_USER', res.data.user)
-                    }).catch(() => {
-                        store.commit('LOADING_DATA', false)
-                    })
-                }
-
+                getUserData();
 
                 const get_program: Program = {
                     id: "p123-xxxx-xxxx-xxxx",
@@ -253,6 +203,7 @@ export default defineComponent({
                     image: "https://www.w3schools.com/w3images/workbench.jpg",
                     state: "on"
                 }
+
                 Object.assign(program, get_program)
 
                 if (store.state.user.role === "applicant") {

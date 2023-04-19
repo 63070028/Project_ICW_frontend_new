@@ -1,4 +1,4 @@
-export default interface JobReportSendModel {
+export default interface JobReportModel {
     user_id:string,
     company_name:string,
     company_id:string,

@@ -85,6 +85,10 @@ import Applicant from "@/models/Applicant";
 import "primeicons/primeicons.css";
 import Swal from "sweetalert2";
 import { useVuelidate } from "@vuelidate/core";
+import {
+  def_applicant,
+} from "@/plugins/defaultValue"
+
 export default defineComponent({
   components: {
     uploadPdfVue,
@@ -96,20 +100,7 @@ export default defineComponent({
 
     const confirmDelete = ref<boolean>(false);
     //ยังไม่กำหนด any ไปก่อน
-    const applicant = reactive<Applicant>({
-      id: "",
-      firstName: "",
-      lastName: "",
-      email_profile: "",
-      birthDate: "",
-      gender: "",
-      address: "",
-      phone: "",
-      resume: "",
-      transcript: "",
-      portfolio: "",
-      state: ""
-    });
+    const applicant = reactive<Applicant>(def_applicant);
 
     const declineApplicant = (applicant_id:string) => {
       //ปฏิ

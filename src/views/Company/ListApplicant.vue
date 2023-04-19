@@ -14,6 +14,7 @@ import { defineComponent, onMounted, reactive } from 'vue'
 import companyListJobs from '@/components/company-list-applicant.vue';
 import Applications from '@/models/Applications';
 
+
 export default defineComponent({
     components: {
         companyListJobs,
