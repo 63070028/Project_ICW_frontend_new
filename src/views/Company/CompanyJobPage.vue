@@ -62,7 +62,7 @@
       </div>
     </div>
   </div>
-  <CompanyAddjob v-if="isAddingjob" @addNewJob="($event)=>{isAddingjob= $event}" @saveNewJob="updateNewJob($event)"></CompanyAddjob>
+  <CompanyAddjob :company_id="company.id" v-if="isAddingjob" @addNewJob="($event)=>{isAddingjob= $event}" @saveNewJob="updateNewJob($event)"></CompanyAddjob>
 
   <template v-for="(job) in jobs">
   <companyEditjob
