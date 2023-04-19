@@ -1,18 +1,8 @@
 <template>
+  <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
   <div class="company p-3" v-if="!isAddingjob">
     <div class="columns">
       <div class="column is-3" style="background-color: #f8f8f8">
-        <aside class="menu">
-          <p class="menu-label">Navigation</p>
-          <ul class="menu-list">
-            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')"
-                to="/companyProfile">ข้อมูลบริษัท</router-link></li>
-            <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')"
-                to="/companyJob">งานที่ประกาศ</router-link></li>
-            <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')"
-                to="/companyProgram">โครงการพิเศษ</router-link></li>
-          </ul>
-        </aside>
       </div>
       <div class="card-container column is-9">
         <div class="card" style="min-height: 100vh ">
@@ -54,6 +44,24 @@
     </div>
   </div>
   <CompanyAddjob v-if="isAddingjob"></CompanyAddjob>
+  <companyEditjob
+  :id="jobs.id"
+  :company_id="jobs.company_id"
+  :company_name="jobs.company_name"
+  :name="jobs.name"
+  :salary_per_day="jobs.salary_per_day"
+  :location="jobs.location"
+  :capacity="jobs.capacity"
+  :detail="jobs.detail"
+  :interview="jobs.interview"
+  :qualifications="jobs.qualifications"
+  :contact="jobs.contact"
+  :creation_date="jobs.creation_date"
+  :state="jobs.state"
+  v-if="isEditjob"
+></companyEditjob>
+
+
 </template>
 <script lang="ts">
 
@@ -64,20 +72,24 @@ import Company from "@/models/Company";
 import Swal from "sweetalert2";
 import { JobStatus } from "@/models/Job2";
 import CompanyAddjob from "@/components/company-addjob.vue";
+import companyEditjob from "@/components/company-editjob.vue";
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
 import { useStore } from "vuex";
 import User from "@/models/User";
 import Job from "@/models/Job";
+import preloadingVue from '@/components/preloading.vue'
 
 export default defineComponent({
   components: {
     CompanyAddjob,
-    // preloadingVue,
+    preloadingVue,
+    companyEditjob
   },
   data: () => ({
     model: "no",
     isAddingjob: false,
+    isEditjob:false,
   }),
 
   setup() {
@@ -97,8 +109,13 @@ export default defineComponent({
     });
     const jobs = reactive<Job[]>([]);
 
-
     onMounted(async () => {
+
+      if (!localStorage.getItem('token')) {
+        router.push('/signIn')
+        return
+      }
+      store.commit('LOADING_DATA', true)
 
       await axios.get(`${PORT}` + "/user/getData").then(res => {
         console.log(res.data.user)
@@ -110,13 +127,10 @@ export default defineComponent({
         Object.assign(jobs, res.data.items)
       })
 
+      store.commit('LOADING_DATA', false)
       console.log("get api company id: " + user.id);
-      
 
     });
-    const viewJob = (id: number) => {
-      router.push("/jobs/" + id);
-    };
     const deleteForm = async () => {
       const result = await Swal.fire({
         title: "Are you sure?",
@@ -142,7 +156,6 @@ export default defineComponent({
       route,
       company,
       jobs,
-      viewJob,
       deleteForm,
       activeTab: "jobs",
       isEnabled: false,
@@ -155,9 +168,7 @@ export default defineComponent({
     };
   },
   methods: {
-    setActiveTab(tab: string) {
-      this.activeTab = tab;
-    },
+   
   }
 });
 </script>

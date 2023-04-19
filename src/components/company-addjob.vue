@@ -74,6 +74,9 @@
 
 
   export default defineComponent({
+    emits: ["addNewJob", "saveNewJob"],
+    
+
     setup() {
       const router = useRouter();
       const job = reactive<Job>({

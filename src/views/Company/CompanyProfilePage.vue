@@ -72,14 +72,13 @@ export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
-
     const store = useStore();
     const user = reactive<User>(store.state.user)
 
     const company = reactive<Company>({
       id: String(route.params.id),
-      name: 'None',
-      description: 'None',
+      name: '',
+      description: '',
       profile_image: '',
       background_image: '',
       video_iframe: '',
@@ -110,9 +109,6 @@ export default defineComponent({
 
     });
 
-    const viewJob = (id: number) => {
-      router.push('/jobs/' + id);
-    };
     const updateCompanyProfile = (change_data: Company) => {
       Object.assign(company, change_data);
     }
@@ -120,7 +116,6 @@ export default defineComponent({
       router,
       route,
       company,
-      viewJob,
       user,
       updateCompanyProfile,
       store
