@@ -28,7 +28,7 @@
 
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive} from 'vue'
+import { defineComponent, onMounted, reactive } from 'vue'
 import companyList from '../components/company-list.vue'
 import Company from '@/models/Company'
 import 'vue3-carousel/dist/carousel.css'
@@ -70,16 +70,19 @@ export default defineComponent({
     });
 
     onMounted(async () => {
-        store.commit('LOADING_DATA', true)
+      store.commit('LOADING_DATA', true)
 
+      if (store.state.user.id === "") {
         await axios.get(`${PORT}` + "/user/getData").then(res => {
           console.log(res.data.user)
           store.commit('SET_USER', res.data.user)
-        }).catch(()=>{
+        }).catch(() => {
           store.commit('LOADING_DATA', false)
         })
+      }
 
-        store.commit('LOADING_DATA', false)
+
+      store.commit('LOADING_DATA', false)
 
     })
 

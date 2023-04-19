@@ -38,10 +38,10 @@
     </div>
     <div style="display: flex; flex-direction: column; align-items: flex-end">
       <i v-show="isMyFavorite == false" class="pi pi-heart m-5" style="font-size: 1.3rem; cursor: pointer"
-        @click="saveMyJobFavorite()"><span class="ml-2">รายการโปรด</span></i>
+        @click="setMyJobFavorite()"><span class="ml-2">รายการโปรด</span></i>
 
       <i v-show="isMyFavorite == true" class="pi pi-heart-fill m-5"
-        style="color: #e41a50; font-size: 1.3rem; cursor: pointer" @click="saveMyJobFavorite()"><span class="ml-2"
+        style="color: #e41a50; font-size: 1.3rem; cursor: pointer" @click="setMyJobFavorite()"><span class="ml-2"
           style="color: black">รายการโปรด</span></i>
     </div>
     <div class="p-5">
@@ -103,6 +103,8 @@ import { useStore } from "vuex";
 import ApplicationJobModel from "@/models/formModels/ApplicationJobModel";
 import Applicant from "@/models/Applicant";
 import preloadingVue from "@/components/preloading.vue";
+import JobFavoriteModel from "@/models/formModels/JobFavoriteModel"
+
 
 export default defineComponent({
   components: {
@@ -125,7 +127,7 @@ export default defineComponent({
       capacity: 0,
       detail: "",
       interview: "",
-      qualifications: ["", ""],
+      qualifications: [],
       contact: {
         name: "",
         email: "",
@@ -138,7 +140,7 @@ export default defineComponent({
     const formReportSend = reactive<reportSendModel>({
       user_id: "",
       company_name: "",
-      company_id:"",
+      company_id: "",
       job_name: "",
       job_id: "",
       creation_date: "",
@@ -164,7 +166,7 @@ export default defineComponent({
     const formApplicationJob = reactive<ApplicationJobModel>({
       applicant_id: "",
       company_name: "",
-      company_id:"",
+      company_id: "",
       job_name: "",
       job_id: "",
       firstName: "",
@@ -177,29 +179,33 @@ export default defineComponent({
       resume: "",
       transcript: "",
       portfolio: "",
-      state: "pending"
+      state: ""
     })
+
+    const setJobFavorite = reactive<JobFavoriteModel>({
+      applicant_id: "",
+      job_id: "",
+    })
+
 
     const isMyFavorite = ref<boolean>(false);
 
     const isReport = ref<boolean>(false);
     const messageReport = ref<string>("");
 
-    const saveMyJobFavorite = () => {
+    const setMyJobFavorite = () => {
       isMyFavorite.value = !isMyFavorite.value;
       if (isMyFavorite.value == true) {
-        //api post /saveMyJobFavorite
-        // const data = {
-        //     applicant_id:"xxx",
-        //     job_id:'xxx'
-        // }
+        setJobFavorite.applicant_id = applicant.id
+        setJobFavorite.job_id = job.id
+        axios.post(`${PORT}` + "/applicant/saveMyJobFavorite", setJobFavorite)
+
       } else {
-        //api post /removeMyJobFavorite
-        // const data = {
-        //     applicant_id:"xxx",
-        //     job_id:'xxx'
-        // }
+        setJobFavorite.applicant_id = applicant.id
+        setJobFavorite.job_id = job.id
+        axios.post(`${PORT}` + "/applicant/removeMyJobFavorite", setJobFavorite)
       }
+
     };
 
     const submitApplication = async () => {
@@ -242,6 +248,7 @@ export default defineComponent({
           formApplicationJob.resume = applicant.resume
           formApplicationJob.transcript = applicant.transcript
           formApplicationJob.portfolio = applicant.portfolio
+          formApplicationJob.state = "pending"
 
           const swalWaiting: any = Swal.fire({
             position: 'center',
@@ -272,14 +279,13 @@ export default defineComponent({
       const isFormCorrect = await v$.value.$validate();
       if (!isFormCorrect) return;
 
-      //ส่ง report
       formReportSend.user_id = user.id
-      formReportSend.company_name = job.company_name,
-      formReportSend.company_id = job.company_id,
-      formReportSend.job_id = "" + route.params.id;
-      formReportSend.job_name = job.name;
-      formReportSend.message = messageReport.value;
-      formReportSend.creation_date = new Date().toLocaleDateString("en-US");
+      formReportSend.company_name = job.company_name
+      formReportSend.company_id = job.company_id
+      formReportSend.job_id = "" + route.params.id
+      formReportSend.job_name = job.name
+      formReportSend.message = messageReport.value
+      formReportSend.creation_date = new Date().toLocaleDateString("en-US")
 
       console.log(formReportSend.creation_date);
       const swalWaiting: any = Swal.fire({
@@ -293,7 +299,6 @@ export default defineComponent({
       await axios
         .post(`${PORT}` + "/applicant/sendReport", formReportSend)
         .then((response) => {
-          // handle success
           console.log(response.data.message);
           swalWaiting.close()
           Swal.fire({
@@ -307,7 +312,6 @@ export default defineComponent({
           isReport.value = !isReport.value;
         })
         .catch((error) => {
-          // handle error
           console.log(error);
           Swal.fire({
             position: "center",
@@ -324,18 +328,23 @@ export default defineComponent({
 
       store.commit('LOADING_DATA', true)
 
-      await axios.get(`${PORT}` + "/company/getJobById/" + route.params.id).then(res => Object.assign(job, res.data.job))
-
-      await axios.get(`${PORT}` + "/user/getData").then(res => {
-        console.log(res.data.user)
-        store.commit('SET_USER', res.data.user)
-      }).catch(() => {
-        store.commit('LOADING_DATA', false)
-      })
+      if (store.state.user.id === "") {
+        await axios.get(`${PORT}` + "/user/getData").then(res => {
+          console.log(res.data.user)
+          store.commit('SET_USER', res.data.user)
+        }).catch(() => {
+          store.commit('LOADING_DATA', false)
+        })
+      }
 
       if (store.state.user.role === "applicant") {
         await axios.get(`${PORT}` + "/applicant/getProfileById/" + store.state.user.id).then(res => Object.assign(applicant, res.data.applicant))
       }
+
+      await axios.post(`${PORT}` + "/company/getJobById", { job_id: route.params.id, applicant_id: user.id }).then((res) => {
+        Object.assign(job, res.data.job)
+        isMyFavorite.value = res.data.isJobFavorite;
+      })
 
       store.commit('LOADING_DATA', false)
 
@@ -349,14 +358,15 @@ export default defineComponent({
       isMyFavorite,
       isReport,
       messageReport,
-      saveMyJobFavorite,
+      setMyJobFavorite,
       submitApplication,
       submitReport,
       formReportSend,
       store,
       user,
       applicant,
-      formApplicationJob
+      formApplicationJob,
+      setJobFavorite
     };
   },
   validations() {
