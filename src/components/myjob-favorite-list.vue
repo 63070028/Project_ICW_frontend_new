@@ -1,7 +1,7 @@
 <template>
     <div class="column ml-6 p-0">
         <div class="card px-5 py-4">
-            <div class="job_content p-3" v-for="job, index in states.addItemsPageList" :key="index"
+            <div class="job_content p-3" v-for="job, index in paginatedItems" :key="index"
                 style="border-top:0.5px solid gray;" @click="viewJob(job.id)">
                 <p class="is-size-4 has-text-weight-bold">บริษัท: </p>
                 <p class="is-size-4 has-text-weight-bold">ตำแหน่ง: {{ job.name }}</p>
@@ -30,10 +30,8 @@
             <button class="pagination-previous" :disabled="previousClicked" @click="getPreviousPage()">Previous</button>
             <button class="pagination-next" :disabled="nextPageClicked" @click="getNextPage()">Next page</button>
             <ul class="pagination-list">
-                <li v-for="index in states.countOfPages" :key="index">
-                    <a v-bind:id="'pageId' + (index + 1)" class="pagination-link" @click="changePage(index + 1)">{{ index +
-                        1
-                    }}</a>
+                <li v-for="n in countOfPages" :key="n">
+                    <a v-bind:id="'pageId' + (n)" class="pagination-link" @click="changePage(n)">{{n}}</a>
                 </li>
 
             </ul>
@@ -42,7 +40,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, onUpdated, PropType, reactive, ref } from 'vue'
+import { computed, ComputedRef, defineComponent, onMounted, onUpdated, PropType, reactive, ref } from 'vue'
 import { useRouter } from 'vue-router';
 import Job from '@/models/Job';
 import JobFavoriteModel from '@/models/formModels/JobFavoriteModel';
@@ -51,6 +49,7 @@ import { PORT } from '@/port';
 import axios from '@/plugins/axios';
 
 export default defineComponent({
+    emits: ['remove'],
     props: {
         items: {
             type: Object as PropType<Job[]>,
@@ -65,17 +64,10 @@ export default defineComponent({
             required: true,
         },
     },
-    setup(props) {
+    setup(props, { emit }) {
         const router = useRouter();
         let presentPage = ref<number>(1);
         let pastPage = ref<number>(1);
-
-        const states = reactive<{ countOfPages: number[], addItemsPageList: Job[]}>(
-            {
-                countOfPages: [],
-                addItemsPageList: [],
-            }
-        )
 
         const nextPageClicked = ref<boolean>(false);
         const previousClicked = ref<boolean>(false);
@@ -83,19 +75,17 @@ export default defineComponent({
         const setJobFavorite = reactive<JobFavoriteModel>(def_JobFavorit)
 
         onMounted(() => {
-            loadMyPaginationList();
-            states.countOfPages = Array.from(Array(Math.ceil(props.items.length / props.itemPerEachPage)).keys());
+            validatePageCount();
         })
 
         onUpdated(() => {
-            // loadMyPaginationList();
             document.getElementById('pageId' + presentPage.value)?.classList.add('is-current');
         })
 
         const getNextPage = () => {
             pastPage.value = presentPage.value;
             presentPage.value += 1;
-            loadMyPaginationList();
+            validatePageCount()
             document.getElementById('pageId' + presentPage.value)?.classList.add('is-current');
             document.getElementById('pageId' + pastPage.value)?.classList.remove('is-current');
         }
@@ -103,7 +93,7 @@ export default defineComponent({
         const changePage = (page: number) => {
             pastPage.value = presentPage.value;
             presentPage.value = page;
-            loadMyPaginationList();
+            validatePageCount()
             document.getElementById('pageId' + presentPage.value)?.classList.add('is-current');
             document.getElementById('pageId' + pastPage.value)?.classList.remove('is-current');
         }
@@ -111,22 +101,25 @@ export default defineComponent({
         const getPreviousPage = () => {
             pastPage.value = presentPage.value;
             presentPage.value -= 1;
-            loadMyPaginationList();
+            validatePageCount()
             document.getElementById('pageId' + presentPage.value)?.classList.add('is-current');
             document.getElementById('pageId' + pastPage.value)?.classList.remove('is-current');
         }
 
 
 
-        const loadMyPaginationList = () => {
+        const paginatedItems = computed(() => {
             let startItem = (presentPage.value - 1) * props.itemPerEachPage;
             let endItem = startItem + props.itemPerEachPage;
-            states.addItemsPageList = props.items.slice(startItem, endItem);
-            validatePageCount();
-        }
+            return props.items.slice(startItem, endItem);
+        })
+
+        const countOfPages: ComputedRef<number> = computed(() => {
+            return Math.ceil(props.items.length / props.itemPerEachPage)
+        })
 
         const validatePageCount = () => {
-            presentPage.value === states.countOfPages.length ? nextPageClicked.value = true : nextPageClicked.value = false;
+            presentPage.value === countOfPages.value ? nextPageClicked.value = true : nextPageClicked.value = false;
             presentPage.value === 1 ? previousClicked.value = true : previousClicked.value = false;
         }
 
@@ -138,16 +131,12 @@ export default defineComponent({
             setJobFavorite.applicant_id = props.appicant_id
             setJobFavorite.job_id = job_id
             axios.post(`${PORT}` + "/applicant/removeMyJobFavorite", setJobFavorite)
-            const index = states.addItemsPageList.findIndex(job => job.id === job_id);
-            if (index !== -1) {
-                states.addItemsPageList.splice(index, 1);
-            }
-
+            emit('remove', job_id)
         }
 
 
         return {
-            nextPageClicked, previousClicked, getNextPage, getPreviousPage, states, presentPage, changePage, router, viewJob, removeFavorieJob
+            nextPageClicked, previousClicked, getNextPage, getPreviousPage, presentPage, changePage, router, viewJob, removeFavorieJob, paginatedItems, countOfPages
         }
     },
 })
