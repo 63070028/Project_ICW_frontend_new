@@ -35,10 +35,20 @@
                     <p class="job-detai-text">จำนวนที่รับ: {{ job.capacity }}</p>
                     <div class="column is-6 edit" style="background-color: #your_color_code;">
                       <div class="field" style="background-color: #your_color_code;">
-                        <v-switch v-model="job.state" hide-details inset color="success" :true-value="JobStatus.Open"
-                          :false-value="JobStatus.Closed" :label="`สถานะงาน: ${job.state}`"
-                          :style="{ color: jobStateColor(job.state) }">
-                        </v-switch>
+                        
+                        <v-switch
+                            v-model="job.state"
+                            hide-details
+                            inset
+                            color="success"
+                            :true-value="JobStatus.Open"
+                            :false-value="JobStatus.Closed"
+                            :label="`สถานะงาน: ${job.state}`"
+                            :style="{ color: jobStateColor(job.state) }"
+                            @change="updateJobState(job.id, job.state)"
+                        ></v-switch>
+
+
                           <button class="button is-small is-info" @click="isEditjob = true" >แก้ไขงาน</button>
                         <button class="button is-small is-danger" @click="deleteForm">ลบงาน</button>
                       </div>
@@ -52,7 +62,7 @@
       </div>
     </div>
   </div>
-  <CompanyAddjob v-if="isAddingjob" @addNewJob="($event)=>{isAddingjob= $event}"></CompanyAddjob>
+  <CompanyAddjob v-if="isAddingjob" @addNewJob="($event)=>{isAddingjob= $event}" @saveNewJob="updateNewJob($event)"></CompanyAddjob>
 
   <template v-for="(job) in jobs">
   <companyEditjob
@@ -73,10 +83,7 @@
     :state="job.state"
     @updateJobEdit="($event)=>{isEditjob = $event}" @saveJobEdit=" updateCompanyJob($event)">
     </companyEditjob>
-</template>
-
-
-
+  </template>
 
 </template>
 <script lang="ts">
@@ -123,6 +130,8 @@ export default defineComponent({
       video_iframe: "",
       state: ""
     });
+  
+
     const jobs = reactive<Job[]>([]);
 
     onMounted(async () => {
@@ -170,6 +179,11 @@ export default defineComponent({
     const updateCompanyJob = (change_data: Job) => {
       Object.assign(jobs, change_data);
     }
+
+    const updateNewJob = (change_data: Job) => {
+      Object.assign(jobs, change_data);
+    }
+    
     return {
       router,
       route,
@@ -180,10 +194,10 @@ export default defineComponent({
       isEnabled: false,
       JobStatus,
       updateCompanyJob,
+      updateNewJob,
       jobStateColor,
       store,
       user,
-      
       //  jobActiveComputed,
     };
   },
@@ -191,7 +205,29 @@ export default defineComponent({
     setActiveTab(tab: string) {
       this.activeTab = tab;
     },
-  }
+    async updateJobState(id: string, newState: string) {
+    const stateText = newState === JobStatus.Open ? "เปิดรับสมัคร" : "ปิดรับสมัคร";
+    try {
+      await axios.post(`${PORT}/company/setJobState`, {
+        id: id,
+        state: stateText,
+      });
+      Swal.fire({
+        title: "Success",
+        text: "Job state updated successfully",
+        icon: "success",
+      });
+    } catch (error) {
+      Swal.fire({
+        title: "Error",
+        text: "Failed to update the job state",
+        icon: "error",
+      });
+      console.error(error);
+    }
+  },
+},
+  
 });
 </script>
 

@@ -69,11 +69,18 @@ import axios from '@/plugins/axios';
 import { PORT } from '@/port';
 export default defineComponent({
   emits: ["addNewJob", "saveNewJob"],
+  props: {
+    company_id: {
+      type: String,
+      required: true,
+    },
+  },
   setup(props,{emit}) {
-    const router = useRouter();
+   // const router = useRouter();
+   
     const job = reactive<Job>({
       id: "",
-      company_id: "",
+      company_id: props.company_id,
       name: "",
       company_name: "",
       salary_per_day: 0,
@@ -86,6 +93,7 @@ export default defineComponent({
       creation_date: "",
       state: ""
     });
+    
 
     const addJob = async () => {
       try {
@@ -95,7 +103,8 @@ export default defineComponent({
           text: "Job added successfully",
           icon: "success",
         });
-        router.push("/companyJob");
+        emit("saveNewJob", job)
+         emit("addNewJob", false);
       } catch (error) {
         Swal.fire({
           title: "Error",
@@ -120,7 +129,8 @@ export default defineComponent({
         console.log("Save updated job data:", job);
         await addJob();
       }
-      emit("addNewJob", false);
+
+     
     };
 
     const cancel = async () => {
