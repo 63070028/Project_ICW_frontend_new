@@ -112,7 +112,7 @@ import axios from "axios";
 
 export default defineComponent({
   emits: ["updateProfileEdit", "saveEdit"],
-  
+
   props: {
     id: {
       type: String,
@@ -144,11 +144,11 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-    
+
     const router = useRouter();
 
     const company = reactive<Company>({
-      id: props.id ,
+      id: props.id,
       name: props.name,
       description: props.description,
       profile_image: props.profile_image,
@@ -273,7 +273,7 @@ export default defineComponent({
       backgroundImagePreview,
       previewProfileImage,
       previewBackgroundImage,
- 
+
     };
   },
   methods: {

@@ -1,8 +1,19 @@
 <template>
   <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
-  <div class="company p-3" v-if="!isAddingjob">
+  <div class="company p-3" v-if="!isAddingjob && !isEditjob" >
     <div class="columns">
       <div class="column is-3" style="background-color: #f8f8f8">
+        <aside class="menu">
+          <p class="menu-label">Navigation</p>
+          <ul class="menu-list">
+            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')"
+                to="/companyProfile">ข้อมูลบริษัท</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')"
+                to="/companyJob">งานที่ประกาศ</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')"
+                to="/companyProgram">โครงการพิเศษ</router-link></li>
+          </ul>
+        </aside>
       </div>
       <div class="card-container column is-9">
         <div class="card" style="min-height: 100vh ">
@@ -28,9 +39,7 @@
                           :false-value="JobStatus.Closed" :label="`สถานะงาน: ${job.state}`"
                           :style="{ color: jobStateColor(job.state) }">
                         </v-switch>
-                        <router-link :to="'/companyEditJob/' + job.id">
-                          <button class="button is-small is-info">แก้ไขงาน</button>
-                        </router-link>
+                          <button class="button is-small is-info" @click="isEditjob = true" >แก้ไขงาน</button>
                         <button class="button is-small is-danger" @click="deleteForm">ลบงาน</button>
                       </div>
                     </div>
@@ -43,23 +52,30 @@
       </div>
     </div>
   </div>
-  <CompanyAddjob v-if="isAddingjob"></CompanyAddjob>
+  <CompanyAddjob v-if="isAddingjob" @addNewJob="($event)=>{isAddingjob= $event}"></CompanyAddjob>
+
+  <template v-for="(job) in jobs">
   <companyEditjob
-  :id="jobs.id"
-  :company_id="jobs.company_id"
-  :company_name="jobs.company_name"
-  :name="jobs.name"
-  :salary_per_day="jobs.salary_per_day"
-  :location="jobs.location"
-  :capacity="jobs.capacity"
-  :detail="jobs.detail"
-  :interview="jobs.interview"
-  :qualifications="jobs.qualifications"
-  :contact="jobs.contact"
-  :creation_date="jobs.creation_date"
-  :state="jobs.state"
-  v-if="isEditjob"
-></companyEditjob>
+    v-if="isEditjob"
+    :key="job.id"
+    :id="job.id"
+    :company_id="job.company_id"
+    :company_name="job.company_name"
+    :name="job.name"
+    :salary_per_day="job.salary_per_day"
+    :location="job.location"
+    :capacity="job.capacity"
+    :detail="job.detail"
+    :interview="job.interview"
+    :qualifications="job.qualifications"
+    :contact="job.contact"
+    :creation_date="job.creation_date"
+    :state="job.state"
+    @updateJobEdit="($event)=>{isEditjob = $event}" @saveJobEdit=" updateCompanyJob($event)">
+    </companyEditjob>
+</template>
+
+
 
 
 </template>
@@ -124,7 +140,7 @@ export default defineComponent({
 
       await axios.get(`${PORT}` + "/company/getJob/" + user.id).then(res => {
         console.log(res.data)
-        Object.assign(jobs, res.data.items)
+        Object.assign(jobs, res.data.job)
       })
 
       store.commit('LOADING_DATA', false)
@@ -151,6 +167,9 @@ export default defineComponent({
     const jobStateColor = (state: string) => {
       return state === "on" ? "green" : "red";
     };
+    const updateCompanyJob = (change_data: Job) => {
+      Object.assign(jobs, change_data);
+    }
     return {
       router,
       route,
@@ -160,6 +179,7 @@ export default defineComponent({
       activeTab: "jobs",
       isEnabled: false,
       JobStatus,
+      updateCompanyJob,
       jobStateColor,
       store,
       user,
@@ -168,7 +188,9 @@ export default defineComponent({
     };
   },
   methods: {
-   
+    setActiveTab(tab: string) {
+      this.activeTab = tab;
+    },
   }
 });
 </script>

@@ -66,7 +66,7 @@
     </div>
 </template>
   <script lang="ts">
-import { defineComponent, onMounted, PropType, reactive } from 'vue';
+import { defineComponent, PropType, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import Job from '@/models/Job';
 import Swal from 'sweetalert2';
@@ -74,7 +74,7 @@ import { PORT } from "@/port";
 import axios from "axios";
 
 export default defineComponent({
-emits: ["updateJobEdit", "saveEdit"],
+emits: ["updateJobEdit", "saveJobEdit"],
 props: {
     id: {
       type: String,
@@ -119,23 +119,14 @@ props: {
     contact: {
       type: Object as PropType<{name: string, email: string, phone: string}>,
       required: true,
-      default: () => {
-        return {
-          name: '',
-          email: '',
-          phone: '',
-        };
-      },
     },
     creation_date: {
       type: String,
       required: true,
-      default: () => new Date().toISOString().substring(0, 10),
     },
     state: {
       type: String,
       required: true,
-      default: 'open',
     },
   },
 
@@ -157,6 +148,21 @@ props: {
       state: props.state,
     });
 
+    const editForm = reactive<Job>({
+            id: "",
+            company_id: "",
+            name: "",
+            company_name: "",
+            salary_per_day: 0,
+            capacity: 0,
+            location: "",
+            detail: "",
+            interview: "",
+            qualifications: [],
+            contact: {name:"", email:"", phone:""},
+            creation_date: "",
+            state: ""
+        })
 
     const saveJob = async () => {
       const result = await Swal.fire({
@@ -167,10 +173,22 @@ props: {
         confirmButtonText: 'ยืนยัน',
         cancelButtonText: 'ยกเลิก',
       });
-
+    
       if (result.isConfirmed) {
-        console.log('Save updated job data:', job);
-       
+        try {
+        Object.assign(editForm, job);
+        await axios.post(`${PORT}`+"/company/editjob", editForm).then(res=>{
+              console.log(res.data.message)
+            })
+        emit('saveJobEdit', editForm)
+        emit('updateJobEdit', false)
+      } catch (error) {
+          Swal.fire({
+            title: "Error",
+            text: "Failed to update company profile",
+            icon: "error",
+          });
+        }
       }
     };
     const deleteForm = async () => {
@@ -191,7 +209,7 @@ props: {
     }
   };
     const cancel = async () => {
-      //router.push('/companyJob');
+      emit("updateJobEdit", false);
     };
 
     return {

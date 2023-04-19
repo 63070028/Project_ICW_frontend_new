@@ -125,14 +125,6 @@ export default defineComponent({
     setActiveTab(tab: string) {
       this.activeTab = tab;
     },
-
-    cancelEdit() {
-      this.editingProfile = false;
-    },
-    saveProfile() {
-      this.editingProfile = false;
-    },
-    
   },
 });
 </script>
