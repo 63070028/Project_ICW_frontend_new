@@ -117,6 +117,7 @@ export default defineComponent({
         const fromApplicationProgram = reactive<ApplicationProgramModel>({
             applicant_id: "",
             company_name: "",
+            company_id: "",
             program_id: "",
             program_name: "",
             job_title: "",
@@ -142,42 +143,6 @@ export default defineComponent({
         const selectedJob = ref<string>("")
 
         const isSubmit = ref<boolean>(false);
-
-
-        onMounted(async () => {
-
-            console.log("api get program form" + route.params.id)
-
-            store.commit('LOADING_DATA', true)
-
-            await axios.get(`${PORT}` + "/user/getData").then(res => {
-                console.log(res.data.user)
-                store.commit('SET_USER', res.data.user)
-            }).catch(() => {
-                store.commit('LOADING_DATA', false)
-            })
-
-            const get_program: Program = {
-                id: "p123-xxxx-xxxx-xxxx",
-                company_id: "xxxx-xxxx-xxxx-xxxx",
-                company_name: "company1",
-                name: "program1",
-                description: "sdfsadfkdsjfklasvklfalksdfasdlfkv", // เพิ่มคุณสมบัติ description
-                course: "dsafkdls;fk;sldkf;ldksf;lavmcvopgowpegjodf",
-                jobs_title: ['SE', 'NW', "ML"],
-                qualifications: ["11111"],
-                privileges: ["111111"],
-                image: "https://www.w3schools.com/w3images/workbench.jpg",
-                state: "on"
-            }
-            Object.assign(program, get_program)
-
-            if (store.state.user.role === "applicant") {
-                await axios.get(`${PORT}` + "/applicant/getProfileById/" + store.state.user.id).then(res => Object.assign(applicant, res.data.applicant))
-            }
-
-            store.commit('LOADING_DATA', false)
-        });
 
 
         const submitApplication = async () => {
@@ -211,6 +176,7 @@ export default defineComponent({
 
                     fromApplicationProgram.applicant_id = applicant.id
                     fromApplicationProgram.company_name = program.company_name
+                    fromApplicationProgram.company_id = program.company_id
                     fromApplicationProgram.program_id = program.id
                     fromApplicationProgram.program_name = program.name
                     fromApplicationProgram.job_title = selectedJob.value
@@ -257,6 +223,45 @@ export default defineComponent({
                     isSubmit.value = !isSubmit.value;
                 }
             })
+
+            onMounted(async () => {
+
+                console.log("api get program form" + route.params.id)
+
+                store.commit('LOADING_DATA', true)
+
+                if (store.state.user.id === "") {
+                    await axios.get(`${PORT}` + "/user/getData").then(res => {
+                        console.log(res.data.user)
+                        store.commit('SET_USER', res.data.user)
+                    }).catch(() => {
+                        store.commit('LOADING_DATA', false)
+                    })
+                }
+
+
+                const get_program: Program = {
+                    id: "p123-xxxx-xxxx-xxxx",
+                    company_id: "xxxx-xxxx-xxxx-xxxx",
+                    company_name: "company1",
+                    name: "program1",
+                    description: "sdfsadfkdsjfklasvklfalksdfasdlfkv", // เพิ่มคุณสมบัติ description
+                    course: "dsafkdls;fk;sldkf;ldksf;lavmcvopgowpegjodf",
+                    jobs_title: ['SE', 'NW', "ML"],
+                    qualifications: ["11111"],
+                    privileges: ["111111"],
+                    image: "https://www.w3schools.com/w3images/workbench.jpg",
+                    state: "on"
+                }
+                Object.assign(program, get_program)
+
+                if (store.state.user.role === "applicant") {
+                    await axios.get(`${PORT}` + "/applicant/getProfileById/" + store.state.user.id).then(res => Object.assign(applicant, res.data.applicant))
+                }
+
+                store.commit('LOADING_DATA', false)
+            });
+
         };
         return {
             router,

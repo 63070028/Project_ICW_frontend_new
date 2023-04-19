@@ -106,12 +106,15 @@ export default defineComponent({
 
             store.commit('LOADING_DATA', true)
 
-            await axios.get(`${PORT}` + "/user/getData").then(res => {
-                console.log(res.data.user)
-                store.commit('SET_USER', res.data.user)
-            }).catch(() => {
-                store.commit('LOADING_DATA', false)
-            })
+            if (store.state.user.id === "") {
+                await axios.get(`${PORT}` + "/user/getData").then(res => {
+                    console.log(res.data.user)
+                    store.commit('SET_USER', res.data.user)
+                }).catch(() => {
+                    store.commit('LOADING_DATA', false)
+                })
+            }
+
 
             await axios.get(`${PORT}` + "/applicant/getProfileById/" + user.id).then(res => {
                 console.log(res.data.applicant)

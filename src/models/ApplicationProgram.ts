@@ -2,6 +2,7 @@ export default interface ApplicationProgram {
   id: string,
   applicant_id: string,
   company_name: string,
+  company_id:string,
   program_id: string,
   program_name: string,
   job_title: string,
