@@ -1,5 +1,6 @@
 <template>
-  <div class="company p-3" v-if="!isAddingjob">
+  <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
+  <div class="company p-3" v-if="!isAddingjob && !isEditjob" >
     <div class="columns">
       <div class="column is-3" style="background-color: #f8f8f8">
         <aside class="menu">
@@ -38,9 +39,7 @@
                           :false-value="JobStatus.Closed" :label="`สถานะงาน: ${job.state}`"
                           :style="{ color: jobStateColor(job.state) }">
                         </v-switch>
-                        <router-link :to="'/companyEditJob/' + job.id">
-                          <button class="button is-small is-info">แก้ไขงาน</button>
-                        </router-link>
+                          <button class="button is-small is-info" @click="isEditjob = true" >แก้ไขงาน</button>
                         <button class="button is-small is-danger" @click="deleteForm">ลบงาน</button>
                       </div>
                     </div>
@@ -53,7 +52,32 @@
       </div>
     </div>
   </div>
-  <CompanyAddjob v-if="isAddingjob"></CompanyAddjob>
+  <CompanyAddjob v-if="isAddingjob" @addNewJob="($event)=>{isAddingjob= $event}"></CompanyAddjob>
+
+  <template v-for="(job) in jobs">
+  <companyEditjob
+    v-if="isEditjob"
+    :key="job.id"
+    :id="job.id"
+    :company_id="job.company_id"
+    :company_name="job.company_name"
+    :name="job.name"
+    :salary_per_day="job.salary_per_day"
+    :location="job.location"
+    :capacity="job.capacity"
+    :detail="job.detail"
+    :interview="job.interview"
+    :qualifications="job.qualifications"
+    :contact="job.contact"
+    :creation_date="job.creation_date"
+    :state="job.state"
+    @updateJobEdit="($event)=>{isEditjob = $event}" @saveJobEdit=" updateCompanyJob($event)">
+    </companyEditjob>
+</template>
+
+
+
+
 </template>
 <script lang="ts">
 
@@ -64,20 +88,24 @@ import Company from "@/models/Company";
 import Swal from "sweetalert2";
 import { JobStatus } from "@/models/Job2";
 import CompanyAddjob from "@/components/company-addjob.vue";
+import companyEditjob from "@/components/company-editjob.vue";
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
 import { useStore } from "vuex";
 import User from "@/models/User";
 import Job from "@/models/Job";
+import preloadingVue from '@/components/preloading.vue'
 
 export default defineComponent({
   components: {
     CompanyAddjob,
-    // preloadingVue,
+    preloadingVue,
+    companyEditjob
   },
   data: () => ({
     model: "no",
     isAddingjob: false,
+    isEditjob:false,
   }),
 
   setup() {
@@ -97,8 +125,13 @@ export default defineComponent({
     });
     const jobs = reactive<Job[]>([]);
 
-
     onMounted(async () => {
+
+      if (!localStorage.getItem('token')) {
+        router.push('/signIn')
+        return
+      }
+      store.commit('LOADING_DATA', true)
 
       await axios.get(`${PORT}` + "/user/getData").then(res => {
         console.log(res.data.user)
@@ -107,16 +140,13 @@ export default defineComponent({
 
       await axios.get(`${PORT}` + "/company/getJob/" + user.id).then(res => {
         console.log(res.data)
-        Object.assign(jobs, res.data.items)
+        Object.assign(jobs, res.data.job)
       })
 
+      store.commit('LOADING_DATA', false)
       console.log("get api company id: " + user.id);
-      
 
     });
-    const viewJob = (id: number) => {
-      router.push("/jobs/" + id);
-    };
     const deleteForm = async () => {
       const result = await Swal.fire({
         title: "Are you sure?",
@@ -137,16 +167,19 @@ export default defineComponent({
     const jobStateColor = (state: string) => {
       return state === "on" ? "green" : "red";
     };
+    const updateCompanyJob = (change_data: Job) => {
+      Object.assign(jobs, change_data);
+    }
     return {
       router,
       route,
       company,
       jobs,
-      viewJob,
       deleteForm,
       activeTab: "jobs",
       isEnabled: false,
       JobStatus,
+      updateCompanyJob,
       jobStateColor,
       store,
       user,

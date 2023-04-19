@@ -2,14 +2,6 @@
     <div class="company p-3">
       <div class="columns">
         <div class="column is-3" style="background-color: #f8f8f8;">
-          <aside class="menu">
-            <p class="menu-label">Navigation</p>
-            <ul class="menu-list">
-              <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')" to="/companyProfile">ข้อมูลบริษัท</router-link></li>
-              <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')" to="/companyJob">งานที่ประกาศ</router-link></li>
-              <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')" to="/companyProgram" >โครงการพิเศษ</router-link ></li>
-            </ul>
-          </aside>
         </div>
         <div class="column is-9" style="background-color: #f1f1f1;">
             <div class="card" style="min-height: 100vh;">
@@ -74,58 +66,103 @@
     </div>
 </template>
   <script lang="ts">
-import { defineComponent, onMounted, reactive } from 'vue';
+import { defineComponent, PropType, reactive } from 'vue';
 import { useRouter } from 'vue-router';
 import Job from '@/models/Job';
 import Swal from 'sweetalert2';
+import { PORT } from "@/port";
+import axios from "axios";
 
 export default defineComponent({
-  name: 'CompanyProfileEdit',
+emits: ["updateJobEdit", "saveJobEdit"],
+props: {
+    id: {
+      type: String,
+      required: true,
+    },
+    company_id: {
+      type: String,
+      required: true,
+    },
+    company_name: {
+      type: String,
+      required: true,
+    },
+    name: {
+      type: String,
+      required: true,
+    },
+    salary_per_day: {
+      type: Number,
+      required: true,
+    },
+    location: {
+      type: String,
+      required: true,
+    },
+    capacity: {
+      type: Number,
+      required: true,
+    },
+    detail: {
+      type: String,
+      required: true,
+    },
+    interview: {
+      type: String,
+      required: true,
+    },
+    qualifications: {
+      type: Array as PropType<string[]>,
+      required: true,
+    },
+    contact: {
+      type: Object as PropType<{name: string, email: string, phone: string}>,
+      required: true,
+    },
+    creation_date: {
+      type: String,
+      required: true,
+    },
+    state: {
+      type: String,
+      required: true,
+    },
+  },
 
-  setup() {
+  setup(props, {emit}) {
     const router = useRouter();
-    const jobId = "";
-    const job = reactive<Job>(
-    {
-    id:"",
-    company_id:"",
-    company_name:"",
-    name:"",
-    salary_per_day:0,
-    location:"",
-    capacity:0,
-    detail:"",
-    interview:"",
-    qualifications:[],
-    contact:{name:"", email:"", phone:""},
-    creation_date:"",
-    state:""
-    }
-    );
-
-    const jobs = reactive<Job[]>([]);
-
-    onMounted(() => {
-    console.log('Load job data using id: ', jobId);
-    let get_jobs:Job[] = [
-    // { id: "", company_id: "", name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "มาร่วมงานกับ THiNKNET หากคุณมีความหลงใหลในการใช้เทคโนโลยีเพื่อการพัฒนาหรือแก้ไขปัญหาต่าง ๆ และพร้อมที่จะเรียนรู้สิ่งใหม่ ๆ อยู่เสมอ เราคือองค์กรที่รวบรวมคนที่มีความรู้ความสามารถ มีสปิริต มีแพสชัน และมีความคิดสร้างสรรค์มาร่วมกันสร้างนวัตกรรมที่มีคุณค่าต่อสังคมและโลกใบนี้", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015" },
-    // { id: "", company_id: "", name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "มาร่วมงานกับ THiNKNET หากคุณมีความหลงใหลในการใช้เทคโนโลยีเพื่อการพัฒนาหรือแก้ไขปัญหาต่าง ๆ และพร้อมที่จะเรียนรู้สิ่งใหม่ ๆ อยู่เสมอ เราคือองค์กรที่รวบรวมคนที่มีความรู้ความสามารถ มีสปิริต มีแพสชัน และมีความคิดสร้างสรรค์มาร่วมกันสร้างนวัตกรรมที่มีคุณค่าต่อสังคมและโลกใบนี้", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015" },
-    // { id: "", company_id: "", name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "มาร่วมงานกับ THiNKNET หากคุณมีความหลงใหลในการใช้เทคโนโลยีเพื่อการพัฒนาหรือแก้ไขปัญหาต่าง ๆ และพร้อมที่จะเรียนรู้สิ่งใหม่ ๆ อยู่เสมอ เราคือองค์กรที่รวบรวมคนที่มีความรู้ความสามารถ มีสปิริต มีแพสชัน และมีความคิดสร้างสรรค์มาร่วมกันสร้างนวัตกรรมที่มีคุณค่าต่อสังคมและโลกใบนี้", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015" },
-    ];
-
-    get_jobs.forEach(jobData => {
-        jobs.push(jobData);
+    const job = reactive<Job>({
+      id: props.id,
+      company_id: props.company_id,
+      company_name: props.company_name,
+      name: props.name,
+      salary_per_day: props.salary_per_day,
+      location: props.location,
+      capacity: props.capacity,
+      detail: props.detail,
+      interview: props.interview,
+      qualifications: props.qualifications,
+      contact: props.contact,
+      creation_date: props.creation_date,
+      state: props.state,
     });
 
-    // Find the job with the matching jobId
-    const jobToEdit = jobs.find(job => job.id === jobId);
-
-    if (jobToEdit) {
-        Object.assign(job, jobToEdit);
-    } else {
-        console.error('Job not found');
-    }
-});
+    const editForm = reactive<Job>({
+            id: "",
+            company_id: "",
+            name: "",
+            company_name: "",
+            salary_per_day: 0,
+            capacity: 0,
+            location: "",
+            detail: "",
+            interview: "",
+            qualifications: [],
+            contact: {name:"", email:"", phone:""},
+            creation_date: "",
+            state: ""
+        })
 
     const saveJob = async () => {
       const result = await Swal.fire({
@@ -136,10 +173,22 @@ export default defineComponent({
         confirmButtonText: 'ยืนยัน',
         cancelButtonText: 'ยกเลิก',
       });
-
+    
       if (result.isConfirmed) {
-        console.log('Save updated job data:', job);
-        router.push('/companyJob');
+        try {
+        Object.assign(editForm, job);
+        await axios.post(`${PORT}`+"/company/editjob", editForm).then(res=>{
+              console.log(res.data.message)
+            })
+        emit('saveJobEdit', editForm)
+        emit('updateJobEdit', false)
+      } catch (error) {
+          Swal.fire({
+            title: "Error",
+            text: "Failed to update company profile",
+            icon: "error",
+          });
+        }
       }
     };
     const deleteForm = async () => {
@@ -160,7 +209,7 @@ export default defineComponent({
     }
   };
     const cancel = async () => {
-      router.push('/companyJob');
+      emit("updateJobEdit", false);
     };
 
     return {

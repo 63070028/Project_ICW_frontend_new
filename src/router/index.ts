@@ -37,11 +37,6 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import('../views/Company/CompanyProgramPage.vue')
   },
   
-
-  {
-    path: '/companyEditJob/:id',
-    component: () => import('../views/Company/CompanyEditPage/CompanyEditJob.vue')
-  },  
   {
     path: '/companyEditProgram/:id',
     name: 'CompanyEditProgram',
