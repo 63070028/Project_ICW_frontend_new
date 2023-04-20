@@ -2,14 +2,6 @@
     <div class="company p-3">
       <div class="columns">
         <div class="column is-3" style="background-color: #f8f8f8;">
-          <aside class="menu">
-            <p class="menu-label">Navigation</p>
-            <ul class="menu-list">
-              <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')" to="/companyProfile">ข้อมูลบริษัท</router-link></li>
-              <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')" to="/companyJob">งานที่ประกาศ</router-link></li>
-              <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')" to="/companyProgram">โครงการพิเศษ</router-link></li>
-            </ul>
-          </aside>
         </div>
         <div class="column is-9" style="background-color: #f1f1f1;">
           <div class="card" style="min-height: 100vh;">
