@@ -150,7 +150,7 @@ export default defineComponent({
                     fromApplicationProgram.state = "pending"
 
                     console.log(fromApplicationProgram)
-                    const swalWaiting: any = Swal.fire({
+                    const swalWaiting:any = Swal.fire({
                         position: 'center',
                         title: 'Uploading...',
                         showConfirmButton: false,

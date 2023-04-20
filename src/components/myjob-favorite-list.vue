@@ -107,7 +107,6 @@ export default defineComponent({
         }
 
 
-
         const paginatedItems = computed(() => {
             let startItem = (presentPage.value - 1) * props.itemPerEachPage;
             let endItem = startItem + props.itemPerEachPage;
