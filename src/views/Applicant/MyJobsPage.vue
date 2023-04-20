@@ -22,7 +22,7 @@
             <myjobApplication :enableCancel="true" :my-applications="myApplications" v-if="select_option === 'application'">
             </myjobApplication>
 
-            <myjobFavoriteListVue :appicant_id="user.id" :items="myFavoriteJobs" v-if="select_option === 'favorite'">
+            <myjobFavoriteListVue :appicant_id="user.id" :items="myFavoriteJobs" v-if="select_option === 'favorite'" @remove="updateMyFavoriteJobs($event)">
             </myjobFavoriteListVue>
 
             <myjobApplication :enableCancel="false" :my-applications="myApplications" v-if="select_option === 'history'">
@@ -63,13 +63,16 @@ export default defineComponent({
             applicationProgram: []
         });
 
-        let myFavoriteJobs = reactive<Job[]>([]);
+        const myFavoriteJobs = reactive<Job[]>([]);
         // const state = reactive<{ myFavoriteJobs: Job[] }>({ myFavoriteJobs: [] });
 
-        // const updateMyFavoriteJobs = (newItems:Job[]) => {
-
-        //     myFavoriteJobs.splice(0, myFavoriteJobs.length, ...newItems)
-        // }
+        const updateMyFavoriteJobs = (job_id:string) => {
+            const index = myFavoriteJobs.findIndex(job => job.id === job_id);
+            if (index !== -1) {
+                myFavoriteJobs.splice(index, 1);
+            }
+            
+        }
 
 
         onMounted(async () => {
@@ -82,12 +85,103 @@ export default defineComponent({
             store.commit('LOADING_DATA', true)
             await getUserData();
 
-            await axios.post("/applicant/getMyJobFavorite", { applicant_id: user.id }).then(res => {
-                console.log(res.data)
-                const myJobs: Job[] = res.data;
-                myJobs.forEach(job => myFavoriteJobs.push(job))
-            })
+            // await axios.post("/applicant/getMyJobFavorite", { applicant_id: user.id }).then(res => {
+            //     console.log(res.data)
+            //     const myJobs: Job[] = res.data;
+            //     myJobs.forEach(job => myFavoriteJobs.push(job))
+            // })
 
+            const myJobs: Job[] = [{
+                    id: "1",
+                    capacity: 10,
+                    company_name: "c_name",
+                    company_id: "xxxx-xxxx-xxxx-xxxx",
+                    creation_date: "03/25/2015",
+                    detail: "xxxxxxxxxxsfasdfasdfasdfasfsadfasdfasdf",
+                    interview: "online",
+                    location: "sssss",
+                    name: "ฝึกงาน ตำแหน่ง Software Engineer",
+                    salary_per_day: 500,
+                    contact: {
+                        name: "chanapon",
+                        email: "xxxxx@hotmail.com",
+                        phone: "08xxxxxxxx"
+                    },
+                    qualifications: [
+                        "111",
+                        "2222"
+                    ],
+                    state: "on"
+                },
+                {
+                    id: "2",
+                    capacity: 10,
+                    company_name: "c_name",
+                    company_id: "xxxx-xxxx-xxxx-xxxx",
+                    creation_date: "03/25/2015",
+                    detail: "xxxxxxxxxxsfasdfasdfasdfasfsadfasdfasdf",
+                    interview: "online",
+                    location: "sssss",
+                    name: "ฝึกงาน ตำแหน่ง Software Engineer",
+                    salary_per_day: 500,
+                    contact: {
+                        name: "chanapon",
+                        email: "xxxxx@hotmail.com",
+                        phone: "08xxxxxxxx"
+                    },
+                    qualifications: [
+                        "111",
+                        "2222"
+                    ],
+                    state: "on"
+                },
+                {
+                    id: "3",
+                    capacity: 10,
+                    company_name: "c_name",
+                    company_id: "xxxx-xxxx-xxxx-xxxx",
+                    creation_date: "03/25/2015",
+                    detail: "xxxxxxxxxxsfasdfasdfasdfasfsadfasdfasdf",
+                    interview: "online",
+                    location: "sssss",
+                    name: "ฝึกงาน ตำแหน่ง Software Engineer",
+                    salary_per_day: 500,
+                    contact: {
+                        name: "chanapon",
+                        email: "xxxxx@hotmail.com",
+                        phone: "08xxxxxxxx"
+                    },
+                    qualifications: [
+                        "111",
+                        "2222"
+                    ],
+                    state: "on"
+                },
+                {
+                    id: "4",
+                    capacity: 10,
+                    company_name: "c_name",
+                    company_id: "xxxx-xxxx-xxxx-xxxx",
+                    creation_date: "03/25/2015",
+                    detail: "xxxxxxxxxxsfasdfasdfasdfasfsadfasdfasdf",
+                    interview: "online",
+                    location: "sssss",
+                    name: "ฝึกงาน ตำแหน่ง Software Engineer",
+                    salary_per_day: 500,
+                    contact: {
+                        name: "chanapon",
+                        email: "xxxxx@hotmail.com",
+                        phone: "08xxxxxxxx"
+                    },
+                    qualifications: [
+                        "111",
+                        "2222"
+                    ],
+                    state: "on"
+                }
+            ]
+
+                myJobs.forEach(job => myFavoriteJobs.push(job))
 
             //api get /myApplicationJobs:id and filter status
             //api get /myApplicationPrograms:id filter status
@@ -99,7 +193,7 @@ export default defineComponent({
         });
 
         return {
-            select_option, myApplications, store, user, router, myFavoriteJobs
+            select_option, myApplications, store, user, router, myFavoriteJobs, updateMyFavoriteJobs
         }
     },
 })
