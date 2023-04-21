@@ -101,7 +101,7 @@ import Company from '@/models/Company';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
 import { def_company } from "@/plugins/defaultValue";
-import preloadingVue from '@/components/preloading.vue'
+import preloadingVue from '@/components/pre-loading.vue'
 import CompanyAddProgram from "@/components/company-addprogram.vue";
 import CompanyEditProgramPage from "@/components/company-editprogram.vue";
 export default defineComponent({

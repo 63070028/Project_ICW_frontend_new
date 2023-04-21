@@ -102,7 +102,7 @@ import User from "@/models/User";
 import { useStore } from "vuex";
 import ApplicationJobModel from "@/models/formModels/ApplicationJobModel";
 import Applicant from "@/models/Applicant";
-import preloadingVue from "@/components/preloading.vue";
+import preloadingVue from "@/components/pre-loading.vue";
 import JobFavoriteModel from "@/models/formModels/JobFavoriteModel"
 import getUserData from "@/plugins/getUser";
 import {

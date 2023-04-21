@@ -13,6 +13,9 @@
 import { defineComponent, onMounted, reactive } from 'vue'
 import companyListJobs from '@/components/company-list-applicant.vue';
 import Applications from '@/models/Applications';
+import User from '@/models/User';
+import { useStore } from 'vuex';
+import getUserData from '@/plugins/getUser';
 
 
 export default defineComponent({
@@ -20,7 +23,8 @@ export default defineComponent({
         companyListJobs,
     },
     setup() {
-
+        const store = useStore()
+        const user = reactive<User>(store.state.user)
 
         const myApplications = reactive<Applications>({
             applicationJob: [],
@@ -28,12 +32,13 @@ export default defineComponent({
         });
 
 
-        onMounted(() => {
+        onMounted(async() => {
             //
+            await getUserData()
         });
 
         return {
-            myApplications
+            myApplications, user
         }
     },
 })

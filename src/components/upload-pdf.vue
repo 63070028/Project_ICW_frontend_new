@@ -35,7 +35,8 @@
         <button class="button mb-3 mt-3 is-info" @click="isEdit = true">Edit</button>
     </div>
 
-    <div v-if="isEdit === false & urlOld === '' & role === 'applicant'" style="display: flex; flex-direction: column; align-items: flex-end;">
+    <div v-if="isEdit === false & urlOld === '' & role === 'applicant'"
+        style="display: flex; flex-direction: column; align-items: flex-end;">
         <button class="button mb-3 mt-3 is-info" @click="isEdit = true">Upload</button>
     </div>
 
@@ -64,7 +65,7 @@ import Swal from 'sweetalert2';
 import axios from '@/plugins/axios'
 import { PORT } from '@/port';
 export default {
-    emits:['resume', 'transcript', 'portfolio'],
+    emits: ['resume', 'transcript', 'portfolio'],
     props: {
         upload_category: {
             type: String,

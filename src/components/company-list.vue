@@ -65,7 +65,15 @@ export default defineComponent({
         const nextPageClicked = ref<boolean>(false);
         const previousClicked = ref<boolean>(false);
 
+        const paginatedItems = computed(() => {
+            let startItem = (presentPage.value - 1) * props.itemPerEachPage;
+            let endItem = startItem + props.itemPerEachPage;
+            return props.items.slice(startItem, endItem);
+        })
 
+        const countOfPages: ComputedRef<number> = computed(() => {
+            return Math.ceil(props.items.length / props.itemPerEachPage)
+        })
 
         onMounted(() => {
             validatePageCount();
@@ -100,15 +108,7 @@ export default defineComponent({
         }
 
 
-        const paginatedItems = computed(() => {
-            let startItem = (presentPage.value - 1) * props.itemPerEachPage;
-            let endItem = startItem + props.itemPerEachPage;
-            return props.items.slice(startItem, endItem);
-        })
-
-        const countOfPages: ComputedRef<number> = computed(() => {
-            return Math.ceil(props.items.length / props.itemPerEachPage)
-        })
+ 
 
         const validatePageCount = () => {
             presentPage.value === countOfPages.value ? nextPageClicked.value = true : nextPageClicked.value = false;
