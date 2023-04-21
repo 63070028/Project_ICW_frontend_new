@@ -81,7 +81,7 @@ import { PORT } from '@/port';
 import { useStore } from "vuex";
 import User from "@/models/User";
 import Job from "@/models/Job";
-import preloadingVue from '@/components/preloading.vue'
+import preloadingVue from '@/components/pre-loading.vue'
 import { def_company } from "@/plugins/defaultValue";
 
 export default defineComponent({

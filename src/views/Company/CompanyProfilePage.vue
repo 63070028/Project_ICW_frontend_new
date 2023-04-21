@@ -54,7 +54,7 @@ import { useStore } from 'vuex';
 import User from '@/models/User';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
-import preloadingVue from '@/components/preloading.vue'
+import preloadingVue from '@/components/pre-loading.vue'
 import companyProfileEdit from '@/components/company-profile.vue';
 import {def_company} from "@/plugins/defaultValue"
 

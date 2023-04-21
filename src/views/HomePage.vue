@@ -37,7 +37,7 @@ import { useRouter } from 'vue-router'
 import Program from '@/models/Program'
 import { useStore } from 'vuex'
 import User from '@/models/User'
-import PreloaderVue from '@/components/preloading.vue'
+import PreloaderVue from '@/components/pre-loading.vue'
 import getUserData from '@/plugins/getUser'
 
 

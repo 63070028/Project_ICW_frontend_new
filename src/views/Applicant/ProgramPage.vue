@@ -84,7 +84,7 @@ import axios from '@/plugins/axios';
 import Applicant from '@/models/Applicant'
 import getUserData from '@/plugins/getUser'
 import { def_applicant, def_fromApplicationProgram, def_program } from '@/plugins/defaultValue'
-import preloadingVue from '@/components/preloading.vue'
+import preloadingVue from '@/components/pre-loading.vue'
 export default defineComponent({
     components: {
         preloadingVue
