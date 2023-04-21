@@ -19,14 +19,14 @@
                 </div>
             </div>
 
-            <myjobApplication :enableCancel="true" :my-applications="myApplications" v-if="select_option === 'application'">
+            <myjobApplication :enableCancel="true" :my-applications="myApplications" v-if="select_option === 'application'" @cancelApplicationJob="updateMyApplicationJob($event)" @cancelApplicationProgram="updateMyApplicationProgram($event)">
             </myjobApplication>
 
             <myjobFavoriteListVue :appicant_id="user.id" :items="myFavoriteJobs" v-if="select_option === 'favorite'"
                 @remove="updateMyFavoriteJobs($event)">
             </myjobFavoriteListVue>
 
-            <myjobApplication :enableCancel="false" :my-applications="myApplications" v-if="select_option === 'history'">
+            <myjobApplication :enableCancel="false" :my-applications="myApplicationsHistory" v-if="select_option === 'history'">
             </myjobApplication>
             <!-- <myjobHistoryList :items="[1, 2, 3, 4]" v-if="select_option === 'history'"></myjobHistoryList> -->
 
@@ -48,6 +48,9 @@ import axios from '@/plugins/axios';
 import getUserData from '@/plugins/getUser';
 import { useRouter } from 'vue-router';
 import preloadingVue from '@/components/preloading.vue';
+import { PORT } from '@/port';
+import ApplicationJob from '@/models/ApplicationJob';
+import ApplicationProgram from '@/models/ApplicationProgram';
 export default defineComponent({
     components: {
         myjobApplication,
@@ -64,6 +67,11 @@ export default defineComponent({
             applicationProgram: []
         });
 
+        const myApplicationsHistory = reactive<Applications>({
+            applicationJob: [],
+            applicationProgram: []
+        });
+
         const myFavoriteJobs = reactive<Job[]>([]);
 
         const updateMyFavoriteJobs = (job_id: string) => {
@@ -74,6 +82,33 @@ export default defineComponent({
 
         }
 
+        const updateMyApplicationJob = (applicationJob_id:string) => {
+            console.log(applicationJob_id)
+            const index = myApplications.applicationJob.findIndex(job => job.id === applicationJob_id);
+            myApplications.applicationJob[index].state = "cancel"
+            //update MyApplicationJobHistoy
+            myApplicationsHistory.applicationJob.push(myApplications.applicationJob[index])
+
+            //update MyApplicationJob
+            if (index !== -1) {
+                myApplications.applicationJob.splice(index, 1);
+            }
+
+        }
+        
+        const updateMyApplicationProgram = (applicationProgram_id:string) => {
+            console.log(applicationProgram_id)
+            const index = myApplications.applicationProgram.findIndex(job => job.id === applicationProgram_id);
+            myApplications.applicationProgram[index].state = "cancel"
+            //update MyApplicationProgramHistoy
+            myApplicationsHistory.applicationProgram.push(myApplications.applicationProgram[index])
+
+            //update MyApplicationProgram
+            if (index !== -1) {
+                myApplications.applicationProgram.splice(index, 1);
+            }
+
+        }
 
         onMounted(async () => {
 
@@ -85,24 +120,36 @@ export default defineComponent({
             store.commit('LOADING_DATA', true)
             await getUserData();
 
-            await axios.post("/applicant/getMyJobFavorite", { applicant_id: user.id }).then(res => {
+            await axios.post(`${PORT}`+"/applicant/getMyJobFavorite", { applicant_id: user.id }).then(res => {
                 console.log(res.data)
                 const myJobs: Job[] = res.data;
                 myJobs.forEach(job => myFavoriteJobs.push(job))
             })
 
 
-            //api get /myApplicationJobs:id and filter status
-            //api get /myApplicationPrograms:id filter status
-            //api get /myFavoriteJobs:id
+           await axios.get(`${PORT}`+"/application/getApplicationJobsByApplicantId/"+user.id).then((res) => {
+            const myApplicationJobs: ApplicationJob[] = res.data
+            const myApplicationJobsIsPending = myApplicationJobs.filter(item => item.state == "pending")
+            const myApplicationJobsIsHistory= myApplicationJobs.filter(item => item.state != "pending")
+            myApplicationJobsIsPending.forEach(applicantJob => myApplications.applicationJob.push(applicantJob))
+            myApplicationJobsIsHistory.forEach(applicantJob => myApplicationsHistory.applicationJob.push(applicantJob))
+           }) 
 
-            //set 
+           await axios.get(`${PORT}`+"/application/getApplicationProgramsByApplicantId/"+user.id).then((res) => {
+            const myApplicationPrograms: ApplicationProgram[] = res.data
+            const myApplicationProgramsIsPending = myApplicationPrograms.filter(item => item.state == "pending")
+            const myApplicationProgramsIsHistory= myApplicationPrograms.filter(item => item.state != "pending")
+            myApplicationProgramsIsPending.forEach(applicantProgram => myApplications.applicationProgram.push(applicantProgram))
+            myApplicationProgramsIsHistory.forEach(applicantProgram => myApplicationsHistory.applicationProgram.push(applicantProgram))
+           }) 
+
+
 
             store.commit('LOADING_DATA', false)
         });
 
         return {
-            select_option, myApplications, store, user, router, myFavoriteJobs, updateMyFavoriteJobs
+            select_option, myApplications, store, user, router, myFavoriteJobs, updateMyFavoriteJobs, myApplicationsHistory, updateMyApplicationJob, updateMyApplicationProgram
         }
     },
 })

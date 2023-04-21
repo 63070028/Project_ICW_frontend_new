@@ -1,31 +1,23 @@
 <template>
     <div class="column m-0 p-0">
         <div class="card px-5 py-4">
-            <div class="pt-3" style="border-top:0.5px solid gray;" v-for="item, index in paginatedItems"
-                :key="index">
-                <!-- <div class="columns">
-                    <div class="column is-7">
-                        <p class="is-size-4 has-text-weight-bold p-4">บริษัท ...</p>
-                    </div>
-                    <div class="column">
-                        <p class="is-size-4 has-text-weight-bold p-4">โครงการ ...</p>
-                    </div>
-                </div> -->
-                <p class="is-size-4 has-text-weight-bold p-3">บริษัท ...</p>
-                <p class="is-size-4 has-text-weight-bold p-3">โครงการ ...</p>
+            <div class="pt-3" style="border-top:0.5px solid gray;" v-for="item, index in paginatedItems" :key="index">
+
+                <p class="is-size-4 has-text-weight-bold p-3">บริษัท {{ item.company_name }}</p>
+                <p class="is-size-4 has-text-weight-bold p-3">โครงการ {{ item.program_name }}</p>
                 <div class="columns p-4">
                     <div class="column">
-                        <p class="is-size-5 has-text-weight-bold">ตำแหน่ง:</p>
+                        <p class="is-size-5 has-text-weight-bold">ตำแหน่ง: {{ item.job_title }}</p>
                     </div>
                     <div class="column">
-                        <p class="is-size-5 has-text-weight-bold">วันที่ยื่นสมัคร:</p>
+                        <p class="is-size-5 has-text-weight-bold">วันที่ยื่นสมัคร: {{ item.creation_date }}</p>
                     </div>
                     <div class="column">
-                        <p class="is-size-5 has-text-weight-bold">สถานะ:</p>
+                        <p class="is-size-5 has-text-weight-bold">สถานะ: {{ item.state }}</p>
                     </div>
                 </div>
                 <div style="display: flex; flex-direction: row; justify-content: flex-end;">
-                    <button v-if="isCancel" class="button mx-4 mb-4 is-danger" @click="cancelApplication()">ยกเลิก</button>
+                    <button v-if="isCancel" class="button mx-4 mb-4 is-danger" @click="cancelApplication(item.id)">ยกเลิก</button>
                 </div>
             </div>
         </div>
@@ -35,7 +27,7 @@
             <button class="pagination-next" :disabled="nextPageClicked" @click="getNextPage()">Next page</button>
             <ul class="pagination-list">
                 <li v-for="n in countOfPages" :key="n">
-                    <a v-bind:id="'pageId' + (n)" class="pagination-link" @click="changePage(n)">{{n}}</a>
+                    <a v-bind:id="'pageId' + (n)" class="pagination-link" @click="changePage(n)">{{ n }}</a>
                 </li>
             </ul>
         </nav>
@@ -46,8 +38,11 @@
 import Swal from 'sweetalert2';
 import { computed, ComputedRef, defineComponent, onMounted, onUpdated, PropType, reactive, ref } from 'vue'
 import ApplicationProgram from '@/models/ApplicationProgram';
+import axios from '@/plugins/axios';
+import { PORT } from '@/port';
 
 export default defineComponent({
+    emits:["cancelApplicationProgram"],
     props: {
         items: {
             type: Object as PropType<ApplicationProgram[]>,
@@ -62,7 +57,7 @@ export default defineComponent({
             default: true
         },
     },
-    setup(props) {
+    setup(props, {emit}) {
 
         let presentPage = ref<number>(1);
         let pastPage = ref<number>(1);
@@ -120,15 +115,11 @@ export default defineComponent({
             presentPage.value === 1 ? previousClicked.value = true : previousClicked.value = false;
         }
 
-        const cancelApplication = () => {
-            // const data = {
-            //     applicationProgram_id: 'xxx',
-            //     status: 'cancel'
-            // }
+        const cancelApplication = async (id: string) => {
 
-            //api post change ApplicationProgram status is pending => cancel
 
-            Swal.fire({
+
+            await Swal.fire({
                 title: 'Are you sure?',
                 text: "คุณแน่ใจแล้วใช่ไหมที่ยกเลิกใบสมัคร",
                 icon: 'warning',
@@ -136,8 +127,15 @@ export default defineComponent({
                 confirmButtonColor: 'hsl(141, 50%, 48%)',
                 cancelButtonColor: 'hsl(348, 100%, 61%)',
                 confirmButtonText: 'Yes'
-            }).then((result) => {
+            }).then(async (result) => {
                 if (result.isConfirmed) {
+                    const data = {
+                        id: id,
+                        state: "cancel"
+                    }
+                    await axios.post(`${PORT}` + "/application/setApplicationProgramState", data)
+                    emit("cancelApplicationProgram", id)
+
                     Swal.fire({
                         position: 'center',
                         icon: 'success',
@@ -147,6 +145,8 @@ export default defineComponent({
                     })
                 }
             })
+
+
         }
 
         return {
