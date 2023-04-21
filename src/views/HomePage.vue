@@ -11,8 +11,8 @@
       <div class="column is-10 ml-3 mr-3 ">
         <Carousel :autoplay="1500" :wrapAround="true" style="width: 90%;">
           <!-- //Array state.progarms -->
-          <Slide v-for="slide in 10" :key="slide">
-            <img @click="viewProgram(slide)" class="carousel__item" src="https://www.w3schools.com/w3images/workbench.jpg"
+          <Slide v-for="(program, index) in states.programs" :key="index">
+            <img @click="viewProgram(program.id)" class="carousel__item" src="https://www.w3schools.com/w3images/workbench.jpg"
               width="1400">
           </Slide>
           <template #addons>
@@ -64,7 +64,19 @@ export default defineComponent({
         { id: "xxxx-xxxx-xxxx-xxxx", name: "Company1", description: "xxxxxx", profile_image: "", background_image: "", video_iframe: "", state: "no" },
       ],
       programs: [
-
+        {
+          id: "p123-xxxx-xxxx-xxxx",
+          company_id: "xxxx-xxxx-xxxx-xxxx",
+          company_name: "company1",
+          name: "program1",
+          description: "sdfsadfkdsjfklasvklfalksdfasdlfkv", // เพิ่มคุณสมบัติ description
+          course: "dsafkdls;fk;sldkf;ldksf;lavmcvopgowpegjodf",
+          jobs_title: ['SE', 'NW', "ML"],
+          qualifications: ["11111"],
+          privileges: ["111111"],
+          image: "https://www.w3schools.com/w3images/workbench.jpg",
+          state: "on"
+        }
       ]
     });
 
@@ -81,8 +93,8 @@ export default defineComponent({
       states.companies.splice(index, 1);
     };
 
-    const viewProgram = (id: number) => {
-      router.push("/programs/" + id)
+    const viewProgram = (id: string) => {
+      router.push("/programs/"+id)
     }
 
     const viewContact = () => {

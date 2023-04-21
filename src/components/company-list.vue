@@ -1,7 +1,7 @@
 <template>
     <div class="companys_content px-6 mb-6">
         <div class="columns is-multiline">
-            <div class="column is-2 ml-6" v-for="item, index in states.addItemsPageList" :key="index">
+            <div class="column is-2 ml-6" v-for="item, index in paginatedItems" :key="index">
                 <!-- <button class="button" @click="deleteItem(index)">Del</button> -->
                 <div class="card" @click="viewConpany(item.id)">
                    <div class="card-content">
@@ -27,8 +27,8 @@
         <button class="pagination-previous" :disabled="previousClicked" @click="getPreviousPage()">Previous</button>
         <button class="pagination-next" :disabled="nextPageClicked" @click="getNextPage()">Next page</button>
         <ul class="pagination-list">
-            <li v-for="index in states.countOfPages" :key="index">
-                <a v-bind:id="'pageId' + (index + 1)" class="pagination-link" @click="changePage(index + 1)">{{ index + 1
+            <li v-for="n in countOfPages" :key="n">
+                <a v-bind:id="'pageId' + (n)" class="pagination-link" @click="changePage(n)">{{ n
                 }}</a>
             </li>
 
@@ -38,7 +38,7 @@
 
 
 <script lang="ts">
-import { defineComponent, onMounted, reactive, ref, onUpdated } from 'vue'
+import { defineComponent, onMounted, ref, onUpdated, ComputedRef, computed } from 'vue'
 import type { PropType } from 'vue'
 import Company from '@/models/Company';
 import { useRouter } from 'vue-router';
@@ -61,32 +61,24 @@ export default defineComponent({
 
         let presentPage = ref<number>(1);
         let pastPage = ref<number>(1);
-        const states = reactive<{ countOfPages: number[], addItemsPageList: Company[] }>(
-            {
-                countOfPages: [],
-                addItemsPageList: [],
-            }
-        )
-        
+
         const nextPageClicked = ref<boolean>(false);
         const previousClicked = ref<boolean>(false);
 
 
+
         onMounted(() => {
-            loadMyPaginationList();
-            states.countOfPages = Array.from(Array(Math.ceil(props.items.length / props.itemPerEachPage)).keys());
+            validatePageCount();
         })
 
         onUpdated(() => {
-            loadMyPaginationList();
             document.getElementById('pageId' + presentPage.value)?.classList.add('is-current');
         })
-
 
         const getNextPage = () => {
             pastPage.value = presentPage.value;
             presentPage.value += 1;
-            loadMyPaginationList();
+            validatePageCount()
             document.getElementById('pageId' + presentPage.value)?.classList.add('is-current');
             document.getElementById('pageId' + pastPage.value)?.classList.remove('is-current');
         }
@@ -94,7 +86,7 @@ export default defineComponent({
         const changePage = (page: number) => {
             pastPage.value = presentPage.value;
             presentPage.value = page;
-            loadMyPaginationList();
+            validatePageCount()
             document.getElementById('pageId' + presentPage.value)?.classList.add('is-current');
             document.getElementById('pageId' + pastPage.value)?.classList.remove('is-current');
         }
@@ -102,22 +94,24 @@ export default defineComponent({
         const getPreviousPage = () => {
             pastPage.value = presentPage.value;
             presentPage.value -= 1;
-            loadMyPaginationList();
+            validatePageCount()
             document.getElementById('pageId' + presentPage.value)?.classList.add('is-current');
             document.getElementById('pageId' + pastPage.value)?.classList.remove('is-current');
         }
 
 
+        const paginatedItems = computed(() => {
+            let startItem = (presentPage.value - 1) * props.itemPerEachPage;
+            let endItem = startItem + props.itemPerEachPage;
+            return props.items.slice(startItem, endItem);
+        })
 
-        const loadMyPaginationList = () => {
-            let startBlog = (presentPage.value - 1) * props.itemPerEachPage;
-            let endBlog = startBlog + props.itemPerEachPage;
-            states.addItemsPageList = props.items.slice(startBlog, endBlog);
-            validatePageCount();
-        }
+        const countOfPages: ComputedRef<number> = computed(() => {
+            return Math.ceil(props.items.length / props.itemPerEachPage)
+        })
 
         const validatePageCount = () => {
-            presentPage.value === states.countOfPages.length ? nextPageClicked.value = true : nextPageClicked.value = false;
+            presentPage.value === countOfPages.value ? nextPageClicked.value = true : nextPageClicked.value = false;
             presentPage.value === 1 ? previousClicked.value = true : previousClicked.value = false;
         }
 
@@ -126,7 +120,7 @@ export default defineComponent({
         }
 
         return {
-            nextPageClicked, previousClicked, getNextPage, getPreviousPage, states, presentPage, changePage, viewConpany
+            nextPageClicked, previousClicked, getNextPage, getPreviousPage, presentPage, changePage, viewConpany, paginatedItems, countOfPages
         }
     }
 

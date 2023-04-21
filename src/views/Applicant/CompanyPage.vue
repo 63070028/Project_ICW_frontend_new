@@ -46,6 +46,7 @@ import { PORT } from '@/port';
 import {
   def_company,
 } from "@/plugins/defaultValue"
+import getUserData from '@/plugins/getUser';
 
 export default defineComponent({
     setup() {
@@ -62,13 +63,16 @@ export default defineComponent({
 
             console.log('get api company id: ' + route.params.id)
             //set company
-            await axios.get(`${PORT}`+'/company/getProfile/'+route.params.id).then(res => Object.assign(company, res.data.company))
 
-            await axios.get(`${PORT}`+'/company//getJob/'+route.params.id).then(res=>{
-                res.data.items.forEach((job:Job) =>{
-                    jobs.push(job)
-                })
-            })
+        
+
+            // await axios.get(`${PORT}`+'/company/getProfile/'+route.params.id).then(res => Object.assign(company, res.data.company))
+
+            // await axios.get(`${PORT}`+'/company//getJob/'+route.params.id).then(res=>{
+            //     res.data.items.forEach((job:Job) =>{
+            //         jobs.push(job)
+            //     })
+            // })
 
             // const get_jobs: Job[] = [
             //     { id: "1234-xxxx-xxxx-xxxx-xxxx", company_id: "xxxx-xxxx-xxxx-xxxx", company_name:"c_name", name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015", state:"on" },

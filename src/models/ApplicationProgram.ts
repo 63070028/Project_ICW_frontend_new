@@ -16,5 +16,6 @@ export default interface ApplicationProgram {
   resume: string,
   transcript: string,
   portfolio: string,
-  state: string,
+  creation_date: string,
+  state: string
 }

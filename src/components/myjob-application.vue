@@ -11,10 +11,10 @@
             </ul>
         </div>
 
-        <myjobApplicationJobList v-if="select_option_display === 'jobs'" :items="myApplications.applicationJob"
+        <myjobApplicationJobList v-if="select_option_display === 'jobs'" :items="myApplications.applicationJob" @cancelApplicationJob="updateMyApplicationJob($event)"
             :isCancel="enableCancel">
         </myjobApplicationJobList>
-        <myjobApplicationProgramList v-if="select_option_display === 'programs'" :items="myApplications.applicationProgram"
+        <myjobApplicationProgramList v-if="select_option_display === 'programs'" :items="myApplications.applicationProgram" @cancelApplicationProgram="updateMyApplicationProgram($event)"
             :isCancel="enableCancel">
         </myjobApplicationProgramList>
     </div>
@@ -27,6 +27,7 @@ import myjobApplicationJobList from './myjob-applicationJob-list.vue';
 import myjobApplicationProgramList from './myjob-applicationProgram-list.vue';
 
 export default defineComponent({
+    emits:["cancelApplicationJob", "cancelApplicationProgram"],
     props: {
         myApplications: {
             type: Object as PropType<Applications>,
@@ -46,12 +47,21 @@ export default defineComponent({
         myjobApplicationJobList,
         myjobApplicationProgramList
     },
-    setup() {
+    setup(props, {emit}) {
 
         const select_option_display = ref<string>('jobs');
 
+        
+        const updateMyApplicationJob = (id:string) => {
+            emit("cancelApplicationJob", id)
+        }
+
+        const updateMyApplicationProgram = (id:string) => {
+            emit("cancelApplicationProgram", id)
+        }
+
         return {
-            select_option_display
+            select_option_display, updateMyApplicationJob, updateMyApplicationProgram
         }
     },
 })
