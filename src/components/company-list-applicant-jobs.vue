@@ -71,7 +71,6 @@ export default defineComponent({
     const router = useRouter();
     let presentPage = ref<number>(1);
     let pastPage = ref<number>(1);
-    console.log("test");
     const states = reactive<{
       countOfPages: number[];
       addItemsPageList: ApplicationJob[];
