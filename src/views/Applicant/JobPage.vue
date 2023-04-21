@@ -192,6 +192,7 @@ export default defineComponent({
           formApplicationJob.resume = applicant.resume
           formApplicationJob.transcript = applicant.transcript
           formApplicationJob.portfolio = applicant.portfolio
+          formApplicationJob.creation_date = new Date().toLocaleDateString("en-US")
           formApplicationJob.state = "pending"
 
           const swalWaiting: any = Swal.fire({

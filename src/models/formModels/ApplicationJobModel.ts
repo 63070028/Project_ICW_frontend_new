@@ -14,5 +14,6 @@ export default interface ApplicationJobModel {
   resume: string,
   transcript: string,
   portfolio: string,
+  creation_date: string,
   state: string
 }

@@ -1,5 +1,6 @@
 <template>
-    <div class="container mt-4">
+    <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
+    <div class="container mt-4" v-if="!store.state.isLoadingData">
         <img src="https://www.w3schools.com/w3images/workbench.jpg" class="background_image">
         <div class="program_header mt-3">
             <p class="is-size-2">โครงการ {{ program.name }}</p>
@@ -83,10 +84,12 @@ import axios from '@/plugins/axios';
 import Applicant from '@/models/Applicant'
 import getUserData from '@/plugins/getUser'
 import { def_applicant, def_fromApplicationProgram, def_program } from '@/plugins/defaultValue'
+import preloadingVue from '@/components/preloading.vue'
 export default defineComponent({
+    components: {
+        preloadingVue
+    },
     setup() {
-
-
         const program = reactive<Program>(def_program)
         const applicant = reactive<Applicant>(def_applicant)
         const fromApplicationProgram = reactive<ApplicationProgramModel>(def_fromApplicationProgram)
@@ -147,6 +150,7 @@ export default defineComponent({
                     fromApplicationProgram.resume = applicant.resume
                     fromApplicationProgram.transcript = applicant.transcript
                     fromApplicationProgram.portfolio = applicant.portfolio
+                    fromApplicationProgram.creation_date = new Date().toLocaleDateString("en-US")
                     fromApplicationProgram.state = "pending"
 
                     console.log(fromApplicationProgram)
@@ -181,39 +185,34 @@ export default defineComponent({
                     isSubmit.value = !isSubmit.value;
                 }
             })
-
-            onMounted(async () => {
-
-                console.log("api get program form" + route.params.id)
-
-                store.commit('LOADING_DATA', true)
-
-                getUserData();
-
-                const get_program: Program = {
-                    id: "p123-xxxx-xxxx-xxxx",
-                    company_id: "xxxx-xxxx-xxxx-xxxx",
-                    company_name: "company1",
-                    name: "program1",
-                    description: "sdfsadfkdsjfklasvklfalksdfasdlfkv", // เพิ่มคุณสมบัติ description
-                    course: "dsafkdls;fk;sldkf;ldksf;lavmcvopgowpegjodf",
-                    jobs_title: ['SE', 'NW', "ML"],
-                    qualifications: ["11111"],
-                    privileges: ["111111"],
-                    image: "https://www.w3schools.com/w3images/workbench.jpg",
-                    state: "on"
-                }
-
-                Object.assign(program, get_program)
-
-                if (store.state.user.role === "applicant") {
-                    await axios.get(`${PORT}` + "/applicant/getProfileById/" + store.state.user.id).then(res => Object.assign(applicant, res.data.applicant))
-                }
-
-                store.commit('LOADING_DATA', false)
-            });
-
         };
+
+        onMounted(async () => {
+            store.commit('LOADING_DATA', true)
+            console.log("api get program form" + route.params.id)
+            await getUserData();
+            const get_program: Program = {
+                id: "p123-xxxx-xxxx-xxxx",
+                company_id: "xxxx-xxxx-xxxx-xxxx",
+                company_name: "company1",
+                name: "program1",
+                description: "sdfsadfkdsjfklasvklfalksdfasdlfkv", // เพิ่มคุณสมบัติ description
+                course: "dsafkdls;fk;sldkf;ldksf;lavmcvopgowpegjodf",
+                jobs_title: ['SE', 'NW', "ML"],
+                qualifications: ["11111"],
+                privileges: ["111111"],
+                image: "https://www.w3schools.com/w3images/workbench.jpg",
+                state: "on"
+            }
+
+            Object.assign(program, get_program)
+
+            if (store.state.user.role === "applicant") {
+                await axios.get(`${PORT}` + "/applicant/getProfileById/" + store.state.user.id).then(res => Object.assign(applicant, res.data.applicant))
+            }
+            store.commit('LOADING_DATA', false)
+
+        });
         return {
             router,
             route,

@@ -65,6 +65,7 @@ const def_applicationJob = reactive<ApplicationJob>({
   resume: "",
   transcript: "",
   portfolio: "",
+  creation_date: "",
   state: "",
 });
 
@@ -84,6 +85,7 @@ const def_formApplicationJob = reactive<ApplicationJobModel>({
   resume: "",
   transcript: "",
   portfolio: "",
+  creation_date: "",
   state: "",
 });
 
@@ -105,6 +107,7 @@ const def_applicationProgram = reactive<ApplicationProgram>({
   resume: "",
   transcript: "",
   portfolio: "",
+  creation_date: "",
   state: "",
 });
 
@@ -162,6 +165,7 @@ const def_fromApplicationProgram = reactive<ApplicationProgramModel>({
   resume: "",
   transcript: "",
   portfolio: "",
+  creation_date: "",
   state: "",
 });
 
