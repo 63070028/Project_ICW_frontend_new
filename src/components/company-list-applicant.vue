@@ -83,7 +83,7 @@ export default defineComponent({
         .catch((error) => {
           // handle error
           console.log(error);
-        });
+        }); 
         axios
         .get(`${PORT}` + "/application/getApplicantProgram")
         .then((response) => {
@@ -97,6 +97,7 @@ export default defineComponent({
         .catch((error) => {
           // handle error
           console.log(error);
+          console.log("test");
         });
     });
 
