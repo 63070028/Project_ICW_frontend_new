@@ -43,9 +43,7 @@ import Company from '@/models/Company';
 import Job from '@/models/Job';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
-import {
-  def_company,
-} from "@/plugins/defaultValue"
+import {def_company,} from "@/plugins/defaultValue"
 import getUserData from '@/plugins/getUser';
 
 export default defineComponent({
