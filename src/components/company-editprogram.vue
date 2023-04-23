@@ -2,23 +2,19 @@
     <div class="company p-3">
       <div class="columns">
         <div class="column is-3" style="background-color: #f8f8f8;">
-          <aside class="menu">
-            <p class="menu-label">Navigation</p>
-            <ul class="menu-list">
-              <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')" to="/companyProfile">ข้อมูลบริษัท</router-link></li>
-              <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')" to="/companyJob">งานที่ประกาศ</router-link></li>
-              <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')" to="/companyProgram">โครงการพิเศษ</router-link></li>
-            </ul>
-          </aside>
         </div>
         <div class="column is-9" style="background-color: #f1f1f1;">
           <div class="card" style="min-height: 100vh;">
             <div class="card-content">
               <div class="content">
                 <div v-show="activeTab === 'programs'" style="background-color: #f6f6f6;">
-                    <h1 class="title">เพิ่มโครงการพิเศษ</h1>
                     <div class="field">
-                        <label class="label">อัพโหลดรูปภาพโครงการ</label>
+                        <label class="label">แก้ไขรูปภาพโครงการ</label>
+                        <div class="field is-grouped">
+                                    <div class="control">
+                                        <button class="button is-link is-danger" @click="deleteForm">ลบโครงการ</button>
+                                    </div>
+                                  </div>
                         <div class="file ">
                         <label class="file-label">
                             <input class="file-input" type="file"   @change="previewProgramImage">
@@ -41,13 +37,10 @@
                         </div>
                         </div>
 
-                        <label class="label">ตำแหน่งงาน</label>
+                        <label class="label">งาน</label>
                         <div>
-                            <div class="control">
-                            <input class="input" type="text" placeholder="ตำแหน่งงาน" v-model="program.jobs_title" />
-                            </div>
-                        </div>
 
+                        </div>
                         <div class="field">
                         <label class="label">รายละเอียด</label>
                         <div class="control">
@@ -93,20 +86,78 @@
 </template>
   
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
-import { useRouter } from 'vue-router';
+import { defineComponent, PropType, reactive, ref } from 'vue';
 import Swal from 'sweetalert2';
 import Program from '@/models/Program';
-import {
-  def_program,
-} from "@/plugins/defaultValue"
+import { PORT } from "@/port";
+import axios from "axios";
+import {def_program,} from "@/plugins/defaultValue"
 
 export default defineComponent({
-  setup() {
-    const router = useRouter();
-    const program = reactive<Program>(def_program);
-    const programImageInput = ref(null);
-    const programImagePreview = ref('https://www.w3schools.com/w3images/workbench.jpg');
+  emits: ["updateProgramEdit", "saveProgramEdit"],
+  props: {
+  id: {
+    type: String,
+    required: true,
+  },
+  company_id: {
+    type: String,
+    required: true,
+  },
+  company_name: {
+    type: String,
+    required: true,
+  },
+  image: {
+    type: String,
+    required: true,
+  },
+  name: {
+    type: String,
+    required: true,
+  },
+  description: {
+    type: String,
+    required: true,
+  },
+  course: {
+    type: String,
+    required: true,
+  },
+  jobs_title: {
+    type: Array as PropType<string[]>,
+    required: true,
+  },
+  qualifications: {
+    type: Array as PropType<string[]>,
+    required: true,
+  },
+  privileges: {
+    type: Array as PropType<string[]>,
+    required: true,
+  },
+  state: {
+    type: String,
+    required: true,
+  },
+},
+setup(props, {emit}) {
+    const program = reactive<Program>({
+      id: props.id,
+      company_id: props.company_id,
+      company_name: props.company_name,
+      image: props.image,
+      name: props.name,
+      description: props.description,
+      course: props.course,
+      jobs_title: props.jobs_title,
+      qualifications: props.qualifications,
+      privileges: props.privileges,
+      state: props.state,
+    });
+
+    const programImageInput =  ref<HTMLInputElement | null>(null);
+    const programImagePreview = ref(program.image);
     const onFileChange = (event: Event) => {
       const file = (event.target as HTMLInputElement).files?.[0];
       if (file) {
@@ -118,32 +169,103 @@ export default defineComponent({
       }
     };
     const submitForm = async () => {
+      const result = await Swal.fire({
+        title: "ยืนยันการบันทึก?",
+        text: "คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "ยืนยัน",
+        cancelButtonText: "ยกเลิก",
+      });
       // ตรวจสอบความถูกต้องของข้อมูลก่อนส่ง
-      if (!program.image || !program.name || !program.description || !program.course) {
-        Swal.fire('กรุณากรอกข้อมูลให้ครบถ้วน', 'ข้อมูลไม่สมบูรณ์ กรุณากรอกข้อมูลให้ครบถ้วน', 'warning');
-        return;
+      Swal.fire({
+        position: "center",
+        title: "Uploading file...",
+        showConfirmButton: false,
+        didOpen: () => {
+          Swal.showLoading();
+        },
+      });
+    
+      if (result.isConfirmed) {
+      const formData = new FormData();
+      formData.append("id", props.id);
+      formData.append("company_id", props.company_id);
+      formData.append("company_name", props.company_name);
+      formData.append("name", program.name);
+      formData.append('jobs_title',  JSON.stringify(program.jobs_title));
+      formData.append('description', program.description);
+      formData.append('course', program.course);
+      formData.append('qualifications',  JSON.stringify(program.qualifications));
+      formData.append('privileges',  JSON.stringify(program.privileges));
+      formData.append('state', program.state)
+      if (programImageInput.value && programImageInput.value.files) {
+        formData.append('image', programImageInput.value.files[0]);
       }
-      // ส่งข้อมูลไปยัง API เพื่อบันทึก
       try {
-        // await saveProgram(program);
-        Swal.fire('บันทึกเรียบร้อย!', 'โครงการพิเศษถูกเพิ่มเรียบร้อยแล้ว', 'success');
-    router.push('/companyProgram');
+      const response = await axios.post(`${PORT}` + "/company/editProgram", formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      }
+
+    });
+    program.image = response.data.image
+    
+    Swal.fire('บันทึกเรียบร้อย!', 'โครงการพิเศษถูกเพิ่มเรียบร้อยแล้ว', 'success');
+     emit("updateProgramEdit", false);
+     emit("saveProgramEdit", program);
+   
   } catch (error) {
     Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเพิ่มโครงการพิเศษได้', 'error');
   }
-};
+      }
+    };
 
-const cancelForm = () => {
-  router.push('/companyProgram');
+    const deleteForm = async () => {
+  const result = await Swal.fire({
+    title: "Are you sure?",
+    text: "คุณจะไม่สามารถกู้ข้อมูลงานนี้ได้",
+    icon: "warning",
+    showCancelButton: true,
+    confirmButtonText: "Yes, delete it!",
+    cancelButtonText: "No, keep it",
+  });
+
+  if (result.isConfirmed) {
+    try {
+      const programId = program.id;
+      const response = await axios.delete(`${PORT}` + "/company/deleteProgram", {
+      params: {
+        programId: programId,
+      },
+    });
+      if (response.status === 200) {
+        emit("saveProgramEdit", program.id) // อัพเดตข้อมูลงาน
+        emit("updateProgramEdit", false)
+        Swal.fire("Deleted!", "ลบงานเรียบร้อยแล้ว.", "success");
+      } else {
+        Swal.fire("Error", "เกิดข้อผิดพลาดในการลบงาน กรุณาลองใหม่.", "error");
+      }
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "เกิดข้อผิดพลาดในการลบงาน กรุณาลองใหม่.", "error");
+    }
+  } else {
+    Swal.fire("Cancelled", "ยกเลิกแล้ว :)", "error");
+  }
 };
+      const cancelForm = () => {
+        emit("updateProgramEdit", false);
+      };
 
 const previewProgramImage = (event: Event) => {
       const file = (event.target as HTMLInputElement).files?.[0];
       if (file) {
         programImagePreview.value = URL.createObjectURL(file);
+        programImageInput.value = event.target as HTMLInputElement;
       }
     };
-
+    
 return {
   program,
   onFileChange,
@@ -152,7 +274,8 @@ return {
   activeTab: 'programs',
   programImageInput,
   previewProgramImage,
-  programImagePreview
+  programImagePreview,
+  deleteForm
 };
 },
 methods: {

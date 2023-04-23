@@ -81,7 +81,6 @@ export default defineComponent({
             if (index !== -1) {
                 myFavoriteJobs.splice(index, 1);
             }
-
         }
 
         const updateMyApplicationJob = (applicationJob_id: string) => {

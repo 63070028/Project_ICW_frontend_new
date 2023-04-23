@@ -41,8 +41,9 @@
     </div>
 
 
-    <div v-if="urlOld === '' && file.url === ''">
-        <p class="is-size-1 has-text-weight-bold has-text-centered mt-6">ยังไม่มีการอัปโหลดไฟล์</p>
+    <div v-if="urlOld === '' && file.url === '' && isEdit == false">
+        <!-- <p class="is-size-1 has-text-weight-bold has-text-centered mt-6">ยังไม่มีการอัปโหลดไฟล์</p> -->
+        <noInformationVue></noInformationVue>
     </div>
 
     <!-- pre-review เก่า -->
@@ -64,7 +65,11 @@
 import Swal from 'sweetalert2';
 import axios from '@/plugins/axios'
 import { PORT } from '@/port';
+import noInformationVue from './no-information.vue';
 export default {
+    components:{
+        noInformationVue
+    },
     emits: ['resume', 'transcript', 'portfolio'],
     props: {
         upload_category: {

@@ -1,5 +1,6 @@
 <template>
-    <div class="column m-0 p-0">
+    <noInformationVue v-if="!(paginatedItems.length > 0)"></noInformationVue>
+    <div class="column m-0 p-0" v-if="(paginatedItems.length > 0)">
         <div class="card px-5 py-4">
             <div class="pt-3" style="border-top:0.5px solid gray;" v-for="item, index in paginatedItems" :key="index">
 
@@ -40,8 +41,12 @@ import { computed, ComputedRef, defineComponent, onMounted, onUpdated, PropType,
 import ApplicationProgram from '@/models/ApplicationProgram';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
+import noInformationVue from './no-information.vue';
 
 export default defineComponent({
+    components:{
+        noInformationVue
+    },
     emits:["cancelApplicationProgram"],
     props: {
         items: {

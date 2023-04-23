@@ -1,37 +1,17 @@
 <template>
+  <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
   <div class="company p-3" v-if="!isAddingProgram && !isEditProgram">
     <div class="columns">
       <div class="column is-3" style="background-color: #f8f8f8; ">
         <aside class="menu">
           <p class="menu-label">Navigation</p>
           <ul class="menu-list">
-            <li>
-              <router-link
-                :class="{ 'is-active': activeTab === 'info' }"
-                @click="setActiveTab('info')"
-                to="/companyProfile"
-              >
-                ข้อมูลบริษัท
-              </router-link>
-            </li>
-            <li>
-              <router-link
-                :class="{ 'is-active': activeTab === 'jobs' }"
-                @click="setActiveTab('jobs')"
-                to="/companyJob"
-              >
-                งานที่ประกาศ
-              </router-link>
-            </li>
-            <li>
-              <router-link
-                :class="{ 'is-active': activeTab === 'programs' }"
-                @click="setActiveTab('programs')"
-                to="/companyProgram"
-              >
-                โครงการพิเศษ
-              </router-link>
-            </li>
+            <li><router-link :class="{ 'is-active': activeTab === 'info' }" @click="setActiveTab('info')"
+                to="/companyProfile">ข้อมูลบริษัท</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'jobs' }" @click="setActiveTab('jobs')"
+                to="/companyJob">งานที่ประกาศ</router-link></li>
+            <li><router-link :class="{ 'is-active': activeTab === 'programs' }" @click="setActiveTab('programs')"
+                to="/companyProgram">โครงการพิเศษ</router-link></li>
           </ul>
         </aside>
       </div>
@@ -46,10 +26,9 @@
                   </button>
                   <h1 class="title">โครงการพิเศษ</h1>
                 </div>
-
                 <div class="program-card" v-for="(program, index) in programs" :key="index">
                   <div class="job-detail">
-                    <p class="is-size-4 has-text-weight-bold">{{ index + 1 }}. {{ program.name }}</p>
+                    <p class="is-size-4 has-text-weight-bold">{{ index + 1 }} {{ program.name }}</p>
                     <div class="columns">
                       <div class="column is-4">
                         <div class="program-image image is-2by1">
@@ -59,21 +38,18 @@
                       <div class="column is-8">
                         <p class="job-detai-text">คำอธิบาย: {{ program.description }}</p>
                         <p class="job-detai-text">คอร์สเรียน: {{ program.course }}</p>
-                        <p class="job-detai-text">ตำแหน่งงาน: {{ program.jobs_title.join(', ') }}</p>
-                        <p class="job-detai-text">คุณสมบัติ: {{ program.qualifications.join(', ') }}</p>
-                        <p class="job-detai-text">สิทธิประโยชน์: {{ program.privileges.join(', ') }}</p>
-                        <v-switch
-                          v-model="program.state"
-                          hide-details
-                          inset
-                          color="success"
-                          :true-value="ProgramStatus.Open"
-                          :false-value="ProgramStatus.Closed"
-                          :label="`สถานะงาน: ${program.state}`"
-                          :style="{ color: ProgramStatusColor(program.state) }">
+                        <p class="job-detai-text">ตำแหน่งงาน: {{ program.jobs_title.toString().replace(/[\[\]"']+/g,'') }}</p>
+                        <p class="job-detai-text">คุณสมบัติ: {{ program.qualifications.toString().replace(/[\[\]"']+/g,'') }}</p>
+                        <p class="job-detai-text">สิทธิประโยชน์: {{ program.privileges.toString().replace(/[\[\]"']+/g,'') }}</p>
+
+                       
+
+                        <v-switch v-model="program.state" hide-details inset color="success" :true-value="ProgramStatus.Open"
+                          :false-value="ProgramStatus.Closed" :label="`สถานะงาน: ${program.state}`"
+                          :style="{ color:  programStateColor(program.state) }" @change="updateProgramState(program.id, program.state)">
                         </v-switch>
-                          <button class="button is-small is-info" @click="isEditProgram = true">แก้ไขงาน</button>
-                        <button class="button is-small is-danger" @click="deleteForm">ลบงาน</button>
+                        <button class="button is-small is-info" @click="updateEdit(program, index); isEditProgram = true">แก้ไขงาน</button>
+                   
                     </div>
                     </div>
                   </div>
@@ -84,9 +60,34 @@
           </div>
       </div>
     </div>
+    const updateNewProgram = (change_data: Program) => {
+
   </div>
-  <CompanyAddProgram v-if="isAddingProgram"></CompanyAddProgram>
-  <CompanyEditProgramPage v-if="isEditProgram"></CompanyEditProgramPage >
+  <CompanyAddProgram 
+    :company_id="company.id"
+    :company_name="company.name"
+    v-if="isAddingProgram"
+    @addNewProgram="($event) => { isAddingProgram = $event }" @saveNewProgram=" updateNewProgram($event)" >
+    
+  </CompanyAddProgram>
+
+  <CompanyEditProgramPage v-if="isEditProgram && selectedProgram" 
+  :key="selectedProgram.id"
+  :id="selectedProgram.id"
+  :company_id="selectedProgram.company_id"
+  :company_name="selectedProgram.company_name"
+  :image="selectedProgram.image"
+  :name="selectedProgram.name"
+  :description="selectedProgram.description"
+  :course="selectedProgram.course"
+  :jobs_title="selectedProgram.jobs_title"
+  :qualifications="selectedProgram.qualifications"
+  :privileges="selectedProgram.privileges"
+  :state="selectedProgram.state"
+  @updateProgramEdit="($event) => {isEditProgram = $event}" @saveProgramEdit="updateCompanyProgram($event)"
+   >
+   </CompanyEditProgramPage>
+
 </template>
 <script lang="ts">
 import 'bulma/css/bulma.css';
@@ -108,12 +109,13 @@ export default defineComponent({
   components: {
     CompanyAddProgram,
     CompanyEditProgramPage,
-   // preloadingVue,
+    preloadingVue,
   },
   data: () => ({
-   
+    model: "no",
     isAddingProgram: false,
     isEditProgram: false,
+    selectedProgramIndex: -1,
   }),
   setup() {
     const router = useRouter();
@@ -123,6 +125,7 @@ export default defineComponent({
 
     const company = reactive<Company>(def_company);
     const programs = reactive<Program[]>([])
+
     onMounted(async() => {
       if (!localStorage.getItem('token')) {
         router.push('/signIn')
@@ -134,12 +137,13 @@ export default defineComponent({
         console.log(res.data.user)
         store.commit('SET_USER', res.data.user)
       })
- await axios.get(`${PORT}` + "/company/getProfile/" + user.id).then(res => {
+      await axios.get(`${PORT}` + "/company/getProfile/" + user.id).then(res => {
         console.log(res.data.company)
         Object.assign(company, res.data.company);
       })
+      
       await axios.get(`${PORT}` + "/company/getProgram/" + user.id).then(res => {
-        console.log(res.data)
+        console.log(res.data.program)
         Object.assign(programs, res.data.program)
       })
 
@@ -163,9 +167,22 @@ export default defineComponent({
       Swal.fire('Cancelled', 'ยกเลิกแล้ว :)', 'error');
     }
   };
-    const ProgramStatusColor = (status: string) => {
-      return status === ProgramStatus.Open ? "green" : "red";
+
+  const programStateColor = (state: string) => {
+      return state === "on" ? "green" : "red";
     };
+
+    const updateNewProgram = (change_data: Program) => {
+      programs.push(change_data);
+    }
+    const updateCompanyProgram = (updatedProgram: Program) => {
+      const index = programs.findIndex((program) => program.id === updatedProgram.id);
+      if (index !== -1) {
+        programs[index] = updatedProgram;
+      }
+    }
+
+  
     return {
       router,
       route,
@@ -174,14 +191,53 @@ export default defineComponent({
       activeTab: 'programs',
       ProgramStatus,
       deleteForm,
-      ProgramStatusColor,
+      programStateColor,
+      updateCompanyProgram,
       user,
-      store
+      store,
+      updateNewProgram
     }
   },
+  computed: {
+  selectedProgram() {
+    return this.selectedProgramIndex >= 0 ? this.programs[this.selectedProgramIndex] : null;
+  },
+},
   methods: {
     setActiveTab(tab: string) {
       this.activeTab = tab;
+    },
+    updateEdit(job: Program, index: number) {
+    // Store the selected job index
+    this.selectedProgramIndex = index;
+   },
+   handleJobDeleted(jobId: string) {
+    const index = this.programs.findIndex((program) => program.id === jobId);
+    if (index !== -1) {
+      this.programs.splice(index, 1);
+    }
+  },
+
+  async updateProgramState(id: string, newState: string) {
+      const stateText = newState === ProgramStatus.Open ? "เปิดรับสมัคร" : "ปิดรับสมัคร";
+      try {
+        await axios.post(`${PORT}/company/setProgramState`, {
+          id: id,
+          state: stateText,
+        });
+        Swal.fire({
+          title: "Success",
+          text: "Program state updated successfully",
+          icon: "success",
+        });
+      } catch (error) {
+        Swal.fire({
+          title: "Error",
+          text: "Failed to update the job state",
+          icon: "error",
+        });
+        console.error(error);
+      }
     },
   },
 });
