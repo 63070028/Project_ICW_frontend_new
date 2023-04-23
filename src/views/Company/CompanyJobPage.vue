@@ -1,6 +1,6 @@
 <template>
   <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
-  <div class="company p-3" v-if="!isAddingjob && !isEditjob">
+  <div class="company p-3" v-if="!isAddJob && !isEditJob && !store.state.isLoadingData">
     <div class="columns">
       <div class="column is-3" style="background-color: #f8f8f8">
         <aside class="menu">
@@ -39,7 +39,7 @@
             <div class="content">
               <div v-show="activeTab === 'jobs'">
                 <div class="head-content">
-                  <button class="button is-success" @click="isAddingjob = true">
+                  <button class="button is-success" @click="isAddJob = true">
                     เพิ่มประกาศงาน
                   </button>
 
@@ -82,12 +82,10 @@
                           @change="updateJobState(job.id, job.state)"
                         >
                         </v-switch>
+
                         <button
                           class="button is-small is-info"
-                          @click="
-                            updateEdit(job, index);
-                            isEditjob = true;
-                          "
+                          @click="updateEdit(index)"
                         >
                           แก้ไขงาน
                         </button>
@@ -106,39 +104,44 @@
   <CompanyAddjob
     :company_id="company.id"
     :company_name="company.name"
-    v-if="isAddingjob"
+    v-if="isAddJob"
     @addNewJob="
       ($event) => {
-        isAddingjob = $event;
+        isAddJob = $event;
       }
     "
     @saveNewJob="updateNewJob($event)"
   ></CompanyAddjob>
 
   <companyEditjob
-    v-if="isEditjob && selectedJob"
+    v-if="isEditJob && selectedJob"
     :key="selectedJob.id"
     :id="selectedJob.id"
     :company_id="selectedJob.company_id"
     :company_name="selectedJob.company_name"
     :name="selectedJob.name"
-    :salary_per_day="selectedJob.salary_per_day"
+    :salary_per_day="Number(selectedJob.salary_per_day)"
     :location="selectedJob.location"
-    :capacity="selectedJob.capacity"
+    :capacity="Number(selectedJob.capacity)"
     :detail="selectedJob.detail"
     :interview="selectedJob.interview"
     :qualifications="selectedJob.qualifications"
     :contact="selectedJob.contact"
     :creation_date="selectedJob.creation_date"
     :state="selectedJob.state"
-    @updateJobEdit="($event => updateJobEdit($event))"
+    @updateJobEdit="
+      ($event) => {
+        isEditJob = $event;
+      }
+    "
     @saveJobEdit="updateCompanyJob($event)"
+    @jobDeleted="updateDelJob($event)"
   >
   </companyEditjob>
 </template>
 <script lang="ts">
 import "bulma/css/bulma.css";
-import { defineComponent, onMounted, reactive } from "vue";
+import { computed, defineComponent, onMounted, reactive, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Company from "@/models/Company";
 import Swal from "sweetalert2";
@@ -162,9 +165,6 @@ export default defineComponent({
   },
   data: () => ({
     model: "no",
-    isAddingjob: false,
-    isEditjob: false,
-    selectedJobIndex: -1,
   }),
 
   setup() {
@@ -173,8 +173,12 @@ export default defineComponent({
     const store = useStore();
     const user = reactive<User>(store.state.user);
 
+    const isAddJob = ref<boolean>(false);
+    const isEditJob = ref<boolean>(false);
     const company = reactive<Company>(def_company);
     const jobs = reactive<Job[]>([]);
+
+    const selectedJobIndex = ref<number>(-1);
 
     onMounted(async () => {
       if (!localStorage.getItem("token")) {
@@ -183,7 +187,7 @@ export default defineComponent({
       }
       store.commit("LOADING_DATA", true);
 
-      await getUserData()
+      await getUserData();
 
       await axios
         .get(`${PORT}` + "/company/getProfile/" + user.id)
@@ -191,7 +195,7 @@ export default defineComponent({
           console.log(res.data.company);
           Object.assign(company, res.data.company);
         });
-        
+
       await axios.get(`${PORT}` + "/company/getJob/" + user.id).then((res) => {
         console.log(res.data);
         Object.assign(jobs, res.data.job);
@@ -203,6 +207,7 @@ export default defineComponent({
     const jobStateColor = (state: string) => {
       return state === "on" ? "green" : "red";
     };
+
     const updateCompanyJob = (updatedJob: Job) => {
       const index = jobs.findIndex((job) => job.id === updatedJob.id);
       if (index !== -1) {
@@ -214,13 +219,21 @@ export default defineComponent({
       jobs.push(change_data);
     };
 
-
-    const updateJobEdit = (job_new: Job) => {
-      const index = jobs.findIndex(job => job.id === job_new.id);
+    const updateDelJob = (job_id: string) => {
+      const index = jobs.findIndex((job) => job.id === job_id);
       if (index !== -1) {
-          jobs.splice(index, 1, job_new);
+        jobs.splice(index, 1);
       }
-    }
+    };
+
+    const updateEdit = (index: number) => {
+      selectedJobIndex.value = index;
+      isEditJob.value = true;
+    };
+
+    const selectedJob = computed(() => {
+      return selectedJobIndex.value >= 0 ? jobs[selectedJobIndex.value] : null;
+    });
 
     return {
       router,
@@ -234,17 +247,15 @@ export default defineComponent({
       updateJobEdit,
       updateNewJob,
       jobStateColor,
+      updateEdit,
+      updateDelJob,
+      selectedJob,
+      selectedJobIndex,
       store,
       user,
-      //  jobActiveComputed,
+      isAddJob,
+      isEditJob,
     };
-  },
-  computed: {
-    selectedJob() {
-      return this.selectedJobIndex >= 0
-        ? this.jobs[this.selectedJobIndex]
-        : null;
-    },
   },
 
   methods: {
@@ -273,13 +284,9 @@ export default defineComponent({
         console.error(error);
       }
     },
-    updateEdit(job: Job, index: number) {
-      // Store the selected job index
-      this.selectedJobIndex = index;
-    },
-
-    
-
+    // updateEdit(index: number) {
+    //   this.selectedJobIndex = index;
+    // },
   },
 });
 </script>

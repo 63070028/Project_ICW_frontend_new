@@ -41,16 +41,20 @@
                 <div class="field">
                   <label class="label">จำนวนที่รับ</label>
                   <div class="control">
-                    <input class="input" type="number" v-model="job.capacity" />
-                  </div>
-                </div>
-                <div class="field">
-                  <label class="label">คุณสมบัติ</label>
-                  <div class="control">
-                    <input class="input" type="text" v-model="job.qualifications" />
+                    <input class="input" type="number" v-model="job.capacity"/>
                   </div>
                 </div>
 
+                <div class="field">
+                  <label class="label">คุณสมบัติ</label>
+                  <button class="button" @click="job.qualifications.push(qualification)">add</button>
+                  <input class="input" type="text" v-model="qualification"/>
+                  <div class="columns control my-5" v-for="qualification, index in job.qualifications" :key="index">
+                      <p class="column is-1">{{qualification}} {{index}}</p>
+                      <button class="button column is-danger is-1" @click="job.qualifications.splice(index, 1)">x</button>
+                  </div>
+
+                </div>
                 <div class="field">
                   <label class="label">ติดต่อ</label>
                   <div class="control">
@@ -85,7 +89,7 @@
 </template>
   
 <script lang="ts">
-import { defineComponent, reactive } from "vue";
+import { defineComponent, reactive, ref } from "vue";
 import Swal from "sweetalert2";
 import Job from "@/models/Job";
 import axios from "@/plugins/axios";
@@ -104,6 +108,8 @@ export default defineComponent({
   },
   setup(props, { emit }) {
     // const router = useRouter();
+
+    const qualification = ref<string>("");
 
     const job = reactive<Job>({
       id: "",
@@ -168,6 +174,7 @@ export default defineComponent({
       saveJob,
       cancel,
       activeTab: "jobs",
+      qualification,
     };
   },
   methods: {
