@@ -42,6 +42,30 @@
                     <button class="button  is-danger " @click="program.jobs_title.splice(index, 1)">x</button>
                   </div>
                 </div>
+
+                <div class="qualification">
+                  <label class="label">คุณสมบัติ</label>
+                  <button class="button is-success" @click="program.qualifications.push(qualification)">add</button>
+                  <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
+                  <div  class="formInput columns control my-5" v-for="qualification, index in program.qualifications"
+                    :key="index">
+                    <p class="form-detail"> {{ qualification }} </p>
+                    <button class="button  is-danger " @click="program.qualifications.splice(index, 1)">x</button>
+                  </div>
+                </div>
+
+
+                <div class="qualification">
+                  <label class="label">สิทธิพิเศษ</label>
+                  <button class="button is-success" @click="program.privileges.push(privilege)">add</button>
+                  <input placeholder="เพิ่มสิทธิพิเศษ" class="input" type="text" v-model="privilege" />
+                  <div  class="formInput columns control my-5" v-for="qualification, index in program.privileges"
+                    :key="index">
+                    <p class="form-detail"> {{ qualification }} </p>
+                    <button class="button  is-danger " @click="program.privileges.splice(index, 1)">x</button>
+                  </div>
+                </div>
+
                 <div class="field">
                   <label class="label">รายละเอียด</label>
                   <div class="control">
@@ -55,25 +79,6 @@
                     <input class="input" type="text" placeholder="หลักสูตร" v-model="program.course" />
                   </div>
                 </div>
-                <div class="qualification">
-                  <label class="label">คุณสมบัติ</label>
-                  <button class="button is-success" @click="program.qualifications.push(qualification)">add</button>
-                  <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
-                  <div  class="formInput columns control my-5" v-for="qualification, index in program.qualifications"
-                    :key="index">
-                    <p class="form-detail"> {{ qualification }} </p>
-                    <button class="button  is-danger " @click="program.qualifications.splice(index, 1)">x</button>
-                  </div>
-                </div>
-
-                
-                <div class="field">
-                  <label class="label">สิทธิประโยชน์</label>
-                  <div class="control">
-                    <textarea class="textarea" placeholder="สิทธิประโยชน์" v-model="program.privileges"></textarea>
-                  </div>
-                </div>
-
 
                 <div class="field">
                   <div class="control">
@@ -116,7 +121,8 @@ export default defineComponent({
   setup(props, { emit }) {
 
     const qualification = ref<string>("");
-     const job_title =  ref<string>("");
+    const job_title =  ref<string>("");
+    const privilege =  ref<string>("");
     const program = reactive<Program>({
       id: '',
       company_id: props.company_id,
@@ -217,7 +223,8 @@ export default defineComponent({
       previewProgramImage,
       programImagePreview,
       qualification,
-      job_title
+      job_title,
+      privilege
     };
   },
   methods: {

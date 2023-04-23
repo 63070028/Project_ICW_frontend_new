@@ -36,9 +36,10 @@
                         </div>
                       </div>
                       <div class="column is-8">
-                        <p class="job-detai-text">คำอธิบาย: {{ program.description }}</p>
+                        
                         <p class="job-detai-text">คอร์สเรียน: {{ program.course }}</p>
                         <p class="job-detai-text">ตำแหน่งงาน: {{ program.jobs_title.toString().replace(/[\[\]"']+/g,'') }}</p>
+                        <p class="job-detai-text">คำอธิบาย: {{ program.description }}</p>
                         <p class="job-detai-text">คุณสมบัติ: {{ program.qualifications.toString().replace(/[\[\]"']+/g,'') }}</p>
                         <p class="job-detai-text">สิทธิประโยชน์: {{ program.privileges.toString().replace(/[\[\]"']+/g,'') }}</p>
 
@@ -71,7 +72,8 @@
     
   </CompanyAddProgram>
 
-  <CompanyEditProgramPage v-if="isEditProgram && selectedProgram" 
+  <CompanyEditProgramPage 
+  v-if="isEditProgram && selectedProgram" 
   :key="selectedProgram.id"
   :id="selectedProgram.id"
   :company_id="selectedProgram.company_id"
@@ -84,8 +86,15 @@
   :qualifications="selectedProgram.qualifications"
   :privileges="selectedProgram.privileges"
   :state="selectedProgram.state"
-  @updateProgramEdit="($event) => {isEditProgram = $event}" @saveProgramEdit="updateCompanyProgram($event)"
-   >
+
+  @updateProgramEdit="
+      ($event) => {
+        isEditProgram = $event;
+      }
+    "
+    @saveProgramEdit="updateCompanyProgram($event)"
+    @programDeleted="updateDelprogram($event)">
+
    </CompanyEditProgramPage>
 
 </template>
@@ -181,7 +190,12 @@ export default defineComponent({
         programs[index] = updatedProgram;
       }
     }
-
+    const updateDelprogram = (program_id: string) => {
+      const index = programs.findIndex((program) => program.id === program_id);
+      if (index !== -1) {
+        programs.splice(index, 1);
+      }
+    };
   
     return {
       router,
@@ -195,7 +209,8 @@ export default defineComponent({
       updateCompanyProgram,
       user,
       store,
-      updateNewProgram
+      updateNewProgram,
+      updateDelprogram
     }
   },
   computed: {

@@ -51,6 +51,9 @@
                       {{ index + 1 + "." }} {{ job.name }}
                     </p>
                     <p class="job-detai-text">
+                      วันที่: {{ job.creation_date }}
+                    </p>
+                    <p class="job-detai-text">
                       สถานที่ทำงาน: {{ job.location }}
                     </p>
                     <p class="job-detai-text">
@@ -62,6 +65,10 @@
                     <p class="job-detai-text">
                       จำนวนที่รับ: {{ job.capacity }}
                     </p>
+                    <p class="job-detai-text">
+                      รายละเอียด: {{ job.detail }}
+                    </p>
+                    <p class="job-detai-text">คุณสมบัติ: {{job.qualifications.toString().replace(/[\[\]"']+/g,'') }}</p>
                     <div
                       class="column is-6 edit"
                       style="background-color: #your_color_code"
