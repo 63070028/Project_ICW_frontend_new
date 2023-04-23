@@ -41,19 +41,18 @@
                 <div class="field">
                   <label class="label">จำนวนที่รับ</label>
                   <div class="control">
-                    <input class="input" type="number" v-model="job.capacity"/>
+                    <input class="input" type="number" v-model="job.capacity" />
                   </div>
                 </div>
-
-                <div class="field">
+                <div class="qualification">
                   <label class="label">คุณสมบัติ</label>
-                  <button class="button" @click="job.qualifications.push(qualification)">add</button>
-                  <input class="input" type="text" v-model="qualification"/>
-                  <div class="columns control my-5" v-for="qualification, index in job.qualifications" :key="index">
-                      <p class="column is-1">{{qualification}} {{index}}</p>
-                      <button class="button column is-danger is-1" @click="job.qualifications.splice(index, 1)">x</button>
+                  <button class="button is-success" @click="job.qualifications.push(qualification)">add</button>
+                  <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
+                  <div  class="formInput columns control my-5" v-for="qualification, index in job.qualifications"
+                    :key="index">
+                    <p class="form-detail"> {{ qualification }} </p>
+                    <button class="button  is-danger " @click="job.qualifications.splice(index, 1)">x</button>
                   </div>
-
                 </div>
                 <div class="field">
                   <label class="label">ติดต่อ</label>
@@ -184,4 +183,61 @@ export default defineComponent({
   },
 });
 </script>
-  
+<style scoped>
+.qualification {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  padding-left: 30px;
+  border-radius: 5px;
+}
+
+.label {
+  font-size: 1.2rem;
+  font-weight: bold;
+
+}
+
+.button.is-success {
+
+  color: white;
+  border: none;
+  border-radius: 5px;
+
+
+}
+
+.input {
+  border: none;
+  border-bottom: 2px;
+
+
+}
+
+.formInput {
+
+  border-radius: 5px;
+
+}
+
+.formInput p {
+
+  background-color: #bdbdbd;
+
+  font-size: 1.1rem;
+
+}
+
+.button.is-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding-left: 20px;
+  margin-left: 10px;
+}
+
+.form-detail {
+  padding: 5px 30px 5px;
+  margin-bottom: 10px;
+}
+</style>

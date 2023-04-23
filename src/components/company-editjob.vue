@@ -19,6 +19,7 @@
                       </button>
                     </div>
                   </div>
+
                   <div class="field">
                     <label class="label">ชื่องาน</label>
                     <div class="control">
@@ -68,16 +69,16 @@
                     </div>
                   </div>
 
-                  <!-- <div class="field">
-                    <label class="label">คุณสมบัติ</label>
-                    <div class="control">
-                      <input
-                        class="input"
-                        type="text"
-                        v-model="job.qualifications"
-                      />
-                    </div>
-                  </div> -->
+                  <div class="qualification">
+                  <label class="label">คุณสมบัติ</label>
+                  <button class="button is-success" @click="job.qualifications.push(qualification)">add</button>
+                  <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
+                  <div  class="formInput columns control my-5" v-for="qualification, index in job.qualifications"
+                    :key="index">
+                    <p class="form-detail"> {{ qualification }} </p>
+                    <button class="button  is-danger " @click="job.qualifications.splice(index, 1)">x</button>
+                  </div>
+                </div>
 
                   <div class="field">
                     <label class="label">ติดต่อ</label>
@@ -131,7 +132,7 @@
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, PropType, reactive } from "vue";
+import { defineComponent, PropType, reactive, ref } from "vue";
 import { useRouter } from "vue-router";
 import Job from "@/models/Job";
 import Swal from "sweetalert2";
@@ -195,6 +196,7 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
+    const qualification = ref<string>("");
     const router = useRouter();
     const job = reactive<Job>({
       id: props.id,
@@ -328,6 +330,7 @@ export default defineComponent({
       deleteForm,
       router,
       activeTab: "jobs",
+      qualification,
     };
   },
   methods: {
@@ -340,5 +343,60 @@ export default defineComponent({
 <style scoped>
 .title {
   margin-bottom: 2rem;
+}
+
+.qualification {
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  padding-left: 30px;
+  border-radius: 5px;
+}
+
+.label {
+  font-size: 1.2rem;
+  font-weight: bold;
+
+}
+.button.is-success {
+
+  color: white;
+  border: none;
+  border-radius: 5px;
+
+
+}
+
+.input {
+  border: none;
+  border-bottom: 2px;
+
+}
+
+.formInput {
+
+  border-radius: 5px;
+
+}
+
+.formInput p {
+
+  
+
+  font-size: 1.1rem;
+
+}
+
+.button.is-danger {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding-left: 20px;
+  margin-left: 10px;
+}
+
+.form-detail {
+  padding: 5px 30px 5px;
+  margin-bottom: 10px;
 }
 </style>
