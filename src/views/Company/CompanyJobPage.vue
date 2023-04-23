@@ -231,6 +231,7 @@ export default defineComponent({
       isEnabled: false,
       JobStatus,
       updateCompanyJob,
+      updateJobEdit,
       updateNewJob,
       jobStateColor,
       store,

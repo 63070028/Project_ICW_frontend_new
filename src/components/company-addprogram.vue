@@ -63,8 +63,14 @@
                         <textarea class="textarea" placeholder="สิทธิประโยชน์"
                             v-model="program.privileges"></textarea>
                         </div>
-                        
                         </div>
+
+                        <div>
+                        <div v-for="(input, index) in inputs" :key="index">
+                          <input type="text" v-model="inputs[index]" />
+                        </div>
+                        <button @click="addInput">Add Input</button>
+                      </div>
                         <div class="field">
                         <div class="control">
                             <button class="button is-primary" @click="submitForm">บันทึก</button>
@@ -98,6 +104,11 @@ export default defineComponent({
       required: true,
     },
   },
+  data() {
+  return {
+    inputs: ['', '', '']
+  };
+},
   setup(props, { emit }) {
   
     const program = reactive<Program>({
@@ -199,6 +210,7 @@ return {
   programImageInput,
   previewProgramImage,
   programImagePreview,
+  
 };
 },
 methods: {
@@ -206,6 +218,9 @@ methods: {
       this.activeTab = tab;
     },
   },
+  addInput() {
+    this.inputs.push('');
+  }
 });
 </script>
 <style scoped>

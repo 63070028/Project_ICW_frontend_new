@@ -40,21 +40,7 @@
                         <label class="label">งาน</label>
                         <div>
 
-      <input
-        class="input"
-        type="text"
-        placeholder="ตำแหน่งงาน"
-        v-model="program.jobs_title[index]"
-      />
-      <button class="button is-danger ml-2" @click="removeJobTitle(index)">
-        Remove
-      </button>
-    </div>
-    <button class="button is-link mt-2" @click="addJobTitle">
-      Add Job Title
-    </button>
-  
-
+                        </div>
                         <div class="field">
                         <label class="label">รายละเอียด</label>
                         <div class="control">
