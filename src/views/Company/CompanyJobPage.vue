@@ -39,8 +39,7 @@
                           :false-value="JobStatus.Closed" :label="`สถานะงาน: ${job.state}`"
                           :style="{ color: jobStateColor(job.state) }" @change="updateJobState(job.id, job.state)">
                         </v-switch>
-                        <button class="button is-small is-info" @click="isEditjob = true">แก้ไขงาน</button>
-                        <button class="button is-small is-danger" @click="deleteForm">ลบงาน</button>
+                        <button class="button is-small is-info" @click="updateEdit(job, index); isEditjob = true">แก้ไขงาน</button>
                       </div>
                     </div>
                   </div>
@@ -53,17 +52,32 @@
     </div>
   </div>
   
-  <CompanyAddjob :company_name="company.name" :company_id="company.id" v-if="isAddingjob"
-    @addNewJob="($event) => { isAddingjob = $event }" @saveNewJob="updateNewJob($event)"></CompanyAddjob>
+  <CompanyAddjob 
+  :company_id="company.id"
+  :company_name="company.name"
+   v-if="isAddingjob"
+  @addNewJob="($event) => { isAddingjob = $event }" @saveNewJob="updateNewJob($event)"></CompanyAddjob>
 
-  <template v-for="(job) in jobs">
-    <companyEditjob v-if="isEditjob" :key="job.id" :id="job.id" :company_id="job.company_id"
-      :company_name="job.company_name" :name="job.name" :salary_per_day="job.salary_per_day" :location="job.location"
-      :capacity="job.capacity" :detail="job.detail" :interview="job.interview" :qualifications="job.qualifications"
-      :contact="job.contact" :creation_date="job.creation_date" :state="job.state"
-      @updateJobEdit="($event) => { isEditjob = $event }" @saveJobEdit="updateCompanyJob($event)">
-    </companyEditjob>
-  </template>
+
+
+    <companyEditjob v-if="isEditjob && selectedJob"
+  :key="selectedJob.id"
+  :id="selectedJob.id"
+  :company_id="selectedJob.company_id"
+  :company_name="selectedJob.company_name"
+  :name="selectedJob.name"
+  :salary_per_day="selectedJob.salary_per_day"
+  :location="selectedJob.location"
+  :capacity="selectedJob.capacity"
+  :detail="selectedJob.detail"
+  :interview="selectedJob.interview"
+  :qualifications="selectedJob.qualifications"
+  :contact="selectedJob.contact"
+  :creation_date="selectedJob.creation_date"
+  :state="selectedJob.state"
+  @updateJobEdit="($event) => { isEditjob = $event }" @saveJobEdit="updateCompanyJob($event)">
+</companyEditjob>
+
 
 </template>
 <script lang="ts">
@@ -94,6 +108,7 @@ export default defineComponent({
     model: "no",
     isAddingjob: false,
     isEditjob: false,
+    selectedJobIndex: -1,
   }),
 
   setup() {
@@ -117,12 +132,10 @@ export default defineComponent({
         console.log(res.data.user)
         store.commit('SET_USER', res.data.user)
       })
-
       await axios.get(`${PORT}` + "/company/getProfile/" + user.id).then(res => {
         console.log(res.data.company)
         Object.assign(company, res.data.company);
       })
-
       await axios.get(`${PORT}` + "/company/getJob/" + user.id).then(res => {
         console.log(res.data)
         Object.assign(jobs, res.data.job)
@@ -132,29 +145,16 @@ export default defineComponent({
       console.log("get api company id: " + user.id);
 
     });
-    const deleteForm = async () => {
-      const result = await Swal.fire({
-        title: "Are you sure?",
-        text: "คุณจะไม่สามารถกู้ข้อมูลงานนี้ได้",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "Yes, delete it!",
-        cancelButtonText: "No, keep it",
-      });
-      if (result.isConfirmed) {
-        Swal.fire("Deleted!", "ลบงานเรียบร้อยแล้ว.", "success");
-        // ...perform the delete action
-      }
-      else {
-        Swal.fire("Cancelled", "ยกเลิกแล้ว :)", "error");
-      }
-    };
     const jobStateColor = (state: string) => {
       return state === "on" ? "green" : "red";
     };
-    const updateCompanyJob = (change_data: Job) => {
-      Object.assign(jobs, change_data);
+    const updateCompanyJob = (updatedJob: Job) => {
+    const index = jobs.findIndex((job) => job.id === updatedJob.id);
+    if (index !== -1) {
+      jobs[index] = updatedJob;
     }
+  };
+
 
     const updateNewJob = (change_data: Job) => {
       jobs.push(change_data);
@@ -165,7 +165,6 @@ export default defineComponent({
       route,
       company,
       jobs,
-      deleteForm,
       activeTab: "jobs",
       isEnabled: false,
       JobStatus,
@@ -177,6 +176,12 @@ export default defineComponent({
       //  jobActiveComputed,
     };
   },
+  computed: {
+  selectedJob() {
+    return this.selectedJobIndex >= 0 ? this.jobs[this.selectedJobIndex] : null;
+  },
+},
+
   methods: {
     setActiveTab(tab: string) {
       this.activeTab = tab;
@@ -202,6 +207,10 @@ export default defineComponent({
         console.error(error);
       }
     },
+    updateEdit(job: Job, index: number) {
+    // Store the selected job index
+    this.selectedJobIndex = index;
+   },
   },
 
 });

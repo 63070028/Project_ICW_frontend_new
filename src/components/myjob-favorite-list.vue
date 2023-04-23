@@ -133,7 +133,6 @@ export default defineComponent({
             emit('remove', job_id)
         }
 
-
         return {
             nextPageClicked, previousClicked, getNextPage, getPreviousPage, presentPage, changePage, router, viewJob, removeFavorieJob, paginatedItems, countOfPages
         }

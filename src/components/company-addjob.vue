@@ -6,10 +6,7 @@
         <div class="card" style="min-height: 100vh">
           <div class="card-content">
             <div class="content">
-              <div
-                v-show="activeTab === 'jobs'"
-                style="background-color: #f6f6f6"
-              >
+              <div v-show="activeTab === 'jobs'" style="background-color: #f6f6f6">
                 <h1 class="title">เพิ่มประกาศงาน</h1>
                 <div class="field">
                   <label class="label">ชื่องาน</label>
@@ -32,11 +29,7 @@
                 <div class="field">
                   <label class="label">ค่าตอบแทนรายวัน</label>
                   <div class="control">
-                    <input
-                      class="input"
-                      type="number"
-                      v-model="job.salary_per_day"
-                    />
+                    <input class="input" type="number" v-model="job.salary_per_day" />
                   </div>
                 </div>
                 <div class="field">
@@ -49,6 +42,25 @@
                   <label class="label">จำนวนที่รับ</label>
                   <div class="control">
                     <input class="input" type="number" v-model="job.capacity" />
+                  </div>
+                </div>
+                <div class="field">
+                  <label class="label">คุณสมบัติ</label>
+                  <div class="control">
+                    <input class="input" type="text" v-model="job.qualifications" />
+                  </div>
+                </div>
+
+                <div class="field">
+                  <label class="label">ติดต่อ</label>
+                  <div class="control">
+                    <input class="input" type="text" v-model="job.contact.name" placeholder="ชื่อผู้ติดต่อ" />
+                  </div>
+                  <div class="control mt-2">
+                    <input class="input" type="email" v-model="job.contact.email" placeholder="อีเมล์" />
+                  </div>
+                  <div class="control mt-2">
+                    <input class="input" type="text" v-model="job.contact.phone" placeholder="เบอร์โทรศัพท์" />
                   </div>
                 </div>
                 <div class="field is-grouped">
@@ -74,7 +86,6 @@
   
 <script lang="ts">
 import { defineComponent, reactive } from "vue";
-import { useRouter } from "vue-router";
 import Swal from "sweetalert2";
 import Job from "@/models/Job";
 import axios from "@/plugins/axios";
@@ -110,32 +121,17 @@ export default defineComponent({
       state: "",
     });
 
-    const editForm = reactive<Job>({
-            id: "",
-            company_id: "",
-            name: "",
-            company_name: "",
-            salary_per_day: 0,
-            capacity: 0,
-            location: "",
-            detail: "",
-            interview: "",
-            qualifications: [],
-            contact: {name:"", email:"", phone:""},
-            creation_date: "",
-            state: ""
-        })
-    console.log('ไอดีcompany'+props.company_id)
+    console.log('ไอดีcompany' + props.company_id)
+
     const addJob = async () => {
       try {
-        Object.assign(editForm,  editForm);
         await axios.post(`${PORT}/company/addJob`, job);
         Swal.fire({
           title: "Success",
           text: "Job added successfully",
           icon: "success",
         });
-        emit("saveNewJob",  job);
+        emit("saveNewJob", job);
         emit("addNewJob", false);
       } catch (error) {
         Swal.fire({
