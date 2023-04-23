@@ -13,9 +13,10 @@
   </div>
 </template>
   
-<script>
-export default {
-  name: 'preLoading',
+<script lang="ts">
+import { computed, defineComponent } from 'vue'
+
+export default defineComponent({
   props: {
     color: {
       type: String,
@@ -26,16 +27,21 @@ export default {
       default: 1,
     },
   },
-  computed: {
-    cssVars() {
+  setup(props){
+
+      let cssVars = computed(() => {
       return {
-        '--color': this.color,
-        '--scale': this.scale,
+        '--color': props.color,
+        '--scale': props.scale,
       }
-    }
+    })
+
+    return { cssVars }
   }
-}
+})
 </script>
+
+
   
 <style scoped>
 .preloader {
@@ -108,9 +114,12 @@ export default {
 
 .parent-container {
   display: flex;
-  justify-content: center; /* align center horizontally */
-  align-items: center; /* align center vertically */
-  height: 100vh; /* adjust the height of the container */
+  justify-content: center;
+  /* align center horizontally */
+  align-items: center;
+  /* align center vertically */
+  height: 100vh;
+  /* adjust the height of the container */
 }
 
 @keyframes f_fadeG {

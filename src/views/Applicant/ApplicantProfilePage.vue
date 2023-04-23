@@ -67,7 +67,7 @@ import { useStore } from 'vuex';
 import User from '@/models/User';
 import { PORT } from '@/port';
 import router from '@/router'
-import preloadingVue from '@/components/preloading.vue'
+import preloadingVue from '@/components/pre-loading.vue'
 import getUserData from '@/plugins/getUser'
 import {def_applicant} from "@/plugins/defaultValue";
 
