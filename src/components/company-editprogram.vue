@@ -7,7 +7,7 @@
         <div class="card" style="min-height: 100vh;">
           <div class="card-content">
             <div class="content">
-              <div v-show="activeTab === 'programs'" style="background-color: #f0ede9;">
+              <div style="background-color: #f0ede9;">
                 <div class="field">
                   <label class="label">แก้ไขรูปภาพโครงการ</label>
                   <div class="field is-grouped">
@@ -59,7 +59,6 @@
                   </div>
                 </div>
 
-
                 <div class="qualification">
                   <label class="label">สิทธิพิเศษ</label>
                   <button class="button is-success" @click="program.privileges.push(privilege)">เพิ่ม +</button>
@@ -87,8 +86,6 @@
                 </div>
               </div>
 
-
-
               <div class="field">
                 <div class="control">
                   <button class="button is-primary" @click="submitForm">บันทึก</button>
@@ -109,7 +106,6 @@ import Swal from 'sweetalert2';
 import Program from '@/models/Program';
 import { PORT } from "@/port";
 import axios from "axios";
-import { def_program, } from "@/plugins/defaultValue"
 
 export default defineComponent({
   emits: ["updateProgramEdit", "saveProgramEdit", "programDeleted"],
@@ -232,12 +228,12 @@ export default defineComponent({
           });
           program.image = response.data.image
 
-          Swal.fire('บันทึกเรียบร้อย!', 'โครงการพิเศษถูกเพิ่มเรียบร้อยแล้ว', 'success');
+          Swal.fire('บันทึกเรียบร้อย!', 'โครงการพิเศษถูกแก้ไขเรียบร้อยแล้ว', 'success');
           emit("updateProgramEdit", false);
           emit("saveProgramEdit", program);
 
         } catch (error) {
-          Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเพิ่มโครงการพิเศษได้', 'error');
+          Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถแก้ไขโครงการพิเศษได้', 'error');
         }
       }
     };
@@ -279,7 +275,7 @@ export default defineComponent({
           }
         } catch (error) {
           console.error(error);
-          Swal.fire("Error", "เกิดข้อผิดพลาดในการลบงาน กรุณาลองใหม่.", "error");
+          Swal.fire("Error", "เกิดข้อผิดพลาดในการลบโครงการ กรุณาลองใหม่.", "error");
         }
       } else {
         Swal.fire("Cancelled", "ยกเลิกแล้ว :)", "error");
@@ -335,8 +331,9 @@ export default defineComponent({
   height: 50%;
 }
 .qualification {
+  
   font-family: Arial, sans-serif;
-  background-color: #e9e9e9;
+  background-color: #f0ede9;
   padding-left: 30px;
   border-radius: 5px;
 }
@@ -351,6 +348,7 @@ export default defineComponent({
   border-radius: 5px;
   margin-bottom: 20px;}
 .input {
+ 
   background-color: #ffffff;
   border: none;
   border-bottom: 2px;
@@ -359,7 +357,7 @@ export default defineComponent({
   border-radius: 5px;
 }
 .formInput p {
-  background-color: #bdbdbd;
+  background-color: #BACDDB;
   font-size: 1.1rem;
 }
 .button.is-danger {
@@ -372,7 +370,9 @@ export default defineComponent({
 }
 
 .form-detail {
-  padding: 5px 30px 5px;
+  border-radius: 5px;
+  padding: 8px 30px 7px;
+  margin-left:10px ;
   margin-bottom: 10px;
 }
 </style>

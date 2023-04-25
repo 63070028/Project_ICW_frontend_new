@@ -3,11 +3,11 @@
     <div class="columns">
       <div class="column is-3" style="background-color: #f8f8f8;">
       </div>
-      <div class="column is-9" style="background-color: #f1f1f1;">
+      <div class="column is-9" style="background-color:#f0ede9;">
         <div class="card" style="min-height: 100vh;">
           <div class="card-content">
             <div class="content">
-              <div v-show="activeTab === 'programs'" style="background-color: #f6f6f6;">
+              <div style="background-color: #f0ede9;">
                 <h1 class="title">เพิ่มโครงการพิเศษ</h1>
                 <div class="field">
                   <label class="label">อัพโหลดรูปภาพโครงการ</label>
@@ -238,53 +238,50 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+.card-container{
+  background-color: #e9e9e9;
+}
+.card-content{
+  background-color: #f0ede9
+}
+.head-content{
+  padding: 1rem;
+}
 .program_image {
   width: 30%;
   height: 50%;
 }
 .qualification {
+  
   font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
+  background-color: #f0ede9;
   padding-left: 30px;
   border-radius: 5px;
 }
-
 .label {
+  
   font-size: 1.2rem;
   font-weight: bold;
-
 }
-
 .button.is-success {
 
   color: white;
   border: none;
   border-radius: 5px;
-
-
-}
-
+  margin-bottom: 20px;}
 .input {
+ 
+  background-color: #ffffff;
   border: none;
   border-bottom: 2px;
-
-
 }
-
 .formInput {
-
   border-radius: 5px;
-
 }
-
 .formInput p {
-
-  background-color: #bdbdbd;
-
+  background-color: #BACDDB;
   font-size: 1.1rem;
-
 }
-
 .button.is-danger {
   background-color: #dc3545;
   color: white;
@@ -295,7 +292,9 @@ export default defineComponent({
 }
 
 .form-detail {
-  padding: 5px 30px 5px;
+  border-radius: 5px;
+  padding: 8px 30px 7px;
+  margin-left:10px ;
   margin-bottom: 10px;
 }
 </style>
