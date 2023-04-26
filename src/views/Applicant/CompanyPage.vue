@@ -1,5 +1,6 @@
 <template>
-    <div class="container mt-4">
+    <preLoadingVue v-if="store.state.isLoadingData"></preLoadingVue>
+    <div class="container mt-4" v-if="!store.state.isLoadingData">
         <img :src="company.background_image" class="background_image">
         <div class="columns is-gapless ml-6 mb-6" style="position: relative; top: -80px;">
             <img :src="company.profile_image" class="column is-2 profile_image">
@@ -45,12 +46,19 @@ import axios from '@/plugins/axios';
 import { PORT } from '@/port';
 import {def_company,} from "@/plugins/defaultValue"
 import getUserData from '@/plugins/getUser';
+import { useStore } from 'vuex';
+import User from '@/models/User';
+import preLoadingVue from '@/components/pre-loading.vue';
 
 export default defineComponent({
+    components:{
+        preLoadingVue
+    },
     setup() {
         const router = useRouter();
         const route = useRoute();
-
+        const store = useStore();
+        const user = reactive<User>(store.state.user);
         //def
         const company = reactive<Company>(def_company);
 
@@ -60,23 +68,26 @@ export default defineComponent({
         onMounted(async () => {
 
             console.log('get api company id: ' + route.params.id)
+            store.commit('LOADING_DATA', true)
             //set company
-
+            await getUserData()
         
 
-            // await axios.get(`${PORT}`+'/company/getProfile/'+route.params.id).then(res => Object.assign(company, res.data.company))
+            await axios.get(`${PORT}`+'/company/getProfile/'+route.params.id).then(res => Object.assign(company, res.data.company))
 
-            // await axios.get(`${PORT}`+'/company//getJob/'+route.params.id).then(res=>{
-            //     res.data.items.forEach((job:Job) =>{
-            //         jobs.push(job)
-            //     })
-            // })
+            await axios.get(`${PORT}`+'/company/getJob/'+route.params.id).then(res=>{
+                console.log( res.data.job)
+                const get_jobs:Job[] = res.data.job
+                get_jobs.forEach((job) =>{
+                    jobs.push(job)
+                })
+            })
 
             // const get_jobs: Job[] = [
             //     { id: "1234-xxxx-xxxx-xxxx-xxxx", company_id: "xxxx-xxxx-xxxx-xxxx", company_name:"c_name", name: "ฝึกงาน ตำแหน่ง Software Engineer", salary_per_day: 500, location: "sssss", capacity: 10, detail: "", interview: "online", qualifications: ["111", "2222"], contact: { name: "chanapon", email: "xxxxx@hotmail.com", phone: "08xxxxxxxx" }, creation_date: "03/25/2015", state:"on" },
             // ]
 
-
+            store.commit('LOADING_DATA', false)
         });
 
         const viewJob = (id: string) => {
@@ -88,6 +99,8 @@ export default defineComponent({
             route,
             company,
             jobs,
+            store,
+            user,
             viewJob
         }
     },

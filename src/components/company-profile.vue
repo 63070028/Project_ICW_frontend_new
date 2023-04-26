@@ -18,14 +18,22 @@
                   <div class="field">
                     <label class="label">คำอธิบาย</label>
                     <div class="control">
-                      <textarea class="textarea" v-model="company.description"></textarea>
+                      <textarea
+                        class="textarea"
+                        v-model="company.description"
+                      ></textarea>
                     </div>
                   </div>
                   <div class="field">
                     <label class="label">รูปโปรไฟล์</label>
                     <div class="file">
                       <label class="file-label">
-                        <input class="file-input" type="file" name="profile_image" @change="previewProfileImage" />
+                        <input
+                          class="file-input"
+                          type="file"
+                          name="profile_image"
+                          @change="previewProfileImage"
+                        />
                         <span class="file-cta is-small">
                           <span class="file-label"> Choose a file.. </span>
                         </span>
@@ -33,7 +41,11 @@
                     </div>
 
                     <div class="control">
-                      <img v-if="profileImagePreview" :src="profileImagePreview" class="image-preview profile_image" />
+                      <img
+                        v-if="profileImagePreview"
+                        :src="profileImagePreview"
+                        class="image-preview profile_image"
+                      />
                     </div>
                   </div>
                   <div class="field">
@@ -41,32 +53,56 @@
                     <div class="control">
                       <div class="file">
                         <label class="file-label">
-                          <input class="file-input" type="file" name="background_image"
-                            @change="previewBackgroundImage" />
+                          <input
+                            class="file-input"
+                            type="file"
+                            name="background_image"
+                            @change="previewBackgroundImage"
+                          />
                           <span class="file-cta is-small">
                             <span class="file-label"> Choose a file.. </span>
                           </span>
                         </label>
                       </div>
                       <br />
-                      <img v-if="backgroundImagePreview" :src="backgroundImagePreview" class="background_image" />
+                      <img
+                        v-if="backgroundImagePreview"
+                        :src="backgroundImagePreview"
+                        class="background_image"
+                      />
                     </div>
                   </div>
                   <div class="field">
                     <label class="label">วิดีโอ</label>
                     <div class="columns">
                       <div class="column">
-                        <img src="https://sv1.picz.in.th/images/2023/04/02/m1nC4y.png" alt="m1nC4y.png" border="0" />
+                        <img
+                          src="https://sv1.picz.in.th/images/2023/04/02/m1nC4y.png"
+                          alt="m1nC4y.png"
+                          border="0"
+                        />
                       </div>
                       <div class="column">
-                        <img src="https://sv1.picz.in.th/images/2023/04/02/m1nvp8.png" alt="m1nvp8.png" border="0" />
+                        <img
+                          src="https://sv1.picz.in.th/images/2023/04/02/m1nvp8.png"
+                          alt="m1nvp8.png"
+                          border="0"
+                        />
                       </div>
                       <div class="column">
-                        <img src="https://sv1.picz.in.th/images/2023/04/02/m1nJNR.png" alt="m1nJNR.png" border="0" />
+                        <img
+                          src="https://sv1.picz.in.th/images/2023/04/02/m1nJNR.png"
+                          alt="m1nJNR.png"
+                          border="0"
+                        />
                       </div>
                     </div>
                     <div class="control">
-                      <input class="input" type="text" v-model="company.video_iframe" />
+                      <input
+                        class="input"
+                        type="text"
+                        v-model="company.video_iframe"
+                      />
                     </div>
                   </div>
                   <div class="field">
@@ -88,7 +124,10 @@
                       </button>
                     </div>
                     <div class="control">
-                      <button class="button is-link is-light" @click="cancelEdit">
+                      <button
+                        class="button is-link is-light"
+                        @click="cancelEdit"
+                      >
                         ยกเลิก
                       </button>
                     </div>
@@ -144,7 +183,6 @@ export default defineComponent({
     },
   },
   setup(props, { emit }) {
-
     const router = useRouter();
 
     const company = reactive<Company>({
@@ -163,7 +201,6 @@ export default defineComponent({
     const backgroundImagePreview = ref(company.background_image);
 
     const saveProfile = async () => {
-
       const result = await Swal.fire({
         title: "ยืนยันการบันทึก?",
         text: "คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?",
@@ -183,13 +220,7 @@ export default defineComponent({
       if (result.isConfirmed) {
         try {
 
-          company.id = props.id;
-          company.name = props.name;
-          company.description = props.description;
-          company.background_image = props.profile_image;
-          company.background_image = props.background_image;
-          company.video_iframe = props.video_iframe;
-          company.state = "on"
+    
 
           const formData = new FormData();
           formData.append("id", props.id);
@@ -219,16 +250,16 @@ export default defineComponent({
           );
 
           console.log(response.data);
-          company.profile_image = response.data.profile_image
-          company.background_image = response.data.background_image
+          company.profile_image = response.data.profile_image;
+          company.background_image = response.data.background_image;
           Swal.fire({
             title: "Success",
             text: "Company profile updated successfully",
             icon: "success",
           });
 
-          emit('saveEdit', company)
-          emit('updateProfileEdit', false)
+          emit("saveEdit", company);
+          emit("updateProfileEdit", false);
         } catch (error) {
           Swal.fire({
             title: "Error",
@@ -270,7 +301,6 @@ export default defineComponent({
       backgroundImagePreview,
       previewProfileImage,
       previewBackgroundImage,
-
     };
   },
   methods: {

@@ -95,7 +95,7 @@ export default defineComponent({
 
             store.commit('LOADING_DATA', true)
 
-            getUserData()
+            await getUserData()
 
             await axios.get(`${PORT}` + "/applicant/getProfileById/" + user.id).then(res => {
                 console.log(res.data.applicant)
