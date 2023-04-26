@@ -125,8 +125,8 @@ export default defineComponent({
     const privilege =  ref<string>("");
     const program = reactive<Program>({
       id: '',
-      company_id: props.company_id,
-      company_name: props.company_name,
+      company_id: '',
+      company_name: '',
       name: '',
       jobs_title: [],
       description: '',
@@ -170,8 +170,8 @@ export default defineComponent({
       if (result.isConfirmed) {
 
         const formData = new FormData();
-        formData.append('company_id', program.company_id);
-        formData.append('company_name', program.company_name);
+        formData.append('company_id', props.company_id);
+        formData.append('company_name', props.company_name);
         formData.append('name', program.name);
         formData.append('jobs_title', JSON.stringify(program.jobs_title));
         formData.append('description', program.description);

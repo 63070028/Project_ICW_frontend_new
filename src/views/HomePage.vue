@@ -62,21 +62,7 @@ export default defineComponent({
 
     const states = reactive<{ companies: Company[], programs: Program[] }>({
       companies: [],
-      programs: [
-        // {
-        //   id: "p123-xxxx-xxxx-xxxx",
-        //   company_id: "xxxx-xxxx-xxxx-xxxx",
-        //   company_name: "company1",
-        //   name: "program1",
-        //   description: "sdfsadfkdsjfklasvklfalksdfasdlfkv", // เพิ่มคุณสมบัติ description
-        //   course: "dsafkdls;fk;sldkf;ldksf;lavmcvopgowpegjodf",
-        //   jobs_title: ['SE', 'NW', "ML"],
-        //   qualifications: ["11111"],
-        //   privileges: ["111111"],
-        //   image: "https://www.w3schools.com/w3images/workbench.jpg",
-        //   state: "on"
-        // }
-      ]
+      programs: []
     });
 
     onMounted(async () => {
