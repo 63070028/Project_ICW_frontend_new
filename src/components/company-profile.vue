@@ -227,7 +227,8 @@ export default defineComponent({
           formData.append("name", company.name);
           formData.append("description", company.description);
           formData.append("video_iframe", company.video_iframe);
-          formData.append("state", company.state); // ใส่ค่า state เป็น on ใน form data
+          
+          formData.append("state", "on"); // ใส่ค่า state เป็น on ใน form data
 
           if (profileImageInput.value?.files?.[0]) {
             formData.append("profile_image", profileImageInput.value.files[0]);

@@ -61,8 +61,6 @@
           </div>
       </div>
     </div>
-    const updateNewProgram = (change_data: Program) => {
-
   </div>
   <CompanyAddProgram 
     :company_id="company.id"

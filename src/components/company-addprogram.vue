@@ -189,6 +189,7 @@ export default defineComponent({
             }
           });
           program.image = response.data.image
+          program.id = response.data.program_id
           Swal.fire('บันทึกเรียบร้อย!', 'โครงการพิเศษถูกเพิ่มเรียบร้อยแล้ว', 'success');
 
           emit("saveNewProgram", program);

@@ -172,6 +172,8 @@ export default defineComponent({
       privileges: props.privileges,
       state: props.state,
     });
+ 
+
 
     const programImageInput = ref<HTMLInputElement | null>(null);
     const programImagePreview = ref(program.image);
@@ -227,7 +229,6 @@ export default defineComponent({
 
           });
           program.image = response.data.image
-
           Swal.fire('บันทึกเรียบร้อย!', 'โครงการพิเศษถูกแก้ไขเรียบร้อยแล้ว', 'success');
           emit("updateProgramEdit", false);
           emit("saveProgramEdit", program);

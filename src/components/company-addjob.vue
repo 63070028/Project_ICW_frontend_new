@@ -130,14 +130,18 @@ export default defineComponent({
 
     const addJob = async () => {
       try {
-        await axios.post(`${PORT}/company/addJob`, job);
+        await axios.post(`${PORT}/company/addJob`, job).then(res => {
+          job.id = res.data.job_id
+          console.log(job)
+          emit("saveNewJob", job);
+        });
         Swal.fire({
           title: "Success",
           text: "Job added successfully",
           icon: "success",
         });
-        emit("saveNewJob", job);
         emit("addNewJob", false);
+
       } catch (error) {
         Swal.fire({
           title: "Error",
