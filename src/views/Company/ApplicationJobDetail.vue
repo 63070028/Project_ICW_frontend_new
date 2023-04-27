@@ -13,7 +13,10 @@
                   ผู้สมัครหมายเลข {{ route.params.id }}
                 </p>
                 <div class="columns is-multiline ml-6 mt-1">
-                  <p class="column is-12"></p>
+                  <p class="column is-12 is-size-5 has-text-weight-bold">
+                    ชื่อผู้สมัคร: {{ applicationJob.firstName }}
+                    {{ applicationJob.lastName }}
+                  </p>
                   <p class="column is-6">เพศ: {{ applicationJob.gender }}</p>
                   <p class="column is-6">
                     อีเมล: {{ applicationJob.email_profile }}
@@ -30,17 +33,20 @@
                   <div class="column is-6">
                     สถานะ: {{ applicationJob.state }}
                   </div>
-                  <div class="column is-1">
+                  <div class="column is-8"></div>
+                  <div class="column is-2">
                     <button
-                      class="button is-small is-success"
+                      style="left: 90%"
+                      class="button is-medium is-success"
                       @click="acceptApplicant(applicationJob)"
                     >
                       ผ่าน
                     </button>
                   </div>
-                  <div class="column is-1">
+                  <div class="column is-2">
                     <button
-                      class="button is-small is-danger"
+                      style="left: 75%"
+                      class="button is-medium is-danger"
                       @click="declineApplicant(applicationJob)"
                     >
                       ไม่ผ่าน
@@ -75,12 +81,12 @@
                 </a>
               </li>
             </ul>
-
             <uploadPdfVue
               :maxSize="100"
               :upload_category="select_option"
               v-if="select_option === 'resume'"
               :role="'company'"
+              :url="applicationJob.resume"
             >
             </uploadPdfVue>
             <uploadPdfVue
@@ -88,6 +94,7 @@
               :upload_category="select_option"
               v-if="select_option === 'transcript'"
               :role="'company'"
+              :url="applicationJob.transcript"
             >
             </uploadPdfVue>
             <uploadPdfVue
@@ -95,6 +102,7 @@
               :upload_category="select_option"
               v-if="select_option === 'portfolio'"
               :role="'company'"
+              :url="applicationJob.portfolio"
             >
             </uploadPdfVue>
           </div>
@@ -162,7 +170,7 @@ export default defineComponent({
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.isConfirmed) {
-          applicant.state = "declined"
+          applicant.state = "declined";
           axios
             .post(`${PORT}` + "/application/declineApplicationJob", applicant)
             .then((response) => {
@@ -173,17 +181,18 @@ export default defineComponent({
               console.log(error);
             });
           Swal.fire({
-            position: "center", 
-            icon: "error",
+            position: "center",
+            icon: "success",
             title: "ทำการปฏิเสธผู้สมัครเรียบร้อย",
             showConfirmButton: false,
             timer: 1500,
           });
+          router.push("/ListApplicant");
         }
       });
     };
     const acceptApplicant = (applicant: ApplicationJob) => {
-      console.log(applicant)
+      console.log(applicant);
       Swal.fire({
         title: "รับผู้สมัคร",
         text: "",
@@ -194,7 +203,7 @@ export default defineComponent({
         confirmButtonText: "Yes",
       }).then((result) => {
         if (result.isConfirmed) {
-          applicant.state = "accepted"
+          applicant.state = "accepted";
           axios
             .post(`${PORT}` + "/application/acceptApplicationJob", applicant)
             .then((response) => {
@@ -211,6 +220,7 @@ export default defineComponent({
             showConfirmButton: false,
             timer: 1500,
           });
+          router.push("/ListApplicant");
         }
       });
     };
@@ -229,7 +239,7 @@ export default defineComponent({
       console.log(applicationJob.id);
     });
 
-    let select_option = ref<string>("user_profile");
+    let select_option = ref<string>("resume");
 
     return {
       v$,
