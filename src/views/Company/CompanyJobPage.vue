@@ -61,16 +61,15 @@
                           {{ index + 1 + "." }} {{ job.name }}
                         </p>
                       </div>
+                      <div class="column is-one-quarter"></div>
+                      <div class="column is-one-quarter"></div>
                       <div class="column is-one-quarter">
-                        
-                      </div>
-                      <div class="column is-one-quarter">
-                       
-                      </div>
-                      <div class="column is-one-quarter">
-                        <button class="button is-danger is-pulled-right" @click="deleteJob(job.id)">
-                        ลบงาน
-                      </button>
+                        <button
+                          class="button is-danger is-pulled-right"
+                          @click="deleteJob(job.id)"
+                        >
+                          ลบงาน
+                        </button>
                       </div>
                     </div>
                     <div class="control"></div>
@@ -122,10 +121,7 @@
                       >
                       </v-switch>
 
-                      <button
-                        class="button  is-info"
-                        @click="updateEdit(index)"
-                      >
+                      <button class="button is-info" @click="updateEdit(index)">
                         แก้ไขงาน
                       </button>
                     </div>
@@ -144,9 +140,7 @@
     :company_name="company.name"
     v-if="isAddJob"
     @addNewJob="
-      ($event) => {
-        isAddJob = $event;
-      }
+      addNewJob($event)
     "
     @saveNewJob="updateNewJob($event)"
   ></CompanyAddjob>
@@ -168,9 +162,7 @@
     :creation_date="selectedJob.creation_date"
     :state="selectedJob.state"
     @updateJobEdit="
-      ($event) => {
-        isEditJob = $event;
-      }
+      updateJobEdit($event)
     "
     @saveJobEdit="updateCompanyJob($event)"
     @jobDeleted="updateDelJob($event)"
@@ -265,7 +257,7 @@ export default defineComponent({
       }
     };
 
-    const updateEdit =  (index: number) => {
+    const updateEdit = (index: number) => {
       selectedJobIndex.value = index;
       isEditJob.value = true;
     };
@@ -274,7 +266,7 @@ export default defineComponent({
       return selectedJobIndex.value >= 0 ? jobs[selectedJobIndex.value] : null;
     });
 
-    const deleteJob =  async  (id: string) => {
+    const deleteJob = async (id: string) => {
       const result = await Swal.fire({
         title: "Are you sure?",
         text: "คุณจะไม่สามารถกู้ข้อมูลงานนี้ได้",
@@ -285,9 +277,8 @@ export default defineComponent({
       });
 
       if (result.isConfirmed) {
-
-      try {
-      const response = await axios.delete(
+        try {
+          const response = await axios.delete(
             `${PORT}` + "/company/deleteJob",
             {
               params: {
@@ -297,17 +288,17 @@ export default defineComponent({
           );
           if (response.status === 200) {
             const index = jobs.findIndex((job) => job.id === id);
-      if (index !== -1) {
-        jobs.splice(index, 1);
-      }
-          
+            if (index !== -1) {
+              jobs.splice(index, 1);
+            }
+
             Swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'Success',
+              position: "center",
+              icon: "success",
+              title: "Success",
               showConfirmButton: false,
-              timer: 1000
-            })
+              timer: 1000,
+            });
           } else {
             Swal.fire(
               "Error",
@@ -315,14 +306,23 @@ export default defineComponent({
               "error"
             );
           }
-  } catch (error) {
+        } catch (error) {
           console.error(error);
           Swal.fire("Error", "เกิดข้อผิดพลาดในการลบงาน กรุณาลองใหม่.", "error");
         }
       } else {
         Swal.fire("Cancelled", "ยกเลิกแล้ว :)", "error");
       }
-  }
+    };
+
+    const addNewJob = (event:boolean) =>{
+      isAddJob.value = event;
+    }
+
+    const updateJobEdit = (event:boolean) =>{
+      isEditJob.value = event;
+    }
+
 
     return {
       router,
@@ -343,7 +343,9 @@ export default defineComponent({
       user,
       isAddJob,
       isEditJob,
-      deleteJob
+      deleteJob,
+      addNewJob,
+      updateJobEdit
     };
   },
 
@@ -352,8 +354,7 @@ export default defineComponent({
       this.activeTab = tab;
     },
     async updateJobState(id: string, newState: string) {
-      const stateText =
-        newState === JobStatus.Open ? "on" : "off";
+      const stateText = newState === JobStatus.Open ? "on" : "off";
       try {
         await axios.post(`${PORT}/company/setJobState`, {
           id: id,
