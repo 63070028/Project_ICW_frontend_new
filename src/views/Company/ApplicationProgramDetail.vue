@@ -1,6 +1,7 @@
 
 <template>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+  <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
   <div class="w3-light-grey">
     <div class="w3-content w3-margin-top" style="max-width: 1400px">
       <div class="w3-container w3-card w3-white w3-margin-bottom">
@@ -40,7 +41,7 @@
                     <button
                       style="left: 90%"
                       class="button is-medium is-success"
-                      @click="acceptApplicant(applicationJob)"
+                      @click="acceptApplicant(applicationProgram)"
                     >
                       ผ่าน
                     </button>
@@ -49,7 +50,7 @@
                     <button
                       style="left: 75%"
                       class="button is-medium is-danger"
-                      @click="declineApplicant(applicationJob)"
+                      @click="declineApplicant(applicationProgram)"
                     >
                       ไม่ผ่าน
                     </button>
@@ -147,15 +148,19 @@ import { useVuelidate } from "@vuelidate/core";
 import { def_applicationProgram } from "@/plugins/defaultValue";
 import axios from "@/plugins/axios";
 import { PORT } from "@/port";
+import { useStore } from 'vuex';
+import preloadingVue from '@/components/pre-loading.vue'
+import User from '@/models/User';
 export default defineComponent({
   components: {
     uploadPdfVue,
+    preloadingVue
   },
   setup() {
     const router = useRouter();
     const route = useRoute();
     const v$ = useVuelidate();
-
+    const store = useStore();
     const confirmDelete = ref<boolean>(false);
 
     const applicationProgram = reactive<ApplicationProgram>(
@@ -176,10 +181,7 @@ export default defineComponent({
         if (result.isConfirmed) {
           applicant.state = "declined";
           axios
-            .post(
-              `${PORT}` + "/application/declineApplicationProgram",
-              applicant
-            )
+            .post(`${PORT}` + "/application/declineApplicationProgram", applicant)
             .then((response) => {
               console.log(response);
             })
@@ -212,10 +214,7 @@ export default defineComponent({
         if (result.isConfirmed) {
           applicant.state = "accepted";
           axios
-            .post(
-              `${PORT}` + "/application/acceptApplicationProgram",
-              applicant
-            )
+            .post(`${PORT}` + "/application/acceptApplicationProgram", applicant)
             .then((response) => {
               console.log(response);
             })
@@ -235,10 +234,14 @@ export default defineComponent({
       });
     };
     onMounted(async () => {
-      console.log("get api applicant id: " + route.params.id);
-
-      //get applicant
-
+      if (!localStorage.getItem('token')) {
+        router.push('/signIn')
+        return
+      }
+      store.commit('LOADING_DATA', true)
+      await axios.get(`${PORT}` + "/user/getData").then(res => {
+        store.commit('SET_USER', res.data.user)
+      })
       await axios
         .get(
           `${PORT}` +
@@ -248,8 +251,7 @@ export default defineComponent({
         .then((res) =>
           Object.assign(applicationProgram, res.data.applicantProgram)
         );
-      console.log("tests");
-      console.log(applicationProgram.id);
+      store.commit('LOADING_DATA', false)
     });
 
     const select_option = ref<string>("resume");
@@ -263,6 +265,7 @@ export default defineComponent({
       select_option,
       declineApplicant,
       acceptApplicant,
+      store
     };
   },
 });

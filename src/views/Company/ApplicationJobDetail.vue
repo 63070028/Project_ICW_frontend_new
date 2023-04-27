@@ -1,6 +1,7 @@
 
 <template>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
+  <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
   <div class="w3-light-grey">
     <div class="w3-content w3-margin-top" style="max-width: 1400px">
       <div class="w3-container w3-card w3-white w3-margin-bottom">
@@ -145,18 +146,23 @@ import { useVuelidate } from "@vuelidate/core";
 import { def_applicationJob } from "@/plugins/defaultValue";
 import axios from "@/plugins/axios";
 import { PORT } from "@/port";
+import { useStore } from "vuex";
+import preloadingVue from "@/components/pre-loading.vue";
+import User from "@/models/User";
 export default defineComponent({
   components: {
     uploadPdfVue,
+    preloadingVue,
   },
   setup() {
     const router = useRouter();
     const route = useRoute();
     const v$ = useVuelidate();
-
+    const store = useStore();
     const confirmDelete = ref<boolean>(false);
     //ยังไม่กำหนด any ไปก่อน
     const applicationJob = reactive<ApplicationJob>(def_applicationJob);
+    const user = reactive<User>(store.state.user);
 
     const declineApplicant = (applicant: ApplicationJob) => {
       //ปฏิ
@@ -225,10 +231,15 @@ export default defineComponent({
       });
     };
     onMounted(async () => {
-      console.log("get api applicant id: " + route.params.id);
+      if (!localStorage.getItem("token")) {
+        router.push("/signIn");
+        return;
+      }
+      store.commit("LOADING_DATA", true);
 
-      //get applicant
-
+      await axios.get(`${PORT}` + "/user/getData").then((res) => {
+        store.commit("SET_USER", res.data.user);
+      });
       await axios
         .get(
           `${PORT}` +
@@ -236,7 +247,7 @@ export default defineComponent({
             route.params.id
         )
         .then((res) => Object.assign(applicationJob, res.data.applicantJob));
-      console.log(applicationJob.id);
+      store.commit("LOADING_DATA", false);
     });
 
     let select_option = ref<string>("resume");
@@ -250,6 +261,8 @@ export default defineComponent({
       select_option,
       declineApplicant,
       acceptApplicant,
+      user,
+      store,
     };
   },
 });
