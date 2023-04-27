@@ -34,7 +34,7 @@
         </div>
         <div class="columns mt-6 submit_button">
             <button class="button column is-6 m-3 is-success is-medium" @click="isSubmit = !isSubmit"
-                v-if="store.state.user.role == 'applicant'">ยืนสมัตร</button>
+            v-if="user.role == 'applicant' && user.state == 'on'">ยืนสมัตร</button>
         </div>
     </div>
 

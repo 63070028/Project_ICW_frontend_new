@@ -39,13 +39,14 @@
             </applicantProfileVue>
 
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'resume'"
-                :url="applicant.resume" :role="'applicant'" @resume="applicant.resume = $event"></uploadPdfVue>
+                :url="applicant.resume" :role="'applicant'" @resume="changeResume($event)"></uploadPdfVue>
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'transcript'"
-                :url="applicant.transcript" :role="'applicant'" @transcript="applicant.resume = $event">
+                :url="applicant.transcript" :role="'applicant'" @transcript="changeTranscript($event)">
             </uploadPdfVue>
             <uploadPdfVue :maxSize="100" :upload_category="select_option" v-if="select_option === 'portfolio'"
-                :url="applicant.portfolio" :role="'applicant'" @portfolio="applicant.resume = $event">
+                :url="applicant.portfolio" :role="'applicant'" @portfolio="changePortfolio($event)">
             </uploadPdfVue>
+
             <applicantPreview :appliacnt="applicant" v-if="select_option === 'preview'"></applicantPreview>
         </div>
 
@@ -110,9 +111,21 @@ export default defineComponent({
             user.state = change_data.state
         }
 
+        const changeResume =  (url:string) =>{
+            applicant.resume = url
+        }
+
+        const changeTranscript =  (url:string) =>{
+            applicant.transcript = url
+        }
+
+        const changePortfolio =  (url:string) =>{
+            applicant.portfolio = url
+        }
+
 
         return {
-            select_option, applicant, store, user, updateProfile
+            select_option, applicant, store, user, updateProfile, changeResume, changeTranscript, changePortfolio
         }
 
     },

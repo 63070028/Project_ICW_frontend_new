@@ -12,7 +12,7 @@
         <Carousel :autoplay="1500" :wrapAround="true" style="width: 90%;">
           <!-- //Array state.progarms -->
           <Slide v-for="(program, index) in states.programs" :key="index">
-            <img @click="viewProgram(program.id)" class="carousel__item"  :src="program.image" width="850">
+            <img @click="viewProgram(program.id)" class="carousel__item"  :src="program.image" width="800">
           </Slide>
           <template #addons>
             <Navigation />
