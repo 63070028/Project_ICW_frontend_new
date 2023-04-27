@@ -3,7 +3,6 @@
         <div class="card px-5 py-4">
             <div class="pt-3" style="border-top:0.5px solid gray;" v-for="item, index in paginatedItems" :key="index">
                 <div @click="viewApplicationProgramDetail(item.id)">
-                <p class="is-size-4 has-text-weight-bold p-3">บริษัท {{ item.company_name }}</p>
                 <p class="is-size-4 has-text-weight-bold p-3">โครงการ {{ item.program_name }}</p>
                 <div class="columns p-4">
                     <div class="column">
