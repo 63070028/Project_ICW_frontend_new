@@ -27,16 +27,16 @@
           </div>
         </div>
         <div class="column my-3" style="display: flex;flex-direction: column;justify-content: space-between;">
-          <button class="button is-danger" @click="isReport = !isReport">
+          <button v-if="user.role === 'applicant'" class="button is-danger" @click="isReport = !isReport">
             รายงาน
           </button>
-          <button class="button is-success" @click="submitApplication()" v-if="store.state.user.role == 'applicant'">
+          <button class="button is-success" @click="submitApplication()" v-if="user.role == 'applicant'">
             ยื่นสมัคร
           </button>
         </div>
       </div>
     </div>
-    <div style="display: flex; flex-direction: column; align-items: flex-end">
+    <div v-if="user.role === 'applicant'" style="display: flex; flex-direction: column; align-items: flex-end">
       <i v-show="isMyFavorite == false" class="pi pi-heart m-5" style="font-size: 1.3rem; cursor: pointer"
         @click="setMyJobFavorite()"><span class="ml-2">รายการโปรด</span></i>
 

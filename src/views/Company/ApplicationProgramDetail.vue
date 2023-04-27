@@ -2,7 +2,7 @@
 <template>
   <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css" />
   <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
-  <div class="w3-light-grey">
+  <div class="w3-light-grey" v-if="!store.state.isLoadingData">
     <div class="w3-content w3-margin-top" style="max-width: 1400px">
       <div class="w3-container w3-card w3-white w3-margin-bottom">
         <div class="columns mt-6">

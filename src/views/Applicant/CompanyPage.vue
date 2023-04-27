@@ -32,11 +32,11 @@
       style="border-bottom: 0.5px solid gray"
       @click="viewJob(job.id)"
     >
+
       <p class="is-size-4 has-text-weight-bold">
         {{ index + 1 + "." }} {{ job.name }}
       </p>
       <div class="columns is-multiline ml-6 mt-1">
-        
         <div class="column is-6">
           <i class="pi pi-map-marker">
             <span class="is-size-5 pl-4"
@@ -63,6 +63,7 @@
         </p>
       </div>
     </div>
+
   </div>
 </template>
 
