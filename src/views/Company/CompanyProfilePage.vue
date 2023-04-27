@@ -16,12 +16,12 @@
           </ul>
         </aside>
       </div>
-      <div class="column is-9" style="background-color: #f1f1f1;">
+      <div class="column is-9" style="background-color: #ddd9d1;">
         <div class="card" style="min-height: 100vh;">
           <div class="card-content">
             <div class="content">
               
-              <div v-show="activeTab === 'info'" style="background-color: #fafafa;">
+              <div v-show="activeTab === 'info'" style="background-color: #f0ede9;">
                 
                 <div class="card-content">
                   <button class="button is-info" @click="isEdited = true">แก้ไขข้อมูล</button>

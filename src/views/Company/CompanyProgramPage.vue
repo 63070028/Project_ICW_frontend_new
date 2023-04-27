@@ -15,7 +15,7 @@
           </ul>
         </aside>
       </div>
-      <div class="card-container column is-9">
+      <div class="card-container column is-9" style="background-color: #ddd9d1;">
         <div class="card" style="min-height: 100vh;">
           <div class="card-content" style="min-height: 100vh;">
             <div class="content">
@@ -68,7 +68,7 @@
                        
 
                         <v-switch v-model="program.state" hide-details inset color="success" :true-value="ProgramStatus.Open"
-                          :false-value="ProgramStatus.Closed" :label="`สถานะโครงการ: ${program.state}`"
+                          :false-value="ProgramStatus.Closed" :label="`สถานะ: ${program.state}`"
                           :style="{ color:  programStateColor(program.state) }" @change="updateProgramState(program.id, program.state)">
                         </v-switch>
                         <button class="button is-small is-info" @click="updateEdit(program, index); isEditProgram = true">แก้ไขโครงการ</button>
