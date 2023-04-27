@@ -16,7 +16,7 @@
             </div>
             <div class="p-4">
               <i class="pi pi-dollar">
-                <span class="is-size-5 pl-4"><b>ค่าตอบแทนรายวัน: </b>{{ job.location }}</span></i>
+                <span class="is-size-5 pl-4"><b>ค่าตอบแทนรายวัน: </b>{{ job.salary_per_day }}</span></i>
             </div>
             <div class="p-4">
               <i class="pi pi-user"><span class="is-size-5 pl-4"><b>จำนวนคำที่รับ: </b>{{ job.capacity }}</span></i>

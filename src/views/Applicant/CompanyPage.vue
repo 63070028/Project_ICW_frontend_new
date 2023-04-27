@@ -32,38 +32,32 @@
       style="border-bottom: 0.5px solid gray"
       @click="viewJob(job.id)"
     >
-
       <p class="is-size-4 has-text-weight-bold">
         {{ index + 1 + "." }} {{ job.name }}
       </p>
       <div class="columns is-multiline ml-6 mt-1">
-        <div class="column is-6">
-          <i class="pi pi-map-marker">
-            <span class="is-size-5 pl-4"
-              ><b>สถานที่ทำงาน: </b>{{ job.location }}</span
-            ></i
-          >
+        <div class="column is-9">
+          <i class="pi pi-map-marker"> <span class="is-size-5 pl-4"><b>สถานที่ทำงาน: </b>{{ job.location }}</span> </i>
         </div>
-        <div class="column is-6">
+        <div class="column is-3">
           <i class="pi pi-dollar">
             <span class="is-size-5 pl-4"
-              ><b>ค่าตอบแทนรายวัน: </b>{{ job.location }}</span
+              ><b>ค่าตอบแทนรายวัน: </b>{{ job.salary_per_day }}</span
             ></i
           >
         </div>
-        <div class="column is-6">
+        <div class="column is-9">
           <i class="pi pi-user"
             ><span class="is-size-5 pl-4"
               ><b>จำนวนคำที่รับ: </b>{{ job.capacity }}</span
             ></i
           >
         </div>
-        <p class="is-size-5 column is-6">
+        <p class="is-size-5 column is-3">
           <b>รูปแบบการสัมภาษณ์: </b>{{ job.interview }}
         </p>
       </div>
     </div>
-
   </div>
 </template>
 
@@ -150,4 +144,5 @@ export default defineComponent({
 .job_content:hover {
   background-color: hsl(0, 0%, 96%);
 }
+
 </style>

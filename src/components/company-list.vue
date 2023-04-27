@@ -4,16 +4,14 @@
             <div class="column is-2 ml-6" v-for="item, index in paginatedItems" :key="index">
                 <!-- <button class="button" @click="deleteItem(index)">Del</button> -->
                 <div class="card" @click="viewConpany(item.id)">
-                   <div class="card-content">
+                   <div>
                         <div class="card-image">
                             <figure class="image">
-                                <img :src="item.profile_image" alt="Placeholder image" style="height: 140px;">
+                                <img :src="item.profile_image" alt="Placeholder image" style="height: 150px;">
                             </figure>
                         </div>
                         <div class="card-content">
-                            <div class="media-content">
-                                <p class="title has-text-centered is-size-6">{{ item.name }}</p>
-                            </div>
+                                <p class="title has-text-centered is-size-6 content">{{ item.name }}</p>
                         </div>
                     </div>
                 </div>
@@ -138,7 +136,7 @@ export default defineComponent({
 }
 
 .content {
-    height: 80px;
+    height: 50px;
     overflow: hidden;
     text-overflow: ellipsis;
 }
