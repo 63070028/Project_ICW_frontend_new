@@ -37,38 +37,50 @@
                   </div>
                 </div>
 
-                <div class="qualification">
-                  <label class="label">ตำแหน่งงาน</label>
-                  <button class="button is-success" @click="program.jobs_title.push(job_title)">เพิ่ม +</button>
-                  <input placeholder="เพิ่ม Job_title" class="input" type="text" v-model="job_title" />
-                  <div class="formInput columns control my-5" v-for="qualification, index in program.jobs_title"
+                <label class="label ">ตำแหน่งงาน</label>
+                  <div class="field is-grouped">
+                    <p class="control">
+                      <input placeholder="เพิ่มตำแหน่งงาน" class="input" type="text" v-model="job_title" />
+                    </p>
+                    <p class="control">
+                      <button class="button is-success" @click="program.jobs_title.push(job_title)">add</button>
+                    </p>
+                  </div>
+                  <div  class="formInput columns control my-5" v-for="job_title, index in program.jobs_title"
                     :key="index">
-                    <p class="form-detail"> {{ qualification }} </p>
+                    <p class="form-detail"> {{ job_title }} </p>
                     <button class="button  is-danger " @click="program.jobs_title.splice(index, 1)">x</button>
                   </div>
-                </div>
 
-                <div class="qualification">
-                  <label class="label">คุณสมบัติ</label>
-                  <button class="button is-success" @click="program.qualifications.push(qualification)">เพิ่ม +</button>
-                  <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
-                  <div class="formInput columns control my-5" v-for="qualification, index in program.qualifications"
+                <label class="label ">คุณสมบัติ</label>
+                  <div class="field is-grouped">
+                    <p class="control">
+                      <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
+                    </p>
+                    <p class="control">
+                      <button class="button is-success" @click="program.qualifications.push(qualification)">add</button>
+                    </p>
+                  </div>
+                  <div  class="formInput columns control my-5" v-for="qualification, index in program.qualifications"
                     :key="index">
                     <p class="form-detail"> {{ qualification }} </p>
                     <button class="button  is-danger " @click="program.qualifications.splice(index, 1)">x</button>
                   </div>
-                </div>
 
-                <div class="qualification">
-                  <label class="label">สิทธิพิเศษ</label>
-                  <button class="button is-success" @click="program.privileges.push(privilege)">เพิ่ม +</button>
-                  <input placeholder="เพิ่มสิทธิพิเศษ" class="input" type="text" v-model="privilege" />
-                  <div class="formInput columns control my-5" v-for="qualification, index in program.privileges"
+                  <label class="label ">สิทธิพิเศษ</label>
+                  <div class="field is-grouped">
+                    <p class="control">
+                      <input placeholder="เพิ่มสิทธิพิเศษ" class="input" type="text" v-model="privilege" />
+                    </p>
+                    <p class="control">
+                      <button class="button is-success" @click="program.privileges.push(privilege)">add</button>
+                    </p>
+                  </div>
+                  <div  class="formInput columns control my-5" v-for="privilege, index in program.privileges"
                     :key="index">
-                    <p class="form-detail"> {{ qualification }} </p>
+                    <p class="form-detail"> {{ privilege }} </p>
                     <button class="button  is-danger " @click="program.privileges.splice(index, 1)">x</button>
                   </div>
-                </div>
 
               </div>
               <div class="field">
@@ -358,7 +370,7 @@ export default defineComponent({
   border-radius: 5px;
 }
 .formInput p {
-  background-color: #BACDDB;
+  background-color: #FFF4E0;
   font-size: 1.1rem;
 }
 .button.is-danger {
@@ -376,4 +388,15 @@ export default defineComponent({
   margin-left:10px ;
   margin-bottom: 10px;
 }
+button,
+input {
+  display: inline-block;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 </style>

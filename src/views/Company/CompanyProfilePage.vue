@@ -20,8 +20,11 @@
         <div class="card" style="min-height: 100vh;">
           <div class="card-content">
             <div class="content">
+              
               <div v-show="activeTab === 'info'" style="background-color: #fafafa;">
+                
                 <div class="card-content">
+                  <button class="button is-info" @click="isEdited = true">แก้ไขข้อมูล</button>
                   <div class="container mt-4">
                     <img :src="company.background_image" class="background_image" />
                     <div class="columns is-gapless ml-6 mb-6" style="position: relative; top: -80px;">
@@ -29,7 +32,7 @@
                       <div class="column ml-4" style="position: relative; top: 100px;">
                         <p class="is-size-4 has-text-weight-bold">{{ company.name }}</p>
                         <!-- Add the edit button here -->
-                        <button class="button is-primary is-small" @click="isEdited = true">แก้ไข</button>
+                        
                       </div>
                     </div>
                     <p class="is-size-5" style="position: relative; top: -40px;">{{ company.description }}</p>

@@ -26,7 +26,7 @@
       ตำแหน่งที่รับสมัคร
     </p>
     <div
-      class="job_content p-3"
+      class="job_content p-6"
       v-for="(job, index) in jobs"
       :key="index"
       style="border-bottom: 0.5px solid gray"
@@ -36,7 +36,7 @@
         {{ index + 1 + "." }} {{ job.name }}
       </p>
       <div class="columns is-multiline ml-6 mt-1">
-        <div class="column is-6">
+        <div class="column is-3">
           <i class="pi pi-map-marker">
             <span class="is-size-5 pl-4"
               ><b>สถานที่ทำงาน: </b>{{ job.location }}</span
