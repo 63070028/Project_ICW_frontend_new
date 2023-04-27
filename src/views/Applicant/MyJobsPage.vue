@@ -1,5 +1,6 @@
 <template>
     <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
+
     <div class="container" v-if="!store.state.isLoadingData">
         <div class="columns mt-6">
             <div class="column has-background-light is-3 pt-3 pb-3 card">
@@ -33,7 +34,10 @@
             <!-- <myjobHistoryList :items="[1, 2, 3, 4]" v-if="select_option === 'history'"></myjobHistoryList> -->
 
         </div>
+        
     </div>
+
+
 </template>
 
 

@@ -4,7 +4,7 @@
         <img src="https://www.w3schools.com/w3images/workbench.jpg" class="background_image">
         <div class="program_header mt-3">
             <p class="is-size-2">โครงการ {{ program.name }}</p>
-            <p class="is-size-4 mt-3">โดย ...</p>
+            <p class="is-size-4 mt-3">โดย {{program.company_name}}</p>
         </div>
         <div class="program_description">
             <p class="is-size-5">{{ program.description }}</p>
@@ -190,22 +190,14 @@ export default defineComponent({
         onMounted(async () => {
             store.commit('LOADING_DATA', true)
             console.log("api get program form" + route.params.id)
-            await getUserData();
-            const get_program: Program = {
-                id: "p123-xxxx-xxxx-xxxx",
-                company_id: "xxxx-xxxx-xxxx-xxxx",
-                company_name: "company1",
-                name: "program1",
-                description: "sdfsadfkdsjfklasvklfalksdfasdlfkv", // เพิ่มคุณสมบัติ description
-                course: "dsafkdls;fk;sldkf;ldksf;lavmcvopgowpegjodf",
-                jobs_title: ['SE', 'NW', "ML"],
-                qualifications: ["11111"],
-                privileges: ["111111"],
-                image: "https://www.w3schools.com/w3images/workbench.jpg",
-                state: "on"
-            }
 
-            Object.assign(program, get_program)
+            await getUserData();
+            await axios.post(`${PORT}`+"/company/getProgramById", {program_id:route.params.id}).then(res => {
+                console.log(res.data.program)
+                Object.assign(program, res.data.program)
+            })
+
+            
 
             if (store.state.user.role === "applicant") {
                 await axios.get(`${PORT}` + "/applicant/getProfileById/" + store.state.user.id).then(res => Object.assign(applicant, res.data.applicant))

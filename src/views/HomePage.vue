@@ -12,8 +12,7 @@
         <Carousel :autoplay="1500" :wrapAround="true" style="width: 90%;">
           <!-- //Array state.progarms -->
           <Slide v-for="(program, index) in states.programs" :key="index">
-            <img @click="viewProgram(program.id)" class="carousel__item" src="https://www.w3schools.com/w3images/workbench.jpg"
-              width="1400">
+            <img @click="viewProgram(program.id)" class="carousel__item"  :src="program.image" width="1400">
           </Slide>
           <template #addons>
             <Navigation />
@@ -39,6 +38,8 @@ import { useStore } from 'vuex'
 import User from '@/models/User'
 import PreloaderVue from '@/components/pre-loading.vue'
 import getUserData from '@/plugins/getUser'
+import axios from '@/plugins/axios'
+import { PORT } from '@/port'
 
 
 export default defineComponent({
@@ -60,29 +61,25 @@ export default defineComponent({
     const user = reactive<User>(store.state.user)
 
     const states = reactive<{ companies: Company[], programs: Program[] }>({
-      companies: [
-        { id: "xxxx-xxxx-xxxx-xxxx", name: "Company1", description: "xxxxxx", profile_image: "", background_image: "", video_iframe: "", state: "no" },
-      ],
-      programs: [
-        {
-          id: "p123-xxxx-xxxx-xxxx",
-          company_id: "xxxx-xxxx-xxxx-xxxx",
-          company_name: "company1",
-          name: "program1",
-          description: "sdfsadfkdsjfklasvklfalksdfasdlfkv", // เพิ่มคุณสมบัติ description
-          course: "dsafkdls;fk;sldkf;ldksf;lavmcvopgowpegjodf",
-          jobs_title: ['SE', 'NW', "ML"],
-          qualifications: ["11111"],
-          privileges: ["111111"],
-          image: "https://www.w3schools.com/w3images/workbench.jpg",
-          state: "on"
-        }
-      ]
+      companies: [],
+      programs: []
     });
 
     onMounted(async () => {
       store.commit('LOADING_DATA', true)
+
       await getUserData();
+
+      await axios.get(`${PORT}`+"/company/getCompanyStateOn").then(res => {
+        const companies:Company[] = res.data
+        companies.forEach((company)=>states.companies.push(company))
+      });
+
+      await axios.get(`${PORT}`+"/company/getProgram").then(res =>{
+        const progarms:Program[] = res.data
+        progarms.forEach((progarm)=>states.programs.push(progarm));
+      })
+
       store.commit('LOADING_DATA', false)
     })
 

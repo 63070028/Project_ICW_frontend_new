@@ -3,11 +3,11 @@
     <div class="columns">
       <div class="column is-3" style="background-color: #f8f8f8;">
       </div>
-      <div class="column is-9" style="background-color: #f1f1f1;">
+      <div class="column is-9" style="background-color:#f0ede9;">
         <div class="card" style="min-height: 100vh;">
           <div class="card-content">
             <div class="content">
-              <div v-show="activeTab === 'programs'" style="background-color: #f6f6f6;">
+              <div style="background-color: #f0ede9;">
                 <h1 class="title">เพิ่มโครงการพิเศษ</h1>
                 <div class="field">
                   <label class="label">อัพโหลดรูปภาพโครงการ</label>
@@ -42,6 +42,30 @@
                     <button class="button  is-danger " @click="program.jobs_title.splice(index, 1)">x</button>
                   </div>
                 </div>
+
+                <div class="qualification">
+                  <label class="label">คุณสมบัติ</label>
+                  <button class="button is-success" @click="program.qualifications.push(qualification)">add</button>
+                  <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
+                  <div  class="formInput columns control my-5" v-for="qualification, index in program.qualifications"
+                    :key="index">
+                    <p class="form-detail"> {{ qualification }} </p>
+                    <button class="button  is-danger " @click="program.qualifications.splice(index, 1)">x</button>
+                  </div>
+                </div>
+
+
+                <div class="qualification">
+                  <label class="label">สิทธิพิเศษ</label>
+                  <button class="button is-success" @click="program.privileges.push(privilege)">add</button>
+                  <input placeholder="เพิ่มสิทธิพิเศษ" class="input" type="text" v-model="privilege" />
+                  <div  class="formInput columns control my-5" v-for="qualification, index in program.privileges"
+                    :key="index">
+                    <p class="form-detail"> {{ qualification }} </p>
+                    <button class="button  is-danger " @click="program.privileges.splice(index, 1)">x</button>
+                  </div>
+                </div>
+
                 <div class="field">
                   <label class="label">รายละเอียด</label>
                   <div class="control">
@@ -55,25 +79,6 @@
                     <input class="input" type="text" placeholder="หลักสูตร" v-model="program.course" />
                   </div>
                 </div>
-                <div class="qualification">
-                  <label class="label">คุณสมบัติ</label>
-                  <button class="button is-success" @click="program.qualifications.push(qualification)">add</button>
-                  <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
-                  <div  class="formInput columns control my-5" v-for="qualification, index in program.qualifications"
-                    :key="index">
-                    <p class="form-detail"> {{ qualification }} </p>
-                    <button class="button  is-danger " @click="program.qualifications.splice(index, 1)">x</button>
-                  </div>
-                </div>
-
-                
-                <div class="field">
-                  <label class="label">สิทธิประโยชน์</label>
-                  <div class="control">
-                    <textarea class="textarea" placeholder="สิทธิประโยชน์" v-model="program.privileges"></textarea>
-                  </div>
-                </div>
-
 
                 <div class="field">
                   <div class="control">
@@ -116,11 +121,12 @@ export default defineComponent({
   setup(props, { emit }) {
 
     const qualification = ref<string>("");
-     const job_title =  ref<string>("");
+    const job_title =  ref<string>("");
+    const privilege =  ref<string>("");
     const program = reactive<Program>({
       id: '',
-      company_id: props.company_id,
-      company_name: props.company_name,
+      company_id: '',
+      company_name: '',
       name: '',
       jobs_title: [],
       description: '',
@@ -164,8 +170,8 @@ export default defineComponent({
       if (result.isConfirmed) {
 
         const formData = new FormData();
-        formData.append('company_id', program.company_id);
-        formData.append('company_name', program.company_name);
+        formData.append('company_id', props.company_id);
+        formData.append('company_name', props.company_name);
         formData.append('name', program.name);
         formData.append('jobs_title', JSON.stringify(program.jobs_title));
         formData.append('description', program.description);
@@ -183,6 +189,7 @@ export default defineComponent({
             }
           });
           program.image = response.data.image
+          program.id = response.data.program_id
           Swal.fire('บันทึกเรียบร้อย!', 'โครงการพิเศษถูกเพิ่มเรียบร้อยแล้ว', 'success');
 
           emit("saveNewProgram", program);
@@ -217,7 +224,8 @@ export default defineComponent({
       previewProgramImage,
       programImagePreview,
       qualification,
-      job_title
+      job_title,
+      privilege
     };
   },
   methods: {
@@ -231,53 +239,50 @@ export default defineComponent({
 });
 </script>
 <style scoped>
+.card-container{
+  background-color: #e9e9e9;
+}
+.card-content{
+  background-color: #f0ede9
+}
+.head-content{
+  padding: 1rem;
+}
 .program_image {
   width: 30%;
   height: 50%;
 }
 .qualification {
+  
   font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
+  background-color: #f0ede9;
   padding-left: 30px;
   border-radius: 5px;
 }
-
 .label {
+  
   font-size: 1.2rem;
   font-weight: bold;
-
 }
-
 .button.is-success {
 
   color: white;
   border: none;
   border-radius: 5px;
-
-
-}
-
+  margin-bottom: 20px;}
 .input {
+ 
+  background-color: #ffffff;
   border: none;
   border-bottom: 2px;
-
-
 }
-
 .formInput {
-
   border-radius: 5px;
-
 }
-
 .formInput p {
-
-  background-color: #bdbdbd;
-
+  background-color: #BACDDB;
   font-size: 1.1rem;
-
 }
-
 .button.is-danger {
   background-color: #dc3545;
   color: white;
@@ -288,7 +293,9 @@ export default defineComponent({
 }
 
 .form-detail {
-  padding: 5px 30px 5px;
+  border-radius: 5px;
+  padding: 8px 30px 7px;
+  margin-left:10px ;
   margin-bottom: 10px;
 }
 </style>
