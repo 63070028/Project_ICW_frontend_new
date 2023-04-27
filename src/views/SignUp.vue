@@ -166,7 +166,7 @@ export default defineComponent({
         return {
             email: {
                 required: helpers.withMessage('กรุณากรอบอีเมล', required),
-                emailValid: helpers.withMessage('มันไม่อีเมล', emailValid)
+                emailValid: helpers.withMessage('มันไม่ใช่อีเมล', emailValid)
             },
             password: {
                 required: helpers.withMessage('กรุณากรอบรหัสผ่าน', required),
