@@ -1,8 +1,8 @@
 <template>
   <div class="company p-3">
-    <div class="columns">
-      <div class="column is-3" style="background-color: #f8f8f8;">
-      </div>
+
+    <div class="columns"  style="background-color: #f0ede9">
+        <div class="column is-2" style="background-color: #f0ede9"></div>
       <div class="column is-9" style="background-color:#f0ede9;">
         <div class="card" style="min-height: 100vh;">
           <div class="card-content">
@@ -46,7 +46,7 @@
                       <button class="button is-success" @click="program.jobs_title.push(job_title)">add</button>
                     </p>
                   </div>
-                  <div  class="formInput columns control my-5" v-for="job_title, index in program.jobs_title"
+                  <div  class="formInput columns control my-1" v-for="job_title, index in program.jobs_title"
                     :key="index">
                     <p class="form-detail"> {{ job_title }} </p>
                     <button class="button  is-danger " @click="program.jobs_title.splice(index, 1)">x</button>
@@ -61,7 +61,7 @@
                       <button class="button is-success" @click="program.qualifications.push(qualification)">add</button>
                     </p>
                   </div>
-                  <div  class="formInput columns control my-5" v-for="qualification, index in program.qualifications"
+                  <div  class="formInput columns control my-1" v-for="qualification, index in program.qualifications"
                     :key="index">
                     <p class="form-detail"> {{ qualification }} </p>
                     <button class="button  is-danger " @click="program.qualifications.splice(index, 1)">x</button>
@@ -76,7 +76,7 @@
                       <button class="button is-success" @click="program.privileges.push(privilege)">add</button>
                     </p>
                   </div>
-                  <div  class="formInput columns control my-5" v-for="privilege, index in program.privileges"
+                  <div  class="formInput columns control my-1" v-for="privilege, index in program.privileges"
                     :key="index">
                     <p class="form-detail"> {{ privilege }} </p>
                     <button class="button  is-danger " @click="program.privileges.splice(index, 1)">x</button>
@@ -200,16 +200,10 @@ export default defineComponent({
       }
     };
     const submitForm = async () => {
-      const result = await Swal.fire({
-        title: "ยืนยันการบันทึก?",
-        text: "คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "ยืนยัน",
-        cancelButtonText: "ยกเลิก",
-      });
-      // ตรวจสอบความถูกต้องของข้อมูลก่อนส่ง
+      
+
       Swal.fire({
+        showCancelButton: false,
         position: "center",
         title: "Uploading file...",
         showConfirmButton: false,
@@ -217,8 +211,6 @@ export default defineComponent({
           Swal.showLoading();
         },
       });
-
-      if (result.isConfirmed) {
         const formData = new FormData();
         formData.append("id", props.id);
         formData.append("company_id", props.company_id);
@@ -248,9 +240,7 @@ export default defineComponent({
         } catch (error) {
           Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถแก้ไขโครงการพิเศษได้', 'error');
         }
-      }
     };
-
     const deleteForm = async () => {
       const result = await Swal.fire({
         title: "Are you sure?",
@@ -343,60 +333,51 @@ export default defineComponent({
   width: 30%;
   height: 50%;
 }
-.qualification {
-  
-  font-family: Arial, sans-serif;
-  background-color: #f0ede9;
-  padding-left: 30px;
-  border-radius: 5px;
-}
 .label {
-  font-size: 1.2rem;
-  font-weight: bold;
+
+font-size: 1.2rem;
+font-weight: bold;
 }
 .button.is-success {
 
-  color: white;
-  border: none;
-  border-radius: 5px;
-  margin-bottom: 20px;}
+color: white;
+border: none;
+border-radius: 5px;
+}
 .input {
- 
-  background-color: #ffffff;
-  border: none;
-  border-bottom: 2px;
+
+background-color: #ffffff;
+border: none;
+border-bottom: 2px;
 }
 .formInput {
-  border-radius: 5px;
+border-radius: 5px;
 }
 .formInput p {
-  background-color: #FFF4E0;
-  font-size: 1.1rem;
+background-color: #ddccb4;
+font-size: 1.1rem;
 }
 .button.is-danger {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding-left: 20px;
-  margin-left: 10px;
+background-color: #dc3545;
+color: white;
+border: none;
+border-radius: 5px;
+padding-left: 20px;
+margin-left: 10px;
 }
-
 .form-detail {
-  border-radius: 5px;
-  padding: 8px 30px 7px;
-  margin-left:10px ;
-  margin-bottom: 10px;
+border-radius: 5px;
+padding: 8px 30px 7px;
+margin-left: 10px;
+
 }
 button,
 input {
-  display: inline-block;
+display: inline-block;
 }
-
 .wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+display: flex;
+align-items: center;
+justify-content: center;
 }
-
 </style>

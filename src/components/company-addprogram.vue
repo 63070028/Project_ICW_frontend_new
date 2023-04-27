@@ -1,99 +1,176 @@
 <template>
   <div class="company p-3">
-    <div class="columns">
-      
-      <div class="column is-12" style="background-color:#f0ede9;">
-        <div class="card" style="min-height: 100vh;">
+    <div class="columns" style="background-color: #f0ede9">
+      <div class="column is-2" style="background-color: #f0ede9"></div>
+      <div class="column is-9" style="background-color: #f0ede9">
+        <div class="card" style="min-height: 100vh">
           <div class="card-content">
             <div class="content">
-              <div style="background-color: #f0ede9;">
+              <div style="background-color: #f0ede9">
                 <h1 class="title">เพิ่มโครงการพิเศษ</h1>
                 <div class="field">
                   <label class="label">อัพโหลดรูปภาพโครงการ</label>
-                  <div class="file ">
+                  <div class="file">
                     <label class="file-label">
-                      <input class="file-input" type="file" @change="previewProgramImage">
+                      <input
+                        class="file-input"
+                        type="file"
+                        @change="previewProgramImage"
+                      />
                       <span class="file-cta is-small">
-                        <span class="file-label">
-                          Choose a file..
-                        </span>
+                        <span class="file-label"> Choose a file.. </span>
                       </span>
                     </label>
                   </div>
                 </div>
                 <div>
-                  <img v-if="programImagePreview" :src="programImagePreview" class="program_image image-is2by1" />
+                  <img
+                    v-if="programImagePreview"
+                    :src="programImagePreview"
+                    class="program_image image-is2by1"
+                  />
                 </div>
                 <!-- ฟอร์มข้อมูลโครงการพิเศษ -->
                 <div class="field">
                   <label class="label">ชื่อโครงการ</label>
                   <div class="control">
-                    <input class="input" type="text" placeholder="ชื่อโครงการ" v-model="program.name" />
+                    <input
+                      class="input"
+                      type="text"
+                      placeholder="ชื่อโครงการ"
+                      v-model="program.name"
+                    />
                   </div>
                 </div>
-                <label class="label ">ตำแหน่งงาน</label>
-                  <div class="field is-grouped">
-                    <p class="control">
-                      <input placeholder="เพิ่มตำแหน่งงาน" class="input" type="text" v-model="job_title" />
-                    </p>
-                    <p class="control">
-                      <button class="button is-success" @click="program.jobs_title.push(job_title)">add</button>
-                    </p>
-                  </div>
-                  <div  class="formInput columns control my-5" v-for="job_title, index in program.jobs_title"
-                    :key="index">
-                    <p class="form-detail"> {{ job_title }} </p>
-                    <button class="button  is-danger " @click="program.jobs_title.splice(index, 1)">x</button>
-                  </div>
+                <label class="label">ตำแหน่งงาน</label>
+                <div class="field is-grouped">
+                  <p class="control">
+                    <input
+                      placeholder="เพิ่มตำแหน่งงาน"
+                      class="input"
+                      type="text"
+                      v-model="job_title"
+                    />
+                  </p>
+                  <p class="control">
+                    <button
+                      class="button is-success"
+                      @click="program.jobs_title.push(job_title)"
+                    >
+                      add
+                    </button>
+                  </p>
+                </div>
+                <div
+                  class="formInput columns control my-1"
+                  v-for="(job_title, index) in program.jobs_title"
+                  :key="index"
+                >
+                  <p class="form-detail">{{ job_title }}</p>
+                  <button
+                    class="button is-danger"
+                    @click="program.jobs_title.splice(index, 1)"
+                  >
+                    x
+                  </button>
+                </div>
 
-                <label class="label ">คุณสมบัติ</label>
-                  <div class="field is-grouped">
-                    <p class="control">
-                      <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
-                    </p>
-                    <p class="control">
-                      <button class="button is-success" @click="program.qualifications.push(qualification)">add</button>
-                    </p>
-                  </div>
-                  <div  class="formInput columns control my-5" v-for="qualification, index in program.qualifications"
-                    :key="index">
-                    <p class="form-detail"> {{ qualification }} </p>
-                    <button class="button  is-danger " @click="program.qualifications.splice(index, 1)">x</button>
-                  </div>
+                <label class="label">คุณสมบัติ</label>
+                <div class="field is-grouped">
+                  <p class="control">
+                    <input
+                      placeholder="เพิ่มคุณสมบัติ"
+                      class="input"
+                      type="text"
+                      v-model="qualification"
+                    />
+                  </p>
+                  <p class="control">
+                    <button
+                      class="button is-success"
+                      @click="program.qualifications.push(qualification)"
+                    >
+                      add
+                    </button>
+                  </p>
+                </div>
+                <div
+                  class="formInput columns control my-1"
+                  v-for="(qualification, index) in program.qualifications"
+                  :key="index"
+                >
+                  <p class="form-detail">{{ qualification }}</p>
+                  <button
+                    class="button is-danger"
+                    @click="program.qualifications.splice(index, 1)"
+                  >
+                    x
+                  </button>
+                </div>
 
-                  <label class="label ">สิทธิพิเศษ</label>
-                  <div class="field is-grouped">
-                    <p class="control">
-                      <input placeholder="เพิ่มสิทธิพิเศษ" class="input" type="text" v-model="privilege" />
-                    </p>
-                    <p class="control">
-                      <button class="button is-success" @click="program.privileges.push(privilege)">add</button>
-                    </p>
-                  </div>
-                  <div  class="formInput columns control my-5" v-for="privilege, index in program.privileges"
-                    :key="index">
-                    <p class="form-detail"> {{ privilege }} </p>
-                    <button class="button  is-danger " @click="program.privileges.splice(index, 1)">x</button>
-                  </div>
+                <label class="label">สิทธิพิเศษ</label>
+                <div class="field is-grouped">
+                  <p class="control">
+                    <input
+                      placeholder="เพิ่มสิทธิพิเศษ"
+                      class="input"
+                      type="text"
+                      v-model="privilege"
+                    />
+                  </p>
+                  <p class="control">
+                    <button
+                      class="button is-success"
+                      @click="program.privileges.push(privilege)"
+                    >
+                      add
+                    </button>
+                  </p>
+                </div>
+                <div
+                  class="formInput columns control my-1"
+                  v-for="(privilege, index) in program.privileges"
+                  :key="index"
+                >
+                  <p class="form-detail">{{ privilege }}</p>
+                  <button
+                    class="button is-danger"
+                    @click="program.privileges.splice(index, 1)"
+                  >
+                    x
+                  </button>
+                </div>
 
                 <div class="field">
                   <label class="label">รายละเอียด</label>
                   <div class="control">
-                    <textarea class="textarea" placeholder="รายละเอียดของโครงการพิเศษ"
-                      v-model="program.description"></textarea>
+                    <textarea
+                      class="textarea"
+                      placeholder="รายละเอียดของโครงการพิเศษ"
+                      v-model="program.description"
+                    ></textarea>
                   </div>
                 </div>
                 <div class="field">
                   <label class="label">หลักสูตร</label>
                   <div class="control">
-                    <input class="input" type="text" placeholder="หลักสูตร" v-model="program.course" />
+                    <input
+                      class="input"
+                      type="text"
+                      placeholder="หลักสูตร"
+                      v-model="program.course"
+                    />
                   </div>
                 </div>
 
                 <div class="field">
                   <div class="control">
-                    <button class="button is-primary" @click="submitForm">บันทึก</button>
-                    <button class="button is-danger" @click="cancelForm">ยกเลิก</button>
+                    <button class="button is-primary" @click="submitForm">
+                      บันทึก
+                    </button>
+                    <button class="button is-danger" @click="cancelForm">
+                      ยกเลิก
+                    </button>
                   </div>
                 </div>
               </div>
@@ -104,11 +181,11 @@
     </div>
   </div>
 </template>
-  
+
 <script lang="ts">
-import { defineComponent, reactive, ref } from 'vue';
-import Swal from 'sweetalert2';
-import Program from '@/models/Program';
+import { defineComponent, reactive, ref } from "vue";
+import Swal from "sweetalert2";
+import Program from "@/models/Program";
 import { PORT } from "@/port";
 import axios from "axios";
 export default defineComponent({
@@ -125,26 +202,25 @@ export default defineComponent({
   },
   data() {
     return {
-      inputs: ['', '', '']
+      inputs: ["", "", ""],
     };
   },
   setup(props, { emit }) {
-
     const qualification = ref<string>("");
-    const job_title =  ref<string>("");
-    const privilege =  ref<string>("");
+    const job_title = ref<string>("");
+    const privilege = ref<string>("");
     const program = reactive<Program>({
-      id: '',
-      company_id: '',
-      company_name: '',
-      name: '',
+      id: "",
+      company_id: "",
+      company_name: "",
+      name: "",
       jobs_title: [],
-      description: '',
-      course: '',
+      description: "",
+      course: "",
       qualifications: [],
       privileges: [],
-      image: '',
-      state: ''
+      image: "",
+      state: "",
     });
 
     const programImageInput = ref<HTMLInputElement | null>(null);
@@ -161,14 +237,6 @@ export default defineComponent({
       }
     };
     const submitForm = async () => {
-      const result = await Swal.fire({
-        title: "ยืนยันการบันทึก?",
-        text: "คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "ยืนยัน",
-        cancelButtonText: "ยกเลิก",
-      });
       Swal.fire({
         position: "center",
         title: "Uploading file...",
@@ -177,42 +245,42 @@ export default defineComponent({
           Swal.showLoading();
         },
       });
-      if (result.isConfirmed) {
-
-        const formData = new FormData();
-        formData.append('company_id', props.company_id);
-        formData.append('company_name', props.company_name);
-        formData.append('name', program.name);
-        formData.append('jobs_title', JSON.stringify(program.jobs_title));
-        formData.append('description', program.description);
-        formData.append('course', program.course);
-        formData.append('qualifications', JSON.stringify(program.qualifications));
-        formData.append('privileges', JSON.stringify(program.privileges));
-        formData.append('state', "on")
-        if (programImageInput.value && programImageInput.value.files) {
-          formData.append('image', programImageInput.value.files[0]);
-        }
-        try {
-          const response = await axios.post(`${PORT}` + "/company/addProgram", formData, {
+      const formData = new FormData();
+      formData.append("company_id", props.company_id);
+      formData.append("company_name", props.company_name);
+      formData.append("name", program.name);
+      formData.append("jobs_title", JSON.stringify(program.jobs_title));
+      formData.append("description", program.description);
+      formData.append("course", program.course);
+      formData.append("qualifications", JSON.stringify(program.qualifications));
+      formData.append("privileges", JSON.stringify(program.privileges));
+      formData.append("state", "on");
+      if (programImageInput.value && programImageInput.value.files) {
+        formData.append("image", programImageInput.value.files[0]);
+      }
+      try {
+        const response = await axios.post(
+          `${PORT}` + "/company/addProgram",
+          formData,
+          {
             headers: {
-              'Content-Type': 'multipart/form-data'
-            }
-          });
-          program.image = response.data.image
-          program.id = response.data.program_id
-          Swal.fire('บันทึกเรียบร้อย!', 'โครงการพิเศษถูกเพิ่มเรียบร้อยแล้ว', 'success');
-
-          emit("saveNewProgram", program);
-          emit("addNewProgram", false);
-
-        } catch (error) {
-          Swal.fire('เกิดข้อผิดพลาด', 'ไม่สามารถเพิ่มโครงการพิเศษได้', 'error');
-
-        }
+              "Content-Type": "multipart/form-data",
+            },
+          }
+        );
+        program.image = response.data.image;
+        program.id = response.data.program_id;
+        Swal.fire(
+          "บันทึกเรียบร้อย!",
+          "โครงการพิเศษถูกเพิ่มเรียบร้อยแล้ว",
+          "success"
+        );
+        emit("saveNewProgram", program);
+        emit("addNewProgram", false);
+      } catch (error) {
+        Swal.fire("เกิดข้อผิดพลาด", "ไม่สามารถเพิ่มโครงการพิเศษได้", "error");
       }
     };
-
-
     const cancelForm = () => {
       emit("addNewProgram", false);
     };
@@ -229,13 +297,13 @@ export default defineComponent({
       onFileChange,
       submitForm,
       cancelForm,
-      activeTab: 'programs',
+      activeTab: "programs",
       programImageInput,
       previewProgramImage,
       programImagePreview,
       qualification,
       job_title,
-      privilege
+      privilege,
     };
   },
   methods: {
@@ -244,44 +312,34 @@ export default defineComponent({
     },
   },
   addInput() {
-    this.inputs.push('');
-  }
+    this.inputs.push("");
+  },
 });
 </script>
 <style scoped>
-.card-container{
+.card-container {
   background-color: #e9e9e9;
 }
-.card-content{
-  background-color: #f0ede9
+.card-content {
+  background-color: #f0ede9;
 }
-.head-content{
+.head-content {
   padding: 1rem;
 }
 .program_image {
   width: 30%;
   height: 50%;
 }
-.qualification {
-  
-  font-family: Arial, sans-serif;
-  background-color: #f0ede9;
-  padding-left: 30px;
-  border-radius: 5px;
-}
 .label {
-  
   font-size: 1.2rem;
   font-weight: bold;
 }
 .button.is-success {
-
   color: white;
   border: none;
   border-radius: 5px;
-  margin-bottom: 20px;}
+}
 .input {
- 
   background-color: #ffffff;
   border: none;
   border-bottom: 2px;
@@ -290,7 +348,7 @@ export default defineComponent({
   border-radius: 5px;
 }
 .formInput p {
-  background-color: #BACDDB;
+  background-color: #ddccb4;
   font-size: 1.1rem;
 }
 .button.is-danger {
@@ -301,11 +359,18 @@ export default defineComponent({
   padding-left: 20px;
   margin-left: 10px;
 }
-
 .form-detail {
   border-radius: 5px;
   padding: 8px 30px 7px;
-  margin-left:10px ;
-  margin-bottom: 10px;
+  margin-left: 10px;
+}
+button,
+input {
+  display: inline-block;
+}
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

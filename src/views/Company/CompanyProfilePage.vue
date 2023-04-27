@@ -25,10 +25,16 @@
                 
                 <div class="card-content">
                   <button class="button is-info" @click="isEdited = true">แก้ไขข้อมูล</button>
-                  <div class="container mt-4">
+                 
+                  <div v-if="company.background_image === '' && company.profile_image === '' && isEdited == false">
+                          <noInformationVue></noInformationVue>
+                        </div>
+
+                      
+                  <div class="container mt-4" v-if="company.background_image && company.profile_image && isEdited == false">
                     <img :src="company.background_image" class="background_image" />
                     <div class="columns is-gapless ml-6 mb-6" style="position: relative; top: -80px;">
-                      <img :src="company.profile_image" class="column is-2 profile_image" />
+                      <img :src="company.profile_image" class=" profile_image" />
                       <div class="column ml-4" style="position: relative; top: 100px;">
                         <p class="is-size-4 has-text-weight-bold">{{ company.name }}</p>
                         <!-- Add the edit button here -->
@@ -40,6 +46,7 @@
                     </div>
                   </div>
                 </div>
+                
               </div>
             </div>
           </div>
@@ -61,11 +68,12 @@ import { PORT } from '@/port';
 import preloadingVue from '@/components/pre-loading.vue'
 import companyProfileEdit from '@/components/company-profile.vue';
 import {def_company} from "@/plugins/defaultValue"
-
+import noInformationVue from "@/components/no-information.vue";
 export default defineComponent({
   components: {
         companyProfileEdit,
         preloadingVue,
+        noInformationVue,
     },
   data() {
     return {
@@ -137,7 +145,6 @@ export default defineComponent({
   border: 2px solid gray;
   border-radius: 25px;
 }
-
 .video_iframe {
   display: flex;
   flex-direction: column;

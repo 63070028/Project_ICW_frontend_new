@@ -1,12 +1,13 @@
 <template>
   <div class="company p-3">
-    <div class="columns">
-      <div class="column is-3" style="background-color: #f8f8f8"></div>
-      <div class="column is-9" style="background-color: #f1f1f1">
-        <div class="card" style="min-height: 100vh">
-          <div class="card-content">
+    <div class="columns"  style="background-color: #f0ede9">
+      <div class="column is-2" style="background-color: #f0ede9"></div>
+      <div class="column is-9" style="background-color: #f0ede9">
+        <div class="card" style="min-height: 100vh" >
+          <div class="card-content" >
             <div class="content">
-              <div class="container">
+            
+              <div class="container" >
                 <h1 class="title">แก้ไขข้อมูลบริษัท</h1>
                 <div class="box">
                   <div class="field">
@@ -201,14 +202,7 @@ export default defineComponent({
     const backgroundImagePreview = ref(company.background_image);
 
     const saveProfile = async () => {
-      const result = await Swal.fire({
-        title: "ยืนยันการบันทึก?",
-        text: "คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "ยืนยัน",
-        cancelButtonText: "ยกเลิก",
-      });
+    
       Swal.fire({
         position: "center",
         title: "Uploading file...",
@@ -217,7 +211,7 @@ export default defineComponent({
           Swal.showLoading();
         },
       });
-      if (result.isConfirmed) {
+      
         try {
           const formData = new FormData();
           formData.append("id", props.id);
@@ -265,9 +259,8 @@ export default defineComponent({
             icon: "error",
           });
         }
-      }
-    };
-
+      
+    }
     const cancelEdit = async () => {
       emit("updateProfileEdit", false);
     };

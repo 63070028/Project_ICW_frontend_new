@@ -78,7 +78,7 @@
                   </p>
                 </div>
                 <div
-                  class="formInput columns control my-5"
+                  class="formInput columns control my-1"
                   v-for="(qualification, index) in job.qualifications"
                   :key="index"
                 >
@@ -174,7 +174,7 @@ export default defineComponent({
       qualifications: [],
       contact: { name: "", email: "", phone: "" },
       creation_date: new Date().toLocaleDateString("en-US"),
-      state: "on",
+      state: "",
     });
 
     console.log("ไอดีcompany" + props.company_id);
@@ -251,58 +251,51 @@ export default defineComponent({
 .head-content {
   padding: 1rem;
 }
-.qualification {
-  font-family: Arial, sans-serif;
-  background-color: #f0ede9;
-  padding-left: 30px;
-  border-radius: 5px;
-}
 .label {
-  font-size: 1.2rem;
-  font-weight: bold;
+
+font-size: 1.2rem;
+font-weight: bold;
 }
 .button.is-success {
-  color: white;
-  border: none;
-  border-radius: 5px;
-  margin-bottom: 20px;
+
+color: white;
+border: none;
+border-radius: 5px;
 }
 .input {
-  background-color: #ffffff;
-  border: none;
-  border-bottom: 2px;
+
+background-color: #ffffff;
+border: none;
+border-bottom: 2px;
 }
 .formInput {
-  border-radius: 5px;
+border-radius: 5px;
 }
 .formInput p {
-  background-color: #e6ddc4;
-  font-size: 1.1rem;
+background-color: #ddccb4;
+font-size: 1.1rem;
 }
 .button.is-danger {
-  background-color: #dc3545;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding-left: 20px;
-  margin-left: 10px;
+background-color: #dc3545;
+color: white;
+border: none;
+border-radius: 5px;
+padding-left: 20px;
+margin-left: 10px;
 }
-
 .form-detail {
-  border-radius: 5px;
-  padding: 8px 30px 7px;
-  margin-left: 10px;
-  margin-bottom: 10px;
-}
+border-radius: 5px;
+padding: 8px 30px 7px;
+margin-left: 10px;
 
+}
 button,
 input {
-  display: inline-block;
+display: inline-block;
 }
-
 .wrapper {
-  display: flex;
-  align-items: center;
-  justify-content: center;
+display: flex;
+align-items: center;
+justify-content: center;
 }
 </style>
