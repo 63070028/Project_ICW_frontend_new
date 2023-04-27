@@ -105,7 +105,7 @@
                       class="input"
                       type="email"
                       v-model="job.contact.email"
-                      placeholder="อีเมล์"
+                      placeholder="อีเมล"
                     />
                   </div>
                   <div class="control mt-2">
