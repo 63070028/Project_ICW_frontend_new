@@ -98,10 +98,10 @@ export default defineComponent({
         .then((res) => Object.assign(company, res.data.company));
 
       await axios
-        .get(`${PORT}` + "/company/getJob/" + route.params.id)
+        .get(`${PORT}` + "/company/getJobByCompanyIdStateOn/" + route.params.id)
         .then((res) => {
-          console.log(res.data.job);
-          const get_jobs: Job[] = res.data.job;
+          console.log(res.data);
+          const get_jobs: Job[] = res.data;
           get_jobs.forEach((job) => {
             jobs.push(job);
           });

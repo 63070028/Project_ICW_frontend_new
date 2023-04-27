@@ -188,7 +188,7 @@ export default defineComponent({
         formData.append('course', program.course);
         formData.append('qualifications', JSON.stringify(program.qualifications));
         formData.append('privileges', JSON.stringify(program.privileges));
-        formData.append('state', program.state)
+        formData.append('state', "on")
         if (programImageInput.value && programImageInput.value.files) {
           formData.append('image', programImageInput.value.files[0]);
         }
