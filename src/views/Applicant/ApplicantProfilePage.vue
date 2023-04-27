@@ -107,6 +107,7 @@ export default defineComponent({
 
         const updateProfile = (change_data: Applicant) => {
             Object.assign(applicant, change_data);
+            user.state = change_data.state
         }
 
 

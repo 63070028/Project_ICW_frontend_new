@@ -30,7 +30,7 @@
           <button v-if="user.role === 'applicant'" class="button is-danger" @click="isReport = !isReport">
             รายงาน
           </button>
-          <button class="button is-success" @click="submitApplication()" v-if="user.role == 'applicant'">
+          <button class="button is-success" @click="submitApplication()" v-if="user.role == 'applicant' && user.state == 'on'">
             ยื่นสมัคร
           </button>
         </div>
