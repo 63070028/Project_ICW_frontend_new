@@ -68,10 +68,10 @@
                        
 
                         <v-switch v-model="program.state" hide-details inset color="success" :true-value="ProgramStatus.Open"
-                          :false-value="ProgramStatus.Closed" :label="`สถานะงาน: ${program.state}`"
+                          :false-value="ProgramStatus.Closed" :label="`สถานะโครงการ: ${program.state}`"
                           :style="{ color:  programStateColor(program.state) }" @change="updateProgramState(program.id, program.state)">
                         </v-switch>
-                        <button class="button is-small is-info" @click="updateEdit(program, index); isEditProgram = true">แก้ไขงาน</button>
+                        <button class="button is-small is-info" @click="updateEdit(program, index); isEditProgram = true">แก้ไขโครงการ</button>
                    
                     </div>
                     </div>

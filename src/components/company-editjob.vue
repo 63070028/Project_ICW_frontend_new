@@ -1,13 +1,20 @@
 <template>
+  <div class="company p-3">
+    <div class="columns" style="background-color: #f0ede9">
+      <div class="column is-2" style="background-color: #f0ede9"></div>
+      <div class="column is-9" style="background-color: #f0ede9">
         <div class="card" style="min-height: 100vh">
           <div class="card-content">
             <div class="content">
               <div class="company-edit-job">
-                <div class="column is-8">
+                <div class="column is-12">
                   <h1 class="title">แก้ไขงาน</h1>
                   <div class="field is-grouped">
                     <div class="control">
-                      <button class="button is-link is-danger" @click="deleteForm">
+                      <button
+                        class="button is-link is-danger"
+                        @click="deleteForm"
+                      >
                         ลบงาน
                       </button>
                     </div>
@@ -34,25 +41,38 @@
                   <div class="field">
                     <label class="label">ค่าตอบแทนรายวัน</label>
                     <div class="control">
-                      <input class="input" type="text" v-model="job.salary_per_day" />
+                      <input
+                        class="input"
+                        type="text"
+                        v-model="job.salary_per_day"
+                      />
                     </div>
                   </div>
                   <div class="field">
-                  <label class="label">รูปแบบการสัมภาษณ์</label>
-                  <div class="control">
+                    <label class="label">รูปแบบการสัมภาษณ์</label>
                     <div class="control">
-                      <label class="radio">
-                        <input type="radio" name="answer" value="ออนไลน์" v-model="job.interview" />
-                        ออนไลน์
-                      </label>
-                      <label class="radio">
-                        <input type="radio" name="answer" value="ออนไซต์"  v-model="job.interview" />
-                        ออนไซต์
-                      </label>
+                      <div class="control">
+                        <label class="radio">
+                          <input
+                            type="radio"
+                            name="answer"
+                            value="ออนไลน์"
+                            v-model="job.interview"
+                          />
+                          ออนไลน์
+                        </label>
+                        <label class="radio">
+                          <input
+                            type="radio"
+                            name="answer"
+                            value="ออนไซต์"
+                            v-model="job.interview"
+                          />
+                          ออนไซต์
+                        </label>
+                      </div>
                     </div>
-                  
                   </div>
-                </div>
                   <div class="field">
                     <label class="label">จำนวนที่รับ</label>
                     <div class="control">
@@ -60,31 +80,63 @@
                     </div>
                   </div>
 
-                  <label class="label ">คุณสมบัติ</label>
+                  <label class="label">คุณสมบัติ</label>
                   <div class="field is-grouped">
                     <p class="control">
-                      <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
+                      <input
+                        placeholder="เพิ่มคุณสมบัติ"
+                        class="input"
+                        type="text"
+                        v-model="qualification"
+                      />
                     </p>
                     <p class="control">
-                      <button class="button is-success" @click="job.qualifications.push(qualification)">add</button>
+                      <button
+                        class="button is-success"
+                        @click="job.qualifications.push(qualification)"
+                      >
+                        add
+                      </button>
                     </p>
-                    
                   </div>
-                  <div  class="formInput columns control my-5" v-for="qualification, index in job.qualifications"
-                    :key="index">
-                    <p class="form-detail"> {{ qualification }} </p>
-                    <button class="button  is-danger " @click="job.qualifications.splice(index, 1)">x</button>
+                  <div
+                    class="formInput columns control my-1"
+                    v-for="(qualification, index) in job.qualifications"
+                    :key="index"
+                  >
+                    <p class="form-detail">{{ qualification }}</p>
+                    <button
+                      class="button is-danger"
+                      @click="job.qualifications.splice(index, 1)"
+                    >
+                      x
+                    </button>
                   </div>
                   <div class="field">
                     <label class="label">ติดต่อ</label>
                     <div class="control">
-                      <input class="input" type="text" v-model="job.contact.name" placeholder="ชื่อผู้ติดต่อ" />
+                      <input
+                        class="input"
+                        type="text"
+                        v-model="job.contact.name"
+                        placeholder="ชื่อผู้ติดต่อ"
+                      />
                     </div>
                     <div class="control mt-2">
-                      <input class="input" type="email" v-model="job.contact.email" placeholder="อีเมล์" />
+                      <input
+                        class="input"
+                        type="email"
+                        v-model="job.contact.email"
+                        placeholder="อีเมล์"
+                      />
                     </div>
                     <div class="control mt-2">
-                      <input class="input" type="text" v-model="job.contact.phone" placeholder="เบอร์โทรศัพท์" />
+                      <input
+                        class="input"
+                        type="text"
+                        v-model="job.contact.phone"
+                        placeholder="เบอร์โทรศัพท์"
+                      />
                     </div>
                   </div>
 
@@ -107,6 +159,9 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
 </template>
 <script lang="ts">
 import { defineComponent, PropType, reactive, ref } from "vue";
@@ -207,14 +262,6 @@ export default defineComponent({
     });
 
     const saveJob = async () => {
-      const result = await Swal.fire({
-        title: "ยืนยันการบันทึก?",
-        text: "คุณต้องการบันทึกข้อมูลการแก้ไขหรือไม่?",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonText: "ยืนยัน",
-        cancelButtonText: "ยกเลิก",
-      });
       Swal.fire({
         position: "center",
         title: "",
@@ -223,30 +270,29 @@ export default defineComponent({
           Swal.showLoading();
         },
       });
-      if (result.isConfirmed) {
-        try {
-          Object.assign(editForm, job);
-          await axios
-            .post(`${PORT}` + "/company/editjob", editForm)
-            .then((res) => {
-              console.log(res.data.message);
-              emit("saveJobEdit", job);
-              emit("updateJobEdit", false);
-              Swal.fire({
-                position: 'center',
-                icon: 'success',
-                title: 'Success',
-                showConfirmButton: false,
-                timer: 1000
-              })
+
+      try {
+        Object.assign(editForm, job);
+        await axios
+          .post(`${PORT}` + "/company/editjob", editForm)
+          .then((res) => {
+            console.log(res.data.message);
+            emit("saveJobEdit", job);
+            emit("updateJobEdit", false);
+            Swal.fire({
+              position: "center",
+              icon: "success",
+              title: "Success",
+              showConfirmButton: false,
+              timer: 1000,
             });
-        } catch (error) {
-          Swal.fire({
-            title: "Error",
-            text: "Failed to update company profile",
-            icon: "error",
           });
-        }
+      } catch (error) {
+        Swal.fire({
+          title: "Error",
+          text: "Failed to update company profile",
+          icon: "error",
+        });
       }
     };
 
@@ -275,12 +321,12 @@ export default defineComponent({
             emit("jobDeleted", job.id); // อัพเดตข้อมูลงาน
             emit("updateJobEdit", false);
             Swal.fire({
-              position: 'center',
-              icon: 'success',
-              title: 'Success',
+              position: "center",
+              icon: "success",
+              title: "Success",
               showConfirmButton: false,
-              timer: 1000
-            })
+              timer: 1000,
+            });
           } else {
             Swal.fire(
               "Error",
@@ -321,58 +367,36 @@ export default defineComponent({
 .title {
   margin-bottom: 2rem;
 }
-
 .card-container {
   background-color: #e9e9e9;
 }
-
 .card-content {
-  background-color: #f0ede9
+  background-color: #f0ede9;
 }
-
 .head-content {
   padding: 1rem;
-
 }
-
-.qualification {
-
-  font-family: Arial, sans-serif;
-  background-color: #f0ede9;
-  padding-left: 30px;
-  border-radius: 5px;
-}
-
 .label {
-
   font-size: 1.2rem;
   font-weight: bold;
 }
-
 .button.is-success {
-
   color: white;
   border: none;
   border-radius: 5px;
-  margin-bottom: 20px;
 }
-
 .input {
-
   background-color: #ffffff;
   border: none;
   border-bottom: 2px;
 }
-
 .formInput {
   border-radius: 5px;
 }
-
 .formInput p {
-  background-color: #FFF4E0;
+  background-color: #ddccb4;
   font-size: 1.1rem;
 }
-
 .button.is-danger {
   background-color: #dc3545;
   color: white;
@@ -381,19 +405,15 @@ export default defineComponent({
   padding-left: 20px;
   margin-left: 10px;
 }
-
 .form-detail {
   border-radius: 5px;
   padding: 8px 30px 7px;
   margin-left: 10px;
-  margin-bottom: 10px;
 }
-
 button,
 input {
   display: inline-block;
 }
-
 .wrapper {
   display: flex;
   align-items: center;
