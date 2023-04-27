@@ -17,7 +17,7 @@
       </div>
       <div class="card-container column is-9">
         <div class="card" style="min-height: 100vh;">
-          <div class="card-content">
+          <div class="card-content" style="min-height: 100vh;">
             <div class="content">
               <div v-show="activeTab === 'programs'">
                 <div class="head-content">
@@ -25,10 +25,32 @@
                     เพิ่มโครงการพิเศษ
                   </button>
                   <h1 class="title">โครงการพิเศษ</h1>
+                  <noInformationVue
+                    v-if="!(programs.length > 0)"
+                  ></noInformationVue>
                 </div>
                 <div class="program-card" v-for="(program, index) in programs" :key="index">
                   <div class="job-detail">
-                    <p class="is-size-4 has-text-weight-bold">{{ index + 1 }} {{ program.name }}</p>
+                    <div class="columns is-multiline is-mobile">
+                      <div class="column is-one-quarter">
+                        <p class="is-size-4 has-text-weight-bold">
+                          {{ index + 1 + "." }} {{ program.name }}
+                        </p>
+                      </div>
+                      <div class="column is-one-quarter">
+                        
+                      </div>
+                      <div class="column is-one-quarter">
+                       
+                      </div>
+                      <div class="column is-one-quarter">
+                        <button class="button is-danger is-pulled-right" @click="deleteProgram(program.id)">
+                        ลบโครงการ
+                      </button>
+                      </div>
+                    </div>
+
+                   
                     <div class="columns">
                       <div class="column is-4">
                         <div class="program-image image is-2by1">
@@ -112,11 +134,13 @@ import { def_company } from "@/plugins/defaultValue";
 import preloadingVue from '@/components/pre-loading.vue'
 import CompanyAddProgram from "@/components/company-addprogram.vue";
 import CompanyEditProgramPage from "@/components/company-editprogram.vue";
+import noInformationVue from "@/components/no-information.vue";
 export default defineComponent({
   components: {
     CompanyAddProgram,
     CompanyEditProgramPage,
     preloadingVue,
+    noInformationVue,
   },
   data: () => ({
     model: "no",
@@ -195,6 +219,55 @@ export default defineComponent({
       }
     };
   
+    const deleteProgram =  async  (id: string) => {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "คุณจะไม่สามารถกู้ข้อมูลงานนี้ได้",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, keep it",
+      });
+
+      if (result.isConfirmed) {
+
+      try {
+      const response = await axios.delete(
+            `${PORT}` + "/company/deleteProgram",
+            {
+              params: {
+                programId: id,
+              },
+            }
+          );
+          if (response.status === 200) {
+            const index = programs.findIndex((program) => program.id === id);
+      if (index !== -1) {
+        programs.splice(index, 1);
+      }
+     
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: 'Success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+          } else {
+            Swal.fire(
+              "Error",
+              "เกิดข้อผิดพลาดในการลบงาน กรุณาลองใหม่.",
+              "error"
+            );
+          }
+  } catch (error) {
+          console.error(error);
+          Swal.fire("Error", "เกิดข้อผิดพลาดในการลบงาน กรุณาลองใหม่.", "error");
+        }
+      } else {
+        Swal.fire("Cancelled", "ยกเลิกแล้ว :)", "error");
+      }
+  }
     return {
       router,
       route,
@@ -208,7 +281,8 @@ export default defineComponent({
       user,
       store,
       updateNewProgram,
-      updateDelprogram
+      updateDelprogram,
+      deleteProgram
     }
   },
   computed: {
@@ -232,7 +306,7 @@ export default defineComponent({
   },
 
   async updateProgramState(id: string, newState: string) {
-      const stateText = newState === ProgramStatus.Open ? "เปิดรับสมัคร" : "ปิดรับสมัคร";
+      const stateText = newState === ProgramStatus.Open ? "on" : "off";
       try {
         await axios.post(`${PORT}/company/setProgramState`, {
           id: id,

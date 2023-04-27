@@ -1,6 +1,6 @@
 export enum JobStatus {
-    Open = 'เปิดรับสมัคร',
-    Closed = 'ปิดรับสมัคร',
+    Open = 'on',
+    Closed = 'off',
 }
 
 export default interface Job2 {

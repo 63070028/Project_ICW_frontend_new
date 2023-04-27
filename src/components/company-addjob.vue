@@ -1,12 +1,12 @@
 <template>
-  <div class="company p-3">
-    <div class="columns">
-      <div class="column is-3" style="background-color: #f8f8f8"></div>
-      <div class="column is-9" style="background-color: #f1f1f1">
+  <div class="company p-4">
+    <div class="columns" style="background-color: #f0ede9">
+      <div class="column is-2" style="background-color: #f0ede9"></div>
+      <div class="column is-9" style="background-color: #f0ede9">
         <div class="card" style="min-height: 100vh">
           <div class="card-content">
             <div class="content">
-              <div style="background-color: #f0ede9;">
+              <div style="background-color: #f0ede9">
                 <h1 class="title">เพิ่มประกาศงาน</h1>
                 <div class="field">
                   <label class="label">ชื่องาน</label>
@@ -29,41 +29,92 @@
                 <div class="field">
                   <label class="label">ค่าตอบแทนรายวัน</label>
                   <div class="control">
-                    <input class="input" type="number" v-model="job.salary_per_day" />
+                    <input
+                      class="input"
+                      type="text"
+                      v-model="job.salary_per_day"
+                    />
                   </div>
                 </div>
                 <div class="field">
                   <label class="label">รูปแบบการสัมภาษณ์</label>
                   <div class="control">
-                    <input class="input" type="text" v-model="job.interview" />
+                    <div class="control">
+                      <label class="radio">
+                        <input type="radio" name="answer" value="ออนไลน์" v-model="job.interview" />
+                        ออนไลน์
+                      </label>
+                      <label class="radio">
+                        <input type="radio" name="answer" value="ออนไซต์"  v-model="job.interview" />
+                        ออนไซต์
+                      </label>
+                    </div>
+                  
                   </div>
                 </div>
                 <div class="field">
                   <label class="label">จำนวนที่รับ</label>
                   <div class="control">
-                    <input class="input" type="number" v-model="job.capacity" />
+                    <input class="input" type="text" v-model="job.capacity" />
                   </div>
                 </div>
-                <div class="qualification">
-                  <label class="label">คุณสมบัติ</label>
-                  <button class="button is-success" @click="job.qualifications.push(qualification)">add</button>
-                  <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
-                  <div  class="formInput columns control my-5" v-for="qualification, index in job.qualifications"
-                    :key="index">
-                    <p class="form-detail"> {{ qualification }} </p>
-                    <button class="button  is-danger " @click="job.qualifications.splice(index, 1)">x</button>
-                  </div>
+                <label class="label">คุณสมบัติ</label>
+                <div class="field is-grouped">
+                  <p class="control">
+                    <input
+                      placeholder="เพิ่มคุณสมบัติ"
+                      class="input"
+                      type="text"
+                      v-model="qualification"
+                    />
+                  </p>
+                  <p class="control">
+                    <button
+                      class="button is-success"
+                      @click="job.qualifications.push(qualification)"
+                    >
+                      add
+                    </button>
+                  </p>
+                </div>
+                <div
+                  class="formInput columns control my-5"
+                  v-for="(qualification, index) in job.qualifications"
+                  :key="index"
+                >
+                  <p class="form-detail">{{ qualification }}</p>
+                  <button
+                    class="button is-danger"
+                    @click="job.qualifications.splice(index, 1)"
+                  >
+                    x
+                  </button>
                 </div>
                 <div class="field">
                   <label class="label">ติดต่อ</label>
                   <div class="control">
-                    <input class="input" type="text" v-model="job.contact.name" placeholder="ชื่อผู้ติดต่อ" />
+                    <input
+                      class="input"
+                      type="text"
+                      v-model="job.contact.name"
+                      placeholder="ชื่อผู้ติดต่อ"
+                    />
                   </div>
                   <div class="control mt-2">
-                    <input class="input" type="email" v-model="job.contact.email" placeholder="อีเมล์" />
+                    <input
+                      class="input"
+                      type="email"
+                      v-model="job.contact.email"
+                      placeholder="อีเมล์"
+                    />
                   </div>
                   <div class="control mt-2">
-                    <input class="input" type="text" v-model="job.contact.phone" placeholder="เบอร์โทรศัพท์" />
+                    <input
+                      class="input"
+                      type="text"
+                      v-model="job.contact.phone"
+                      placeholder="เบอร์โทรศัพท์"
+                    />
                   </div>
                 </div>
                 <div class="field is-grouped">
@@ -86,7 +137,7 @@
     </div>
   </div>
 </template>
-  
+
 <script lang="ts">
 import { defineComponent, reactive, ref } from "vue";
 import Swal from "sweetalert2";
@@ -122,17 +173,17 @@ export default defineComponent({
       interview: "",
       qualifications: [],
       contact: { name: "", email: "", phone: "" },
-      creation_date: "",
-      state: "",
+      creation_date: new Date().toLocaleDateString("en-US"),
+      state: "on",
     });
 
-    console.log('ไอดีcompany' + props.company_id)
+    console.log("ไอดีcompany" + props.company_id);
 
     const addJob = async () => {
       try {
-        await axios.post(`${PORT}/company/addJob`, job).then(res => {
-          job.id = res.data.job_id
-          console.log(job)
+        await axios.post(`${PORT}/company/addJob`, job).then((res) => {
+          job.id = res.data.job_id;
+          console.log(job);
           emit("saveNewJob", job);
         });
         Swal.fire({
@@ -141,7 +192,6 @@ export default defineComponent({
           icon: "success",
         });
         emit("addNewJob", false);
-
       } catch (error) {
         Swal.fire({
           title: "Error",
@@ -188,41 +238,36 @@ export default defineComponent({
 });
 </script>
 <style scoped>
-
 .title {
   margin-bottom: 2rem;
 }
 
-.card-container{
+.card-container {
   background-color: #e9e9e9;
 }
-.card-content{
-  background-color: #f0ede9
+.card-content {
+  background-color: #f0ede9;
 }
-.head-content{
+.head-content {
   padding: 1rem;
-  
 }
 .qualification {
-  
   font-family: Arial, sans-serif;
   background-color: #f0ede9;
   padding-left: 30px;
   border-radius: 5px;
 }
 .label {
-  
   font-size: 1.2rem;
   font-weight: bold;
 }
 .button.is-success {
-
   color: white;
   border: none;
   border-radius: 5px;
-  margin-bottom: 20px;}
+  margin-bottom: 20px;
+}
 .input {
- 
   background-color: #ffffff;
   border: none;
   border-bottom: 2px;
@@ -231,7 +276,7 @@ export default defineComponent({
   border-radius: 5px;
 }
 .formInput p {
-  background-color: #BACDDB;
+  background-color: #e6ddc4;
   font-size: 1.1rem;
 }
 .button.is-danger {
@@ -246,7 +291,18 @@ export default defineComponent({
 .form-detail {
   border-radius: 5px;
   padding: 8px 30px 7px;
-  margin-left:10px ;
+  margin-left: 10px;
   margin-bottom: 10px;
+}
+
+button,
+input {
+  display: inline-block;
+}
+
+.wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 </style>

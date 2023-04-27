@@ -75,7 +75,7 @@ export default defineComponent({
         companies.forEach((company)=>states.companies.push(company))
       });
 
-      await axios.get(`${PORT}`+"/company/getProgram").then(res =>{
+      await axios.get(`${PORT}`+"/company/getProgramStateOn").then(res =>{
         const progarms:Program[] = res.data
         progarms.forEach((progarm)=>states.programs.push(progarm));
       })

@@ -1,9 +1,8 @@
 <template>
   <div class="company p-3">
     <div class="columns">
-      <div class="column is-3" style="background-color: #f8f8f8;">
-      </div>
-      <div class="column is-9" style="background-color:#f0ede9;">
+      
+      <div class="column is-12" style="background-color:#f0ede9;">
         <div class="card" style="min-height: 100vh;">
           <div class="card-content">
             <div class="content">
@@ -32,39 +31,50 @@
                     <input class="input" type="text" placeholder="ชื่อโครงการ" v-model="program.name" />
                   </div>
                 </div>
-                <div class="qualification">
-                  <label class="label">ชื่องาน</label>
-                  <button class="button is-success" @click="program.jobs_title.push(job_title)">add</button>
-                  <input placeholder="เพิ่ม Job_title" class="input" type="text" v-model="job_title" />
-                  <div  class="formInput columns control my-5" v-for="qualification, index in program.jobs_title"
+                <label class="label ">ตำแหน่งงาน</label>
+                  <div class="field is-grouped">
+                    <p class="control">
+                      <input placeholder="เพิ่มตำแหน่งงาน" class="input" type="text" v-model="job_title" />
+                    </p>
+                    <p class="control">
+                      <button class="button is-success" @click="program.jobs_title.push(job_title)">add</button>
+                    </p>
+                  </div>
+                  <div  class="formInput columns control my-5" v-for="job_title, index in program.jobs_title"
                     :key="index">
-                    <p class="form-detail"> {{ qualification }} </p>
+                    <p class="form-detail"> {{ job_title }} </p>
                     <button class="button  is-danger " @click="program.jobs_title.splice(index, 1)">x</button>
                   </div>
-                </div>
 
-                <div class="qualification">
-                  <label class="label">คุณสมบัติ</label>
-                  <button class="button is-success" @click="program.qualifications.push(qualification)">add</button>
-                  <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
+                <label class="label ">คุณสมบัติ</label>
+                  <div class="field is-grouped">
+                    <p class="control">
+                      <input placeholder="เพิ่มคุณสมบัติ" class="input" type="text" v-model="qualification" />
+                    </p>
+                    <p class="control">
+                      <button class="button is-success" @click="program.qualifications.push(qualification)">add</button>
+                    </p>
+                  </div>
                   <div  class="formInput columns control my-5" v-for="qualification, index in program.qualifications"
                     :key="index">
                     <p class="form-detail"> {{ qualification }} </p>
                     <button class="button  is-danger " @click="program.qualifications.splice(index, 1)">x</button>
                   </div>
-                </div>
 
-
-                <div class="qualification">
-                  <label class="label">สิทธิพิเศษ</label>
-                  <button class="button is-success" @click="program.privileges.push(privilege)">add</button>
-                  <input placeholder="เพิ่มสิทธิพิเศษ" class="input" type="text" v-model="privilege" />
-                  <div  class="formInput columns control my-5" v-for="qualification, index in program.privileges"
+                  <label class="label ">สิทธิพิเศษ</label>
+                  <div class="field is-grouped">
+                    <p class="control">
+                      <input placeholder="เพิ่มสิทธิพิเศษ" class="input" type="text" v-model="privilege" />
+                    </p>
+                    <p class="control">
+                      <button class="button is-success" @click="program.privileges.push(privilege)">add</button>
+                    </p>
+                  </div>
+                  <div  class="formInput columns control my-5" v-for="privilege, index in program.privileges"
                     :key="index">
-                    <p class="form-detail"> {{ qualification }} </p>
+                    <p class="form-detail"> {{ privilege }} </p>
                     <button class="button  is-danger " @click="program.privileges.splice(index, 1)">x</button>
                   </div>
-                </div>
 
                 <div class="field">
                   <label class="label">รายละเอียด</label>
@@ -178,7 +188,7 @@ export default defineComponent({
         formData.append('course', program.course);
         formData.append('qualifications', JSON.stringify(program.qualifications));
         formData.append('privileges', JSON.stringify(program.privileges));
-        formData.append('state', program.state)
+        formData.append('state', "on")
         if (programImageInput.value && programImageInput.value.files) {
           formData.append('image', programImageInput.value.files[0]);
         }

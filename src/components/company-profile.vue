@@ -105,7 +105,7 @@
                       />
                     </div>
                   </div>
-                  <div class="field">
+               <!-- <div class="field">
                     <label class="label">สถานะ</label>
                     <div class="control">
                       <div class="select">
@@ -116,7 +116,7 @@
                       </div>
                     </div>
                   </div>
-
+                  !-->
                   <div class="field is-grouped">
                     <div class="control">
                       <button class="button is-link" @click="saveProfile">
@@ -219,9 +219,6 @@ export default defineComponent({
       });
       if (result.isConfirmed) {
         try {
-
-    
-
           const formData = new FormData();
           formData.append("id", props.id);
           formData.append("name", company.name);
@@ -230,10 +227,10 @@ export default defineComponent({
           
           formData.append("state", "on"); // ใส่ค่า state เป็น on ใน form data
 
-          if (profileImageInput.value?.files?.[0]) {
+          if (profileImageInput.value?.files) {
             formData.append("profile_image", profileImageInput.value.files[0]);
           }
-          if (backgroundImageInput.value?.files?.[0]) {
+          if (backgroundImageInput.value?.files) {
             formData.append(
               "background_image",
               backgroundImageInput.value.files[0]

@@ -1,8 +1,12 @@
 <template>
   <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
-  <div class="company p-3" v-if="!isAddJob && !isEditJob && !store.state.isLoadingData">
+
+  <div
+    class="company p-3"
+    v-if="!isAddJob && !isEditJob && !store.state.isLoadingData"
+  >
     <div class="columns">
-      <div class="column is-3" style="background-color: #f8f8f8">
+      <div class="column is-3">
         <aside class="menu">
           <p class="menu-label">Navigation</p>
           <ul class="menu-list">
@@ -35,7 +39,7 @@
       </div>
       <div class="card-container column is-9">
         <div class="card" style="min-height: 100vh">
-          <div class="card-content">
+          <div class="card-content" style="min-height: 100vh">
             <div class="content">
               <div v-show="activeTab === 'jobs'">
                 <div class="head-content">
@@ -44,59 +48,86 @@
                   </button>
 
                   <h1 class="title">งานที่ประกาศ</h1>
+                  <noInformationVue
+                    v-if="!(jobs.length > 0)"
+                  ></noInformationVue>
                 </div>
+
                 <div class="job-card" v-for="(job, index) in jobs" :key="index">
                   <div class="job-detail">
-                    <p class="is-size-4 has-text-weight-bold">
-                      {{ index + 1 + "." }} {{ job.name }}
-                    </p>
-                    <p class="job-detai-text">
-                      วันที่: {{ job.creation_date }}
-                    </p>
-                    <p class="job-detai-text">
-                      สถานที่ทำงาน: {{ job.location }}
-                    </p>
-                    <p class="job-detai-text">
-                      ค่าตอบแทนรายวัน: {{ job.salary_per_day }}
-                    </p>
-                    <p class="job-detai-text">
-                      รูปแบบการสัมภาษณ์: {{ job.interview }}
-                    </p>
-                    <p class="job-detai-text">
-                      จำนวนที่รับ: {{ job.capacity }}
-                    </p>
-                    <p class="job-detai-text">
-                      รายละเอียด: {{ job.detail }}
-                    </p>
-                    <p class="job-detai-text">คุณสมบัติ: {{job.qualifications.toString().replace(/[\[\]"']+/g,'') }}</p>
-                    <div
-                      class="column is-6 edit"
-                      style="background-color: #your_color_code"
-                    >
-                      <div
-                        class="field"
-                        style="background-color: #your_color_code"
-                      >
-                        <v-switch
-                          v-model="job.state"
-                          hide-details
-                          inset
-                          color="success"
-                          :true-value="JobStatus.Open"
-                          :false-value="JobStatus.Closed"
-                          :label="`สถานะงาน: ${job.state}`"
-                          :style="{ color: jobStateColor(job.state) }"
-                          @change="updateJobState(job.id, job.state)"
-                        >
-                        </v-switch>
-
-                        <button
-                          class="button is-small is-info"
-                          @click="updateEdit(index)"
-                        >
-                          แก้ไขงาน
-                        </button>
+                    <div class="columns is-multiline is-mobile">
+                      <div class="column is-one-quarter">
+                        <p class="is-size-4 has-text-weight-bold">
+                          {{ index + 1 + "." }} {{ job.name }}
+                        </p>
                       </div>
+                      <div class="column is-one-quarter">
+                        
+                      </div>
+                      <div class="column is-one-quarter">
+                       
+                      </div>
+                      <div class="column is-one-quarter">
+                        <button class="button is-danger is-pulled-right" @click="deleteJob(job.id)">
+                        ลบงาน
+                      </button>
+                      </div>
+                    </div>
+                    <div class="control"></div>
+
+                    <div class="field">
+                      <div class="columns">
+                        <div class="column is-half">
+                          วันที่: {{ job.creation_date }}
+                        </div>
+                        <div class="column">
+                          สถานที่ทำงาน: {{ job.location }}
+                        </div>
+                      </div>
+                      <div class="columns">
+                        <div class="column is-half">
+                          ค่าตอบแทนรายวัน: {{ job.salary_per_day }}
+                        </div>
+                        <div class="column">
+                          รูปแบบการสัมภาษณ์: {{ job.interview }}
+                        </div>
+                      </div>
+                      <div class="columns">
+                        <div class="column is-half">
+                          จำนวนที่รับ: {{ job.capacity }}
+                        </div>
+                        <div class="column">รายละเอียด: {{ job.detail }}</div>
+                      </div>
+                      <div class="columns">
+                        <div class="column is-half">
+                          คุณสมบัติ:
+                          {{
+                            job.qualifications
+                              .toString()
+                              .replace(/[\[\]"']+/g, "")
+                          }}
+                        </div>
+                      </div>
+
+                      <v-switch
+                        v-model="job.state"
+                        hide-details
+                        inset
+                        color="success"
+                        :true-value="JobStatus.Open"
+                        :false-value="JobStatus.Closed"
+                        :label="`สถานะงาน: ${job.state}`"
+                        :style="{ color: jobStateColor(job.state) }"
+                        @change="updateJobState(job.id, job.state)"
+                      >
+                      </v-switch>
+
+                      <button
+                        class="button  is-info"
+                        @click="updateEdit(index)"
+                      >
+                        แก้ไขงาน
+                      </button>
                     </div>
                   </div>
                 </div>
@@ -163,12 +194,13 @@ import Job from "@/models/Job";
 import preloadingVue from "@/components/pre-loading.vue";
 import { def_company } from "@/plugins/defaultValue";
 import getUserData from "@/plugins/getUser";
-
+import noInformationVue from "@/components/no-information.vue";
 export default defineComponent({
   components: {
     CompanyAddjob,
     preloadingVue,
     companyEditjob,
+    noInformationVue,
   },
   data: () => ({
     model: "no",
@@ -233,7 +265,7 @@ export default defineComponent({
       }
     };
 
-    const updateEdit = (index: number) => {
+    const updateEdit =  (index: number) => {
       selectedJobIndex.value = index;
       isEditJob.value = true;
     };
@@ -241,6 +273,56 @@ export default defineComponent({
     const selectedJob = computed(() => {
       return selectedJobIndex.value >= 0 ? jobs[selectedJobIndex.value] : null;
     });
+
+    const deleteJob =  async  (id: string) => {
+      const result = await Swal.fire({
+        title: "Are you sure?",
+        text: "คุณจะไม่สามารถกู้ข้อมูลงานนี้ได้",
+        icon: "warning",
+        showCancelButton: true,
+        confirmButtonText: "Yes, delete it!",
+        cancelButtonText: "No, keep it",
+      });
+
+      if (result.isConfirmed) {
+
+      try {
+      const response = await axios.delete(
+            `${PORT}` + "/company/deleteJob",
+            {
+              params: {
+                jobId: id,
+              },
+            }
+          );
+          if (response.status === 200) {
+            const index = jobs.findIndex((job) => job.id === id);
+      if (index !== -1) {
+        jobs.splice(index, 1);
+      }
+          
+            Swal.fire({
+              position: 'center',
+              icon: 'success',
+              title: 'Success',
+              showConfirmButton: false,
+              timer: 1000
+            })
+          } else {
+            Swal.fire(
+              "Error",
+              "เกิดข้อผิดพลาดในการลบงาน กรุณาลองใหม่.",
+              "error"
+            );
+          }
+  } catch (error) {
+          console.error(error);
+          Swal.fire("Error", "เกิดข้อผิดพลาดในการลบงาน กรุณาลองใหม่.", "error");
+        }
+      } else {
+        Swal.fire("Cancelled", "ยกเลิกแล้ว :)", "error");
+      }
+  }
 
     return {
       router,
@@ -251,7 +333,6 @@ export default defineComponent({
       isEnabled: false,
       JobStatus,
       updateCompanyJob,
-      //updateJobEdit,
       updateNewJob,
       jobStateColor,
       updateEdit,
@@ -262,6 +343,7 @@ export default defineComponent({
       user,
       isAddJob,
       isEditJob,
+      deleteJob
     };
   },
 
@@ -271,7 +353,7 @@ export default defineComponent({
     },
     async updateJobState(id: string, newState: string) {
       const stateText =
-        newState === JobStatus.Open ? "เปิดรับสมัคร" : "ปิดรับสมัคร";
+        newState === JobStatus.Open ? "on" : "off";
       try {
         await axios.post(`${PORT}/company/setJobState`, {
           id: id,
@@ -291,9 +373,6 @@ export default defineComponent({
         console.error(error);
       }
     },
-    // updateEdit(index: number) {
-    //   this.selectedJobIndex = index;
-    // },
   },
 });
 </script>
@@ -335,8 +414,12 @@ export default defineComponent({
 }
 
 .edit {
+  display: flex;
   align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  height: 100%;
+  color: white;
 }
-
 /*toggle swtch*/
 </style>
