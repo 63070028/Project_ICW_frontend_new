@@ -1,9 +1,11 @@
 <template>
     <div class="column m-0 p-0">
-        <div class="card px-5 py-3">
+        <noInformationVue v-if="!(paginatedItems.length > 0)"></noInformationVue>
+        <div v-if="paginatedItems.length > 0">
+        <div class="card px-5 py-3" >
             <div class="pt-3" style="border-top:0.5px solid gray;" v-for="item, index in paginatedItems" :key="index">
 
-                <p class="is-size-4 has-text-weight-bold p-4">ตำแหน่ง {{ item.job_name }}</p>
+                <p class="is-size-4 has-text-weight-bold p-4">{{ index+1 }}.{{ item.firstName }} {{ item.lastName }}</p>
                 <div class="columns p-4" @click="viewApplicationDetail(item.id)">
                     <div class="column">
                         <p class="is-size-5 has-text-weight-bold">ตำแหน่ง: {{ item.job_name }}</p>
@@ -31,6 +33,7 @@
             </ul>
         </nav>
     </div>
+    </div>
 </template>
 
 <script lang="ts">
@@ -40,8 +43,12 @@ import ApplicationJob from '@/models/ApplicationJob';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
 import { useRouter } from 'vue-router';
+import noInformationVue from "./no-information.vue";
 
 export default defineComponent({
+    components: {
+    noInformationVue,
+  },
     props: {
         items: {
             type: Object as PropType<ApplicationJob[]>,
