@@ -2,7 +2,7 @@
     <div class="column m-0 p-0">
         <div class="card px-5 py-4">
             <div class="pt-3" style="border-top:0.5px solid gray;" v-for="item, index in paginatedItems" :key="index">
-
+                <div @click="viewApplicationProgramDetail(item.id)">
                 <p class="is-size-4 has-text-weight-bold p-3">บริษัท {{ item.company_name }}</p>
                 <p class="is-size-4 has-text-weight-bold p-3">โครงการ {{ item.program_name }}</p>
                 <div class="columns p-4">
@@ -16,8 +16,6 @@
                         <p class="is-size-5 has-text-weight-bold">สถานะ: {{ item.state }}</p>
                     </div>
                 </div>
-                <div style="display: flex; flex-direction: row; justify-content: flex-end;">
-                    <button v-if="isCancel" class="button mx-4 mb-4 is-danger" @click="cancelApplication(item.id)">ยกเลิก</button>
                 </div>
             </div>
         </div>
@@ -40,6 +38,7 @@ import { computed, ComputedRef, defineComponent, onMounted, onUpdated, PropType,
 import ApplicationProgram from '@/models/ApplicationProgram';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';
+import { useRouter } from 'vue-router';
 
 export default defineComponent({
     emits:["cancelApplicationProgram"],
@@ -58,7 +57,7 @@ export default defineComponent({
         },
     },
     setup(props, {emit}) {
-
+        const router = useRouter();
         let presentPage = ref<number>(1);
         let pastPage = ref<number>(1);
 
@@ -115,6 +114,9 @@ export default defineComponent({
             presentPage.value === 1 ? previousClicked.value = true : previousClicked.value = false;
         }
 
+        const viewApplicationProgramDetail = (id: string) => {
+            router.push("/ApplicantProgram/" + id)
+        }
         const cancelApplication = async (id: string) => {
 
 
@@ -150,7 +152,7 @@ export default defineComponent({
         }
 
         return {
-            nextPageClicked, previousClicked, getNextPage, getPreviousPage, paginatedItems, presentPage, changePage, cancelApplication, countOfPages
+            nextPageClicked, previousClicked, getNextPage, getPreviousPage, paginatedItems, presentPage, changePage, cancelApplication, countOfPages, viewApplicationProgramDetail
         }
     },
 })

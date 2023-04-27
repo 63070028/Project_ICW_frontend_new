@@ -70,18 +70,11 @@ export default defineComponent({
     const jobs = reactive<Job[]>([]);
     onMounted(() => {
       axios
-        .get(`${PORT}` + "/admin/getCompanyJob")
+        .get(`${PORT}` + "/admin/getCompanyJobByCompanyId/" + route.params.id)
         .then((response) => {
-          console.log(response.data.items);
           const get_company_job: Job[] = response.data.items;
-          console.log(get_company_job);
           get_company_job.forEach((job) => {
-            console.log(job.company_id);
-            if (job.company_id == route.params.id) {
               jobs.push(job);
-            } else {
-              // do nothing
-            }
           });
         })
         .catch((error) => {
@@ -113,28 +106,6 @@ export default defineComponent({
         });
     };
 
-    const deleteJob = (index: number) => {
-      //ปฏิs
-      Swal.fire({
-        title: "ยืนยันลบงานนี้หรือไม่",
-        text: "",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: "hsl(141, 50%, 48%)",
-        cancelButtonColor: "hsl(348, 100%, 61%)",
-        confirmButtonText: "Yes",
-      }).then((result) => {
-        if (result.isConfirmed) {
-          Swal.fire({
-            position: "center",
-            icon: "error",
-            title: "ทำการลบผู้สมัครเรียบร้อย",
-            showConfirmButton: false,
-            timer: 1500,
-          });
-        }
-      });
-    };
     return {
       router,
       route,
@@ -143,7 +114,6 @@ export default defineComponent({
       job2,
       jobs,
       viewJob,
-      deleteJob,
       activeTab: "jobs",
       changeState
     };

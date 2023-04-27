@@ -4,7 +4,7 @@
             <div class="pt-3" style="border-top:0.5px solid gray;" v-for="item, index in paginatedItems" :key="index">
 
                 <p class="is-size-4 has-text-weight-bold p-4">ตำแหน่ง {{ item.job_name }}</p>
-                <div class="columns p-4" @click="viewApplicationDetail(item.applicant_id)">
+                <div class="columns p-4" @click="viewApplicationDetail(item.id)">
                     <div class="column">
                         <p class="is-size-5 has-text-weight-bold">ตำแหน่ง: {{ item.job_name }}</p>
                     </div>
@@ -114,7 +114,7 @@ export default defineComponent({
             presentPage.value === 1 ? previousClicked.value = true : previousClicked.value = false;
         }
         const viewApplicationDetail = (id: string) => {
-            router.push("/Applicant/" + id)
+            router.push("/ApplicantJob/" + id)
         }
 
         return {

@@ -5,7 +5,8 @@ import ProgramPage from '@/views/Applicant/ProgramPage.vue';
 import ContactPage from '@/views/Applicant/ContactPage.vue';
 import ApplicantProfilePage from '@/views/Applicant/ApplicantProfilePage.vue';
 import JobPage from '@/views/Applicant/JobPage.vue';
-import Applicant from '@/views/Company/ApplicantDetail.vue';
+import ApplicantJob from '@/views/Company/ApplicationJobDetail.vue';
+import ApplicantProgram from '@/views/Company/ApplicationProgramDetail.vue';
 import MyJobsPage from '@/views/Applicant/MyJobsPage.vue';
 import AdminSignIn from '@/views/Admin/AdminSignIn.vue'
 
@@ -61,8 +62,12 @@ const routes: Array<RouteRecordRaw> = [
     component: () => import(/* webpackChunkName: "about" */ '../views/Company/ListApplicant.vue')
   },
   {
-    path: '/Applicant/:id',
-    component:Applicant
+    path: '/ApplicantJob/:id',
+    component:ApplicantJob
+  },
+  {
+    path: '/ApplicantProgram/:id',
+    component:ApplicantProgram
   },
   {
     path: '/MyJobs',
