@@ -1,7 +1,7 @@
 <template>
     <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
     <div class="container mt-4" v-if="!store.state.isLoadingData">
-        <img src="https://www.w3schools.com/w3images/workbench.jpg" class="background_image">
+        <img :src="program.image" class="background_image">
         <div class="program_header mt-3">
             <p class="is-size-2">โครงการ {{ program.name }}</p>
             <p class="is-size-4 mt-3">โดย {{program.company_name}}</p>
@@ -232,7 +232,6 @@ export default defineComponent({
 <style scoped>
 .background_image {
     width: 100%;
-    height: 500px;
 }
 
 .program_header {
