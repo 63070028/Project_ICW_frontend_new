@@ -37,11 +37,8 @@
 </template>
 
 <script lang="ts">
-import Swal from 'sweetalert2';
 import { computed, ComputedRef, defineComponent, onMounted, onUpdated, PropType, ref } from 'vue'
 import ApplicationJob from '@/models/ApplicationJob';
-import axios from '@/plugins/axios';
-import { PORT } from '@/port';
 import { useRouter } from 'vue-router';
 import noInformationVue from "./no-information.vue";
 
@@ -63,7 +60,7 @@ export default defineComponent({
             default: true
         },
     },
-    setup(props, { emit }) {
+    setup(props) {
         const router = useRouter();
         let presentPage = ref<number>(1);
         let pastPage = ref<number>(1);

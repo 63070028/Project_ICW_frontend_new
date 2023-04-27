@@ -37,7 +37,7 @@
 
 <script lang="ts">
 import Swal from 'sweetalert2';
-import { computed, ComputedRef, defineComponent, onMounted, onUpdated, PropType, reactive, ref } from 'vue'
+import { computed, ComputedRef, defineComponent, onMounted, onUpdated, PropType, ref } from 'vue'
 import ApplicationProgram from '@/models/ApplicationProgram';
 import axios from '@/plugins/axios';
 import { PORT } from '@/port';

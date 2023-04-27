@@ -136,7 +136,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted, App } from "vue";
+import { defineComponent, ref, reactive, onMounted} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import uploadPdfVue from "@/components/upload-pdf.vue";
 import ApplicationJob from "@/models/ApplicationJob";

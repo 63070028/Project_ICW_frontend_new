@@ -81,7 +81,6 @@ import { defineComponent, onMounted, reactive } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import Company from "@/models/Company";
 import Job from "@/models/Job";
-import Swal from "sweetalert2";
 import axios from "axios";
 import { PORT } from "@/port";
 import { def_company, def_job } from "@/plugins/defaultValue";

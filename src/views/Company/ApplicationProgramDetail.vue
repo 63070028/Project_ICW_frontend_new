@@ -138,7 +138,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, reactive, onMounted, App } from "vue";
+import { defineComponent, ref, reactive, onMounted} from "vue";
 import { useRoute, useRouter } from "vue-router";
 import uploadPdfVue from "@/components/upload-pdf.vue";
 import ApplicationProgram from "@/models/ApplicationProgram";
@@ -150,7 +150,6 @@ import axios from "@/plugins/axios";
 import { PORT } from "@/port";
 import { useStore } from 'vuex';
 import preloadingVue from '@/components/pre-loading.vue'
-import User from '@/models/User';
 export default defineComponent({
   components: {
     uploadPdfVue,
