@@ -1,7 +1,7 @@
 <template>
   <preloadingVue v-if="store.state.isLoadingData"></preloadingVue>
   
-  <div class="company p-3" v-if="!isEdited" >
+  <div class="company p-3" v-if="!isEdited && !store.state.isLoadingData">
     <div class="columns">
       <div class="column is-3" style="background-color: #f8f8f8;">
         <aside class="menu">

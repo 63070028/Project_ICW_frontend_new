@@ -174,7 +174,7 @@ export default defineComponent({
       qualifications: [],
       contact: { name: "", email: "", phone: "" },
       creation_date: new Date().toLocaleDateString("en-US"),
-      state: "",
+      state: "on",
     });
 
     console.log("ไอดีcompany" + props.company_id);

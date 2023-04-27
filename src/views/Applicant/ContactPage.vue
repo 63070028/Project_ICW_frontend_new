@@ -2,7 +2,7 @@
     <div class="container card p-6 mt-6">
         <p class="is-size-1 has-text-centered ">รายชื่ออาจารย์</p>
         <div class="columns is-multiline mt-6">
-            <div class="column is-3 m-6 has-background-grey-lighter p-0">
+            <div class="card column is-3 m-6 has-background-grey-lighter p-0">
                 <img class="image_profile"
                     src="https://www.it.kmitl.ac.th/wp-content/uploads/2017/12/Boonprasert-768x768.jpg">
                 <div class="px-3">
@@ -12,7 +12,7 @@
                     <p class="is-size-5 has-text-weight-medium">Office: 522</p>
                 </div>
             </div>
-            <div class="column is-3 m-6 has-background-grey-lighter p-0">
+            <div class="card column is-3 m-6 has-background-grey-lighter p-0">
                 <img class="image_profile"
                     src="https://www.it.kmitl.ac.th/wp-content/uploads/2017/12/Pattanapong-768x768.jpg">
                 <div class="px-3">
@@ -21,7 +21,7 @@
                     <p class="is-size-5 has-text-weight-medium">Office: 610</p>
                 </div>
             </div>
-            <div class="column is-3 m-6 has-background-grey-lighter p-0">
+            <div class="card column is-3 m-6 has-background-grey-lighter p-0">
                 <img class="image_profile" src="https://www.it.kmitl.ac.th/wp-content/uploads/2018/03/Lapas-768x768.jpg">
                 <div class="px-3">
                     <p class="is-size-5 has-text-weight-semibold">ผศ.ดร. ลภัส ประดิษฐ์ทัศนีย์</p>
