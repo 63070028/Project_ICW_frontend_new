@@ -1,6 +1,6 @@
 export enum ProgramStatus {
-    Open = 'เปิดรับสมัคร',
-    Closed = 'ปิดรับสมัคร',
+    Open = 'on',
+    Closed = 'off',
 }
 export default interface Program {
     id: number,
