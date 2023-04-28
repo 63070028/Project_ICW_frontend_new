@@ -93,7 +93,6 @@ export default defineComponent({
             myApplications.applicationJob[index].state = "cancel"
             //update MyApplicationJobHistoy
             myApplicationsHistory.applicationJob.push(myApplications.applicationJob[index])
-
             //update MyApplicationJob
             if (index !== -1) {
                 myApplications.applicationJob.splice(index, 1);
@@ -134,6 +133,7 @@ export default defineComponent({
 
             await axios.get(`${PORT}` + "/application/getApplicationJobsByApplicantId/" + user.id).then((res) => {
                 const myApplicationJobs: ApplicationJob[] = res.data
+                myApplicationJobs.sort((a, b) => new Date(a.creation_date) < new Date(b.creation_date) ? 1 : -1);
                 const myApplicationJobsIsPending = myApplicationJobs.filter(item => item.state == "pending")
                 const myApplicationJobsIsHistory = myApplicationJobs.filter(item => item.state != "pending")
                 myApplicationJobsIsPending.forEach(applicantJob => myApplications.applicationJob.push(applicantJob))
@@ -142,6 +142,7 @@ export default defineComponent({
 
             await axios.get(`${PORT}` + "/application/getApplicationProgramsByApplicantId/" + user.id).then((res) => {
                 const myApplicationPrograms: ApplicationProgram[] = res.data
+                myApplicationPrograms.sort((a, b) => new Date(a.creation_date) < new Date(b.creation_date) ? 1 : -1);
                 const myApplicationProgramsIsPending = myApplicationPrograms.filter(item => item.state == "pending")
                 const myApplicationProgramsIsHistory = myApplicationPrograms.filter(item => item.state != "pending")
                 myApplicationProgramsIsPending.forEach(applicantProgram => myApplications.applicationProgram.push(applicantProgram))

@@ -144,6 +144,7 @@ import Swal from "sweetalert2";
 import Job from "@/models/Job";
 import axios from "@/plugins/axios";
 import { PORT } from "@/port";
+import formatDate from "@/plugins/formatDate";
 export default defineComponent({
   emits: ["addNewJob", "saveNewJob"],
   props: {
@@ -173,7 +174,7 @@ export default defineComponent({
       interview: "",
       qualifications: [],
       contact: { name: "", email: "", phone: "" },
-      creation_date: new Date().toLocaleDateString("en-US"),
+      creation_date: formatDate(new Date()),
       state: "on",
     });
 

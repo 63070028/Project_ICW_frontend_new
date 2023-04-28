@@ -105,6 +105,7 @@ import Applicant from "@/models/Applicant";
 import preloadingVue from "@/components/pre-loading.vue";
 import JobFavoriteModel from "@/models/formModels/JobFavoriteModel"
 import getUserData from "@/plugins/getUser";
+import formatDate from "@/plugins/formatDate"
 import {
   def_job,
   def_applicant,
@@ -192,7 +193,7 @@ export default defineComponent({
           formApplicationJob.resume = applicant.resume
           formApplicationJob.transcript = applicant.transcript
           formApplicationJob.portfolio = applicant.portfolio
-          formApplicationJob.creation_date = new Date().toLocaleDateString("en-US")
+          formApplicationJob.creation_date = formatDate(new Date());
           formApplicationJob.state = "pending"
 
           const swalWaiting: any = Swal.fire({
@@ -230,7 +231,7 @@ export default defineComponent({
       formReportSend.job_id = "" + route.params.id
       formReportSend.job_name = job.name
       formReportSend.message = messageReport.value
-      formReportSend.creation_date = new Date().toLocaleDateString("en-US")
+      formReportSend.creation_date = formatDate(new Date());
 
       console.log(formReportSend.creation_date);
       const swalWaiting: any = Swal.fire({

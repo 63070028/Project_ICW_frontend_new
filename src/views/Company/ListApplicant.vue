@@ -80,7 +80,7 @@ export default defineComponent({
 
             await axios.get(`${PORT}` + "/application/getApplicationJobsByCompanyId/" + user.id).then((res) => {
                 const myApplicationJobs: ApplicationJob[] = res.data
-                
+                myApplicationJobs.sort((a, b) => new Date(a.creation_date) > new Date(b.creation_date) ? 1 : -1);
 
                 const myApplicationJobsIsPending = myApplicationJobs.filter(item => item.state == "pending")
                 myApplicationJobsIsPending.forEach(applicantJob => Applications.applicationJob.push(applicantJob))
@@ -89,6 +89,7 @@ export default defineComponent({
 
             await axios.get(`${PORT}` + "/application/getApplicationProgramsByCompanyId/" + user.id).then((res) => {
                 const myApplicationPrograms: ApplicationProgram[] = res.data
+                myApplicationPrograms.sort((a, b) => new Date(a.creation_date) > new Date(b.creation_date) ? 1 : -1);
                 const myApplicationProgramsIsPending = myApplicationPrograms.filter(item => item.state == "pending")
                 myApplicationProgramsIsPending.forEach(applicantProgram => Applications.applicationProgram.push(applicantProgram))
             })

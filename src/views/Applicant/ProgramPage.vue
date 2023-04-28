@@ -85,6 +85,7 @@ import Applicant from '@/models/Applicant'
 import getUserData from '@/plugins/getUser'
 import { def_applicant, def_fromApplicationProgram, def_program } from '@/plugins/defaultValue'
 import preloadingVue from '@/components/pre-loading.vue'
+import formatDate from '@/plugins/formatDate'
 export default defineComponent({
     components: {
         preloadingVue
@@ -150,7 +151,7 @@ export default defineComponent({
                     fromApplicationProgram.resume = applicant.resume
                     fromApplicationProgram.transcript = applicant.transcript
                     fromApplicationProgram.portfolio = applicant.portfolio
-                    fromApplicationProgram.creation_date = new Date().toLocaleDateString("en-US")
+                    fromApplicationProgram.creation_date = formatDate(new Date());
                     fromApplicationProgram.state = "pending"
 
                     console.log(fromApplicationProgram)

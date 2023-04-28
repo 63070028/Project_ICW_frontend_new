@@ -230,6 +230,7 @@ export default defineComponent({
       await axios.get(`${PORT}` + "/company/getJob/" + user.id).then((res) => {
         console.log(res.data);
         Object.assign(jobs, res.data.job);
+        jobs.sort((a, b) => new Date(a.creation_date) > new Date(b.creation_date) ? 1 : -1);
       });
 
       store.commit("LOADING_DATA", false);

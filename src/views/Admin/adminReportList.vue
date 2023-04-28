@@ -91,6 +91,7 @@ export default defineComponent({
         .then((response) => {
           console.log(response.data.items);
           const get_jobReport: JobReport[] = response.data.items;
+          get_jobReport.sort((a, b) => new Date(a.creation_date) < new Date(b.creation_date) ? 1 : -1);
           console.log(get_jobReport);
           get_jobReport.forEach((job) => {
             console.log(job)
